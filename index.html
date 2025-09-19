@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfolio of Janmejoy Mahato - Full Stack Web Developer & Cyber Security Enthusiast" />
+  <title>Janmejoy Mahato | Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  (function(){
+    emailjs.init("ErMIvr0deGJO9B9rR"); // replace with your EmailJS public key
+  })();
+</script>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX'); // Replace with your GA4 Measurement ID
+</script>
+
+</head>
+<body class="bg-gray-900 text-white">
+  <div id="loading" class="fixed inset-0 flex items-center justify-center bg-gray-900 z-50">
+    <div class="loader"></div>
+  </div>
+
+  <div id="theme-toggle">
+    <button id="toggle-btn">
+      🌙
+    </button>
+  </div>
+  
+  <section id="hero" class="h-screen flex flex-col items-center justify-center text-center relative overflow-hidden">
+    <div id="particles-js" class="absolute inset-0"></div>
+    <h1 class="text-4xl md:text-6xl font-bold">JANMEJOY MAHATO</h1>
+    <p class="mt-4 text-xl md:text-2xl">FULL STACK WEB DEVELOPER & CYBER SECURITY ENTHUSIAST</p>
+    <div class="mt-6 space-x-4">
+      <a href="assets/resume.pdf" download class="btn">Download Resume</a>
+      <a href="tel:+917477661933" class="btn">Contact Me</a>
+      <a href="mailto:janmejoymahato529@gmail.com" class="btn">Contact Me(Email)</a>
+      <!-- Floating CTA -->
+<a href="mailto:janmejoymahato529@gmail.com" class="floating-cta">Hire Me</a>
+
+<!-- Resume Modal -->
+<div id="resumeModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Resume Preview</h2>
+    <embed src="assets/resume.pdf" type="application/pdf" width="100%" height="500px" />
+    <a href="assets/resume.pdf" download class="btn">Download Resume</a>
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  <section id="about" class="about-section fade-in">
+    <div class="about-container">
+      <div class="about-image">
+        <img src="assets/profile.jpg" alt="Janmejoy Mahato">
+      </div>
+      <div class="about-content">
+        <h2>About Me</h2>
+        <p>
+          I’m <strong>JANMEJOY MAHATO</strong>, a Final-year B.Tech CSE student skilled in Full Stack Web Development (HTML5, CSS3, JavaScript, React, Node.js, Express.js, MySQL, MongoDB) with exposure to Python and Redis. Knowledgeable in cybersecurity tools like Wireshark, Burp Suite, and Ethical Hacking. Strong grasp of data structures and OOP, passionate about building secure, scalable applications, and eager to contribute to agile teams.
+          <span class="highlight">Full Stack Web Development</span> and a growing interest in 
+          <span class="highlight">Cybersecurity</span>.  
+          Skilled in creating modern, scalable applications with tools like React, Node.js, and MongoDB, 
+          while also exploring ethical hacking and penetration testing.  
+        </p>
+        <div class="about-stats">
+          <div class="stat-card">
+            <h3>3+</h3>
+            <p>Years of Coding</p>
+          </div>
+          <div class="stat-card">
+            <h3>5+</h3>
+            <p>Projects Completed</p>
+          </div>
+          <div class="stat-card">
+            <h3>4+</h3>
+            <p>Internships</p>
+          </div>
+    </div>
+  </section>
+  
+
+  <section id="education" class="education-section fade-in">
+    <h2>Education</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-icon">🎓</div>
+        <div class="timeline-content">
+          <h3>B. Tech in Computer Science & Engineering</h3>
+          <span class="edu-institute">Greater Kolkata College of Engineering & Management</span>
+          <span class="edu-year">2022 – 2026</span>
+          <p>CGPA: <strong>7/10</strong></p>
+        </div>
+      </div>
+  
+      <div class="timeline-item">
+        <div class="timeline-icon">🏫</div>
+        <div class="timeline-content">
+          <h3>Higher Secondary – WBCHSE</h3>
+          <span class="edu-institute">R.B.B. High (H.S) School</span>
+          <span class="edu-year">2021 – 2022</span>
+          <p>Percentage: <strong>85.60%</strong></p>
+        </div>
+      </div>
+  
+      <div class="timeline-item">
+        <div class="timeline-icon">📘</div>
+        <div class="timeline-content">
+          <h3>Secondary – WBBSE</h3>
+          <span class="edu-institute">R.B.B. High (H.S) School</span>
+          <span class="edu-year">2019 – 2020</span>
+          <p>Percentage: <strong>69.70%</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+  <section id="projects" class="py-16 container mx-auto px-6 fade-in">
+    <h2 class="text-3xl font-bold mb-8 text-center">Projects</h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="project-card">
+        <h3>Online Voting System</h3>
+        <p>Secure online platform for voting.</p>
+        <a href="https://ezeevote.onrender.com/">Live</a> | <a href="https://github.com/janmej0y/Online-Voting-System">GitHub</a>
+      </div>
+      <div class="project-card">
+        <h3>Voice Assistant</h3>
+        <p>Personalized voice-controlled assistant.</p>
+        <a href="#">Runs Locally</a> | <a href="https://github.com/janmej0y/Voice-assistant">GitHub</a>
+      </div>
+      <div class="project-card">
+        <h3>Music Player</h3>
+        <p>Web-based interactive music player.</p>
+        <a href="https://music-player-rosy-xi.vercel.app/">Live</a> | <a href="https://github.com/janmej0y/Music-Player">GitHub</a>
+      </div>
+      <div class="project-card">
+        <h3>Weather App</h3>
+        <p>Live weather updates using API.</p>
+        <a href="https://janmej0y.github.io/Weather-App/">Live</a> | <a href="https://github.com/janmej0y/Weather-App">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="py-16 bg-gray-800 fade-in">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl font-bold mb-8 text-center">Technical Skills</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="skill">HTML5 / CSS3 / Bootstrap / Tailwind / React</div>
+        <div class="skill">Node.js / Express.js</div>
+        <div class="skill">MySQL / MongoDB</div>
+        <div class="skill">Python / C</div>
+        <div class="skill">Git / VS Code</div>
+        <div class="skill">Cybersecurity Tools</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="certifications" class="py-16 container mx-auto px-6 fade-in">
+    <h2 class="text-3xl font-bold mb-8 text-center">Certifications</h2>
+    <ul class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <li class="cert-card">Palo Alto Cybersecurity Internship</li>
+      <li class="cert-card">Blue Prism Automation Internship</li>
+      <li class="cert-card">Full Stack BCT Training</li>
+      <li class="cert-card">Ethical Hacking Internship</li>
+      <li class="cert-card">AI-ML Virtual Internship</li>
+    </ul>
+  </section>
+
+  <section id="contact" class="contact-section fade-in">
+    <h2 class="section-title">📬 Get In Touch</h2>
+    <p class="contact-subtext">Feel free to reach out for collaborations, opportunities, or just to say hi!</p>
+  
+    <div class="contact-container">
+      <!-- Contact Info Cards -->
+      <div class="contact-info">
+        <div class="info-card">
+          <i class="fas fa-envelope"></i>
+          <h3>Email</h3>
+          <p>janmejoymahato529@gmail.com</p>
+          <a href="mailto:janmejoymahato529@gmail.com" class="btn-glow">Send Mail</a>
+        </div>
+        <div class="info-card">
+          <i class="fas fa-phone"></i>
+          <h3>Phone</h3>
+          <p>+91 7477661933</p>
+          <a href="tel:+917477661933" class="btn-glow">Call Now</a>
+        </div>
+        <div class="info-card">
+          <i class="fab fa-linkedin"></i>
+          <h3>LinkedIn</h3>
+          <p>@janmejoy</p>
+          <a href="https://linkedin.com/in/janmejoy" target="_blank" class="btn-glow">Visit</a>
+        </div>
+      </div>
+  
+      <!-- Contact Form -->
+      <form id="contact-form" class="contact-form">
+        <input type="text" class="input-field" placeholder="Your Name" required>
+        <input type="email" class="input-field" placeholder="Your Email" required>
+        <textarea class="input-field" placeholder="Your Message" rows="5" required></textarea>
+        <button type="submit" class="btn-glow">🚀 Send Message</button>
+      </form>
+    </div>
+  </section>
+  
+      <p id="form-status"></p>
+      
+      <div class="mt-6 flex justify-center space-x-6">
+        <a href="www.linkedin.com/in/janmej0y">LinkedIn</a>
+        <a href="https://github.com/janmej0y">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-4 text-center bg-gray-900">
+    <p>© 2025 Janmejoy Mahato. All Rights Reserved.</p>
+    <p id="visitor-count">Visitors: Loading...</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+  <script src="js/script.js"></script>
+</body>
+<div id="progress-bar"></div>
+
+</html>
