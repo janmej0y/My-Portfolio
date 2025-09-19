@@ -1,8 +1,3 @@
-Perfect idea 🙌 A **README** will make your portfolio project professional and ready for GitHub deployment.
-Here’s a suggested `README.md` content you can place in a `readme/` folder inside your project:
-
----
-
 ### 📂 Folder Structure
 
 ```
@@ -72,7 +67,7 @@ It showcases my skills, education, projects, certifications, and contact details
 
 ## 📸 Preview
 
-*(Add screenshot here after deployment)*
+*(Currently not available)*
 
 ---
 
@@ -94,7 +89,3 @@ Feel free to use and customize it for your own portfolio!
 
 ---
 
-👉 You can copy this into a new file named `readme/README.md`.  
-
-Do you want me to also **generate a Markdown preview screenshot** (so you can directly see how it looks before pushing to GitHub)?
-```
