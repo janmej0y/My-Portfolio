@@ -203,17 +203,37 @@
         </div>
       </div>
   
-      <!-- Contact Form -->
-      <form id="contact-form" class="contact-form">
-        <input type="text" class="input-field" placeholder="Your Name" required>
-        <input type="email" class="input-field" placeholder="Your Email" required>
-        <textarea class="input-field" placeholder="Your Message" rows="5" required></textarea>
-        <button type="submit" class="btn-glow">🚀 Send Message</button>
-      </form>
-    </div>
-  </section>
-  
-      <p id="form-status"></p>
+     <!-- Contact Form -->
+<form id="contact-form" class="contact-form">
+  <input 
+    type="text" 
+    class="input-field" 
+    name="from_name" 
+    placeholder="Your Name" 
+    required 
+  />
+
+  <input 
+    type="email" 
+    class="input-field" 
+    name="reply_to" 
+    placeholder="Your Email" 
+    required 
+  />
+
+  <textarea 
+    class="input-field" 
+    name="message" 
+    placeholder="Your Message" 
+    rows="5" 
+    required
+  ></textarea>
+
+  <button type="submit" class="btn-glow">🚀 Send Message</button>
+</form>
+
+<p id="form-status"></p>
+
       
       <div class="mt-6 flex justify-center space-x-6">
         <a href="www.linkedin.com/in/janmej0y">LinkedIn</a>

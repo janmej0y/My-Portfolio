@@ -85,7 +85,7 @@ window.addEventListener("load", revealOnScroll);
 const form = document.getElementById("contact-form");
 form.addEventListener("submit", function(e) {
   e.preventDefault();
-  emailjs.sendForm("service_l8nf8bg", "template_q0qnxam", this)
+  emailjs.sendForm("service_l8nf8bg", "template_p4a3691", this)
     .then(() => {
       document.getElementById("form-status").textContent = "Message sent successfully ✅";
       form.reset();
