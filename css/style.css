@@ -600,3 +600,40 @@ section.show {
   box-shadow: 0 0 25px rgba(46, 204, 113, 0.8);
   transform: translateY(-3px);
 }
+/* =========================
+   SCROLL ANIMATION EFFECTS
+=========================== */
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s ease-out;
+  will-change: opacity, transform;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optional variations */
+.fade-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: all 1s ease-out;
+}
+
+.fade-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: all 1s ease-out;
+}
+
+.fade-left.visible,
+.fade-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+html {
+  scroll-behavior: smooth;
+}

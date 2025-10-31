@@ -83,25 +83,49 @@ window.addEventListener("scroll", revealOnScroll);
 window.addEventListener("load", revealOnScroll);
 // EmailJS Contact Form
 const form = document.getElementById("contact-form");
-form.addEventListener("submit", function(e) {
+const status = document.getElementById("form-status");
+
+form.addEventListener("submit", (e) => {
   e.preventDefault();
-  emailjs.sendForm("service_l8nf8bg", "template_p4a3691", this)
+  status.textContent = "Sending message... ⏳";
+
+  emailjs.sendForm("service_l8nf8bg", "template_p4a3691", form)
     .then(() => {
-      document.getElementById("form-status").textContent = "Message sent successfully ✅";
+      status.textContent = "✅ Message sent successfully!";
+      status.style.color = "#4ade80";
       form.reset();
-    }, (err) => {
-      document.getElementById("form-status").textContent = "Error sending message ❌";
-      console.error(err);
+    })
+    .catch((err) => {
+      console.error("EmailJS Error:", err);
+      status.textContent = "❌ Failed to send message. Try again.";
+      status.style.color = "#f87171";
     });
 });
+
 // Visitor Counter using countapi
 fetch("https://api.countapi.xyz/hit/janmejoy-portfolio/visits")
   .then(res => res.json())
   .then(data => {
     document.getElementById("visitor-count").textContent = "Visitors: " + data.value;
   });
-  document.getElementById("contact-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    alert("Message sent successfully! 🚀 (EmailJS integration coming soon)");
-  });
   
+  /* =========================
+   SCROLL REVEAL ANIMATION
+=========================== */
+const fadeEls = document.querySelectorAll('.fade-in, .fade-left, .fade-right');
+
+const observer = new IntersectionObserver(
+  entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target); // Animate once
+      }
+    });
+  },
+  {
+    threshold: 0.2, // Trigger when 20% visible
+  }
+);
+
+fadeEls.forEach(el => observer.observe(el));
