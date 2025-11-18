@@ -27,6 +27,35 @@
   <div id="loading" class="fixed inset-0 flex items-center justify-center bg-gray-900 z-50">
     <div class="loader"></div>
   </div>
+  <!-- NAVBAR -->
+<nav id="navbar" class="fixed top-0 left-0 w-full backdrop-blur-lg bg-black bg-opacity-40 border-b border-cyan-400 z-50">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center">
+    <h2 class="text-xl font-bold text-cyan-400">JM Portfolio</h2>
+
+    <ul class="hidden md:flex space-x-6 text-cyan-300 font-semibold">
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#education" class="nav-link">Education</a></li>
+      <li><a href="#projects" class="nav-link">Projects</a></li>
+      <li><a href="#skills" class="nav-link">Skills</a></li>
+      <li><a href="#certifications" class="nav-link">Certifications</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+
+    <!-- Mobile Menu Button -->
+    <button id="menu-btn" class="md:hidden text-cyan-400 text-2xl">☰</button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden flex-col bg-black bg-opacity-80 text-center py-4 space-y-4 md:hidden">
+    <a href="#about" class="nav-link">About</a>
+    <a href="#education" class="nav-link">Education</a>
+    <a href="#projects" class="nav-link">Projects</a>
+    <a href="#skills" class="nav-link">Skills</a>
+    <a href="#certifications" class="nav-link">Certifications</a>
+    <a href="#contact" class="nav-link">Contact</a>
+  </div>
+</nav>
+
 
   <div id="theme-toggle">
     <button id="toggle-btn">
@@ -129,6 +158,7 @@
     <h2 class="text-3xl font-bold mb-8 text-center">Projects</h2>
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div class="project-card">
+        <img src="assets/projects/voting.png" class="project-img" alt="Online Voting System">
         <h3>Online Voting System</h3>
         <p>Secure online platform for voting.</p>
         <a href="https://online-voting-system-henna.vercel.app/">Live</a> | <a href="https://github.com/janmej0y/Online-Voting-System">GitHub</a>
@@ -141,18 +171,21 @@
       </div>
 
       <div class="project-card">
+        <img src="assets/projects/coins.png" class="project-img" alt="Campus Coins">
         <h3>Campus Coins</h3>
         <p>Track your Income and Expenses.</p>
         <a href="https://campuscoins.netlify.app/">Live</a> | <a href="https://github.com/janmej0y/campuscoins">GitHub</a>
       </div>
 
       <div class="project-card">
+        <img src="assets/projects/music.png" class="project-img" alt="Music Player">
         <h3>Music Player</h3>
         <p>Web-based interactive music player.</p>
         <a href="https://music-player-rosy-xi.vercel.app/">Live</a> | <a href="https://github.com/janmej0y/Music-Player">GitHub</a>
       </div>
 
       <div class="project-card">
+        <img src="assets/projects/hax.png" class="project-img" alt="FutureHax">
         <h3>FutureHax</h3>
         <p>FutureHax is a fun that predicts the “end of the world”.</p>
         <a href="https://janmej0y.github.io/FutureHax/">Live</a> | <a href="https://github.com/janmej0y/FutureHax">GitHub</a>
