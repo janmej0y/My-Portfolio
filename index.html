@@ -171,50 +171,154 @@
   
   
 
-  <section id="projects" class="py-16 container mx-auto px-6 fade-in">
-    <h2 class="text-3xl font-bold mb-8 text-center">Projects</h2>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div class="project-card">
-        <img src="assets/projects/voting.png" class="project-img" alt="Online Voting System">
-        <h3>Online Voting System</h3>
-        <p>Secure online platform for voting.</p>
-        <a href="https://online-voting-system-henna.vercel.app/">Live</a> | <a href="https://github.com/janmej0y/Online-Voting-System">GitHub</a>
-      </div>
+  <section id="projects" class="projects-section fade-in">
 
-      <div class="project-card">
-        <h3>Voice Assistant</h3>
-        <p>Personalized voice-controlled assistant.</p>
-        <a href="#">Runs Locally</a> | <a href="https://github.com/janmej0y/Voice-assistant">GitHub</a>
-      </div>
-
-      <div class="project-card">
-        <img src="assets/projects/coins.png" class="project-img" alt="Campus Coins">
-        <h3>Campus Coins</h3>
-        <p>Track your Income and Expenses.</p>
-        <a href="https://campuscoins.netlify.app/">Live</a> | <a href="https://github.com/janmej0y/campuscoins">GitHub</a>
-      </div>
-
-      <div class="project-card">
-        <img src="assets/projects/music.png" class="project-img" alt="Music Player">
-        <h3>Music Player</h3>
-        <p>Web-based interactive music player.</p>
-        <a href="https://music-player-rosy-xi.vercel.app/">Live</a> | <a href="https://github.com/janmej0y/Music-Player">GitHub</a>
-      </div>
-
-      <div class="project-card">
-        <img src="assets/projects/hax.png" class="project-img" alt="FutureHax">
-        <h3>FutureHax</h3>
-        <p>FutureHax is a fun that predicts the “end of the world”.</p>
-        <a href="https://janmej0y.github.io/FutureHax/">Live</a> | <a href="https://github.com/janmej0y/FutureHax">GitHub</a>
-      </div>
-
-      <div class="project-card">
-        <h3>Weather App</h3>
-        <p>Live weather updates using API.</p>
-        <a href="https://janmej0y.github.io/Weather-App/">Live</a> | <a href="https://github.com/janmej0y/Weather-App">GitHub</a>
-      </div>
+    <h2 class="section-title">🚀 Projects</h2>
+  
+    <!-- FILTER BUTTONS -->
+    <div class="project-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="web">Web</button>
+      <button class="filter-btn" data-filter="app">Apps</button>
+      <button class="filter-btn" data-filter="tools">Tools</button>
     </div>
-  </section> 
+  
+    <!-- PROJECT GRID -->
+    <div class="projects-grid">
+  
+      <!-- ONLINE VOTING SYSTEM -->
+      <div class="project-card" data-category="web">
+        <div class="project-img-box">
+          <img src="assets/projects/voting.png" class="project-img" alt="Online Voting System">
+        </div>
+  
+        <h3 class="project-title">Online Voting System</h3>
+        <p class="project-desc">Secure online platform for voting with authentication.</p>
+  
+        <div class="project-tech">
+          <span>Node.js</span><span>Express</span><span>MongoDB</span><span>JWT</span>
+        </div>
+  
+        <div class="project-links">
+          <button class="view-btn" data-project="voting">View</button>
+          <a href="https://online-voting-system-henna.vercel.app/" target="_blank" class="project-btn live-btn">Live</a>
+          <a href="https://github.com/janmej0y/Online-Voting-System" target="_blank" class="project-btn github-btn">GitHub</a>
+        </div>
+      </div>
+  
+      <!-- VOICE ASSISTANT -->
+      <div class="project-card" data-category="app">
+        <div class="project-img-box">
+          <img src="assets/projects/voice.png" class="project-img" alt="Voice Assistant">
+        </div>
+  
+        <h3 class="project-title">Voice Assistant</h3>
+        <p class="project-desc">A personalized offline voice-controlled assistant.</p>
+  
+        <div class="project-tech">
+          <span>Python</span><span>Speech Recognition</span><span>AI</span>
+        </div>
+  
+        <div class="project-links">
+          <button class="view-btn" data-project="voice">View</button>
+          <a href="#" class="project-btn live-btn">Runs Locally</a>
+          <a href="https://github.com/janmej0y/Voice-assistant" target="_blank" class="project-btn github-btn">GitHub</a>
+        </div>
+      </div>
+  
+      <!-- CAMPUS COINS -->
+      <div class="project-card" data-category="web">
+        <div class="project-img-box">
+          <img src="assets/projects/coins.png" class="project-img" alt="Campus Coins">
+        </div>
+  
+        <h3 class="project-title">Campus Coins</h3>
+        <p class="project-desc">Income and expenses tracking web app.</p>
+  
+        <div class="project-tech">
+          <span>HTML</span><span>CSS</span><span>JavaScript</span>
+        </div>
+  
+        <div class="project-links">
+          <button class="view-btn" data-project="coins">View</button>
+          <a href="https://campuscoins.netlify.app/" target="_blank" class="project-btn live-btn">Live</a>
+          <a href="https://github.com/janmej0y/campuscoins" target="_blank" class="project-btn github-btn">GitHub</a>
+        </div>
+      </div>
+  
+      <!-- MUSIC PLAYER -->
+      <div class="project-card" data-category="web">
+        <div class="project-img-box">
+          <img src="assets/projects/music.png" class="project-img" alt="Music Player">
+        </div>
+  
+        <h3 class="project-title">Music Player</h3>
+        <p class="project-desc">Web-based interactive music player.</p>
+  
+        <div class="project-tech">
+          <span>HTML</span><span>CSS</span><span>JavaScript</span>
+        </div>
+  
+        <div class="project-links">
+          <button class="view-btn" data-project="music">View</button>
+          <a href="https://music-player-rosy-xi.vercel.app/" target="_blank" class="project-btn live-btn">Live</a>
+          <a href="https://github.com/janmej0y/Music-Player" target="_blank" class="project-btn github-btn">GitHub</a>
+        </div>
+      </div>
+  
+      <!-- FUTUREHAX -->
+      <div class="project-card" data-category="tools">
+        <div class="project-img-box">
+          <img src="assets/projects/hax.png" class="project-img" alt="FutureHax">
+        </div>
+  
+        <h3 class="project-title">FutureHax</h3>
+        <p class="project-desc">Fun prediction tool calculating “end of the world”.</p>
+  
+        <div class="project-tech">
+          <span>JavaScript</span><span>UI Design</span>
+        </div>
+  
+        <div class="project-links">
+          <button class="view-btn" data-project="hax">View</button>
+          <a href="https://janmej0y.github.io/FutureHax/" target="_blank" class="project-btn live-btn">Live</a>
+          <a href="https://github.com/janmej0y/FutureHax" target="_blank" class="project-btn github-btn">GitHub</a>
+        </div>
+      </div>
+  
+      <!-- WEATHER APP -->
+      <div class="project-card" data-category="web">
+        <div class="project-img-box">
+          <img src="assets/projects/weather.png" class="project-img" alt="Weather App">
+        </div>
+  
+        <h3 class="project-title">Weather App</h3>
+        <p class="project-desc">Live weather updates using API.</p>
+  
+        <div class="project-tech">
+          <span>API</span><span>JavaScript</span><span>HTML</span>
+        </div>
+  
+        <div class="project-links">
+          <button class="view-btn" data-project="weather">View</button>
+          <a href="https://janmej0y.github.io/Weather-App/" target="_blank" class="project-btn live-btn">Live</a>
+          <a href="https://github.com/janmej0y/Weather-App" target="_blank" class="project-btn github-btn">GitHub</a>
+        </div>
+      </div>
+  
+    </div>
+  </section>
+  
+  <!-- MODAL POPUP -->
+  <div id="project-modal" class="project-modal">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <h2 id="modal-title"></h2>
+      <img id="modal-img">
+      <p id="modal-desc"></p>
+    </div>
+  </div>
+  
 
   <section id="skills" class="py-16 bg-gray-800 fade-in">
     <div class="container mx-auto px-6">

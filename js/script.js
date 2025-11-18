@@ -242,3 +242,99 @@ document.querySelectorAll('.contact-3-social .orb').forEach(orb => {
     }
   });
 });
+/* PROJECT FILTERS */
+const filterBtns = document.querySelectorAll(".filter-btn");
+const projectCards = document.querySelectorAll(".project-card");
+
+filterBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelector(".filter-btn.active").classList.remove("active");
+    btn.classList.add("active");
+
+    let filter = btn.dataset.filter;
+
+    projectCards.forEach(card => {
+      card.style.display = (filter === "all" || card.dataset.category === filter) 
+        ? "block" 
+        : "none";
+    });
+  });
+});
+
+/* ===============================
+   PROJECT MODAL (No Variable Conflict)
+=============================== */
+
+// Project Modal Elements
+const projectModal = document.getElementById("project-modal");
+const projectModalTitle = document.getElementById("modal-title");
+const projectModalImg = document.getElementById("modal-img");
+const projectModalDesc = document.getElementById("modal-desc");
+const projectModalClose = document.querySelector(".modal-close");
+
+// Project Data Object
+const projectData = {
+  voting: {
+    title: "Online Voting System",
+    img: "assets/projects/voting.png",
+    desc: "A secure online voting system built with Node.js, Express, MongoDB, and JWT authentication."
+  },
+
+  voice: {
+    title: "Voice Assistant",
+    img: "assets/projects/voice.png",
+    desc: "A personalized offline voice assistant built with Python, using speech recognition and automation."
+  },
+
+  coins: {
+    title: "Campus Coins",
+    img: "assets/projects/coins.png",
+    desc: "A simple income and expense tracker, built with HTML, CSS and JavaScript."
+  },
+
+  music: {
+    title: "Music Player",
+    img: "assets/projects/music.png",
+    desc: "A modern web-based music player with a clean UI and playlist support."
+  },
+
+  hax: {
+    title: "FutureHax",
+    img: "assets/projects/hax.png",
+    desc: "A fun web project predicting the imaginary 'end of the world' using random algorithms."
+  },
+
+  weather: {
+    title: "Weather App",
+    img: "assets/projects/weather.png",
+    desc: "A clean UI weather app that fetches real-time data from an open weather API."
+  }
+};
+
+// Attach click event to all *View* buttons
+document.querySelectorAll(".view-btn").forEach((button) => {
+  button.addEventListener("click", () => {
+    const projectKey = button.dataset.project;
+    const project = projectData[projectKey];
+
+    // Fill modal content
+    projectModalTitle.textContent = project.title;
+    projectModalImg.src = project.img;
+    projectModalDesc.textContent = project.desc;
+
+    // Show modal
+    projectModal.style.display = "flex";
+  });
+});
+
+// Close modal on X click
+projectModalClose.addEventListener("click", () => {
+  projectModal.style.display = "none";
+});
+
+// Close modal when clicking outside content
+window.addEventListener("click", (e) => {
+  if (e.target === projectModal) {
+    projectModal.style.display = "none";
+  }
+});
