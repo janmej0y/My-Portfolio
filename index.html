@@ -7,6 +7,9 @@
   <title>Janmejoy Mahato | Portfolio</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <!-- Font Awesome (icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p0fQ4kqQY0GgF2t+G6p0xQ2I3KZ4QF3q2PZ9e7sK6g9f3s1b7q6A0x9mZ0u1mYkYv1e4Wz7a3Qf1vYk1+5a2Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
   (function(){
@@ -27,12 +30,18 @@
   <div id="loading" class="fixed inset-0 flex items-center justify-center bg-gray-900 z-50">
     <div class="loader"></div>
   </div>
-  <!-- NAVBAR -->
-<nav id="navbar" class="fixed top-0 left-0 w-full backdrop-blur-lg bg-black bg-opacity-40 border-b border-cyan-400 z-50">
-  <div class="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center">
+<!-- NAVBAR -->
+<nav id="navbar" class="fixed top-0 left-0 w-full backdrop-blur-lg bg-black bg-opacity-40 border-b border-cyan-400 z-50 transition-all duration-300">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center relative">
+
     <h2 class="text-xl font-bold text-cyan-400">JM Portfolio</h2>
 
-    <ul class="hidden md:flex space-x-6 text-cyan-300 font-semibold">
+    <!-- Links -->
+    <ul id="nav-links" class="hidden md:flex space-x-6 font-semibold relative">
+      
+      <!-- Floating Indicator -->
+      <span id="indicator"></span>
+
       <li><a href="#about" class="nav-link">About</a></li>
       <li><a href="#education" class="nav-link">Education</a></li>
       <li><a href="#projects" class="nav-link">Projects</a></li>
@@ -55,6 +64,7 @@
     <a href="#contact" class="nav-link">Contact</a>
   </div>
 </nav>
+
 
 
   <div id="theme-toggle">
@@ -119,39 +129,46 @@
   
 
   <section id="education" class="education-section fade-in">
-    <h2>Education</h2>
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-icon">🎓</div>
-        <div class="timeline-content">
+    <h2>EDUCATION</h2>
+  
+    <div class="edu-timeline">
+  
+      <!-- ITEM 1 -->
+      <div class="edu-item left">
+        <div class="edu-dot"></div>
+        <div class="edu-card">
           <h3>B. Tech in Computer Science & Engineering</h3>
-          <span class="edu-institute">Greater Kolkata College of Engineering & Management</span>
-          <span class="edu-year">2022 – 2026</span>
-          <p>CGPA: <strong>7/10</strong></p>
+          <p class="inst">Greater Kolkata College of Engineering & Management</p>
+          <span class="year">2022 – 2026</span>
+          <p class="info">CGPA: <strong>7/10</strong></p>
         </div>
       </div>
   
-      <div class="timeline-item">
-        <div class="timeline-icon">🏫</div>
-        <div class="timeline-content">
+      <!-- ITEM 2 -->
+      <div class="edu-item right">
+        <div class="edu-dot"></div>
+        <div class="edu-card">
           <h3>Higher Secondary – WBCHSE</h3>
-          <span class="edu-institute">R.B.B. High (H.S) School</span>
-          <span class="edu-year">2021 – 2022</span>
-          <p>Percentage: <strong>85.60%</strong></p>
+          <p class="inst">R.B.B. High (H.S) School</p>
+          <span class="year">2021 – 2022</span>
+          <p class="info">Percentage: <strong>85.60%</strong></p>
         </div>
       </div>
   
-      <div class="timeline-item">
-        <div class="timeline-icon">📘</div>
-        <div class="timeline-content">
+      <!-- ITEM 3 -->
+      <div class="edu-item left">
+        <div class="edu-dot"></div>
+        <div class="edu-card">
           <h3>Secondary – WBBSE</h3>
-          <span class="edu-institute">R.B.B. High (H.S) School</span>
-          <span class="edu-year">2019 – 2020</span>
-          <p>Percentage: <strong>69.70%</strong></p>
+          <p class="inst">R.B.B. High (H.S) School</p>
+          <span class="year">2019 – 2020</span>
+          <p class="info">Percentage: <strong>69.70%</strong></p>
         </div>
       </div>
+  
     </div>
   </section>
+  
   
 
   <section id="projects" class="py-16 container mx-auto px-6 fade-in">
@@ -225,70 +242,92 @@
   </section>
 
   <section id="contact" class="contact-section fade-in">
-    <h2 class="section-title">📬 Get In Touch</h2>
-    <p class="contact-subtext">Feel free to reach out for collaborations, opportunities, or just to say hi!</p>
+
+    <div class="contact-bg-waves"></div>
   
-    <div class="contact-container">
-      <!-- Contact Info Cards -->
-      <div class="contact-info">
-        <div class="info-card">
-          <i class="fas fa-envelope"></i>
+    <h2 class="contact-title">📬 Get In Touch</h2>
+    <p class="contact-subtext">Let's collaborate, build something amazing, or just have a chat!</p>
+  
+    <div class="contact-3-wrapper">
+  
+      <!-- LEFT CARDS -->
+      <div class="contact-3-info">
+  
+        <div class="c3-card">
+          <div class="c3-icon"><i class="fas fa-envelope"></i></div>
           <h3>Email</h3>
           <p>janmejoymahato529@gmail.com</p>
-          <a href="mailto:janmejoymahato529@gmail.com" class="btn-glow">Send Mail</a>
+          <a href="mailto:janmejoymahato529@gmail.com" class="c3-btn">Send Mail</a>
         </div>
-        <div class="info-card">
-          <i class="fas fa-phone"></i>
+  
+        <div class="c3-card">
+          <div class="c3-icon"><i class="fas fa-phone"></i></div>
           <h3>Phone</h3>
           <p>+91 7477661933</p>
-          <a href="tel:+917477661933" class="btn-glow">Call Now</a>
+          <a href="tel:+917477661933" class="c3-btn">Call Now</a>
         </div>
-        <div class="info-card">
-          <i class="fab fa-linkedin"></i>
+  
+        <div class="c3-card">
+          <div class="c3-icon"><i class="fab fa-linkedin"></i></div>
           <h3>LinkedIn</h3>
           <p>@janmejoy</p>
-          <a href="https://linkedin.com/in/janmejoy" target="_blank" class="btn-glow">Visit</a>
+          <a href="https://linkedin.com/in/janmejoy" target="_blank" class="c3-btn">Visit</a>
         </div>
+  
       </div>
   
-     <!-- Contact Form -->
-     <form id="contact-form" class="contact-form">
-      <input 
-        type="text" 
-        class="input-field" 
-        name="from_name" 
-        placeholder="Your Name" 
-        required
-      />
-    
-      <input 
-        type="email" 
-        class="input-field" 
-        name="from_email" 
-        placeholder="Your Email" 
-        required
-      />
-    
-      <textarea 
-        class="input-field" 
-        name="message" 
-        placeholder="Your Message" 
-        rows="5" 
-        required
-      ></textarea>
-    
-      <button type="submit" class="btn-glow">🚀 Send Message</button>
-    </form>
-    
-<p id="form-status"></p>
-
-      
-      <div class="mt-6 flex justify-center space-x-6">
-        <a href="www.linkedin.com/in/janmej0y">LinkedIn</a>
-        <a href="https://github.com/janmej0y">GitHub</a>
-      </div>
+      <!-- RIGHT FORM -->
+      <form id="contact-form" class="contact-3-form">
+  
+        <div class="c3-group">
+          <input type="text" name="from_name" required>
+          <label>Your Name</label>
+          <span class="focus-border"></span>
+        </div>
+  
+        <div class="c3-group">
+          <input type="email" name="from_email" required>
+          <label>Your Email</label>
+          <span class="focus-border"></span>
+        </div>
+  
+        <div class="c3-group">
+          <textarea name="message" rows="4" required></textarea>
+          <label>Your Message</label>
+          <span class="focus-border"></span>
+        </div>
+  
+        <button type="submit" class="c3-send-btn">
+          <span>🚀 Send Message</span>
+        </button>
+  
+        <p id="form-status"></p>
+      </form>
+  
     </div>
+  
+    <!-- Social Animated Icons -->
+    <div class="contact-3-social" aria-label="Social links">
+      <a class="orb" href="https://linkedin.com/in/janmej0y" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    
+      <a class="orb" href="https://github.com/janmej0y" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+    
+      <a class="orb" href="mailto:janmejoymahato529@gmail.com" aria-label="Email">
+        <i class="fas fa-envelope"></i>
+      </a>
+    
+      <a class="orb" href="https://instagram.com/janmej0y" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+    </div>
+    
+  
   </section>
+  
 
   <footer class="py-4 text-center bg-gray-900">
     <p>© 2025 Janmejoy Mahato. All Rights Reserved.</p>

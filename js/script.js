@@ -129,3 +129,116 @@ const observer = new IntersectionObserver(
 );
 
 fadeEls.forEach(el => observer.observe(el));
+
+const menuBtn = document.getElementById("menu-btn");
+const mobileMenu = document.getElementById("mobile-menu");
+
+menuBtn.addEventListener("click", () => {
+  mobileMenu.classList.toggle("hidden");
+});
+
+const navLinks = document.querySelectorAll(".nav-link");
+
+window.addEventListener("scroll", () => {
+  let fromTop = window.scrollY + 150;
+
+  navLinks.forEach(link => {
+    const section = document.querySelector(link.getAttribute("href"));
+
+    if (
+      section.offsetTop <= fromTop &&
+      section.offsetTop + section.offsetHeight > fromTop
+    ) {
+      navLinks.forEach(l => l.classList.remove("active"));
+      link.classList.add("active");
+    }
+  });
+});
+
+navLinks.forEach(link => {
+  link.addEventListener("click", () => {
+    mobileMenu.classList.add("hidden");
+  });
+});
+// navbar background change on scroll
+/* Floating nav indicator */
+const indicator = document.getElementById("indicator");
+const navContainer = document.getElementById("nav-links");
+
+function moveIndicator(activeLink) {
+  const rect = activeLink.getBoundingClientRect();
+  const parentRect = navContainer.getBoundingClientRect();
+
+  indicator.style.width = rect.width + "px";
+  indicator.style.left = rect.left - parentRect.left + "px";
+}
+
+navLinks.forEach(link => {
+  link.addEventListener("mouseenter", () => moveIndicator(link));
+});
+
+navContainer.addEventListener("mouseleave", () => {
+  const activeLink = document.querySelector(".nav-link.active");
+  if (activeLink) moveIndicator(activeLink);
+});
+/* Scroll spy + indicator update */
+window.addEventListener("scroll", () => {
+  let fromTop = window.scrollY + 200;
+
+  navLinks.forEach(link => {
+    const section = document.querySelector(link.getAttribute("href"));
+
+    if (
+      section.offsetTop <= fromTop &&
+      section.offsetTop + section.offsetHeight > fromTop
+    ) {
+      navLinks.forEach(l => l.classList.remove("active"));
+      link.classList.add("active");
+      moveIndicator(link);
+    }
+  });
+});
+/* Navbar auto hide/show */
+let lastScroll = 0;
+
+window.addEventListener("scroll", () => {
+  const currentScroll = window.scrollY;
+  const navbar = document.getElementById("navbar");
+
+  if (currentScroll > lastScroll && currentScroll > 200) {
+    navbar.classList.add("hide");
+    navbar.classList.remove("show");
+  } else {
+    navbar.classList.add("show");
+    navbar.classList.remove("hide");
+  }
+
+  lastScroll = currentScroll;
+});
+
+/* EDUCATION TIMELINE ANIMATION */
+const eduItems = document.querySelectorAll(".edu-item");
+
+const eduObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+      eduObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+eduItems.forEach(item => eduObserver.observe(item));
+
+/* Optional: ensure mailto opens in new tab/window for some browsers */
+document.querySelectorAll('.contact-3-social .orb').forEach(orb => {
+  orb.addEventListener('click', (e) => {
+    const href = orb.getAttribute('href');
+    if (!href) return;
+    // mailto handled by default; for analytics you could send event here.
+    // Example: open mailto in new window (some browsers block this, so keep as fallback)
+    if (href.startsWith('mailto:')) {
+      window.open(href, '_blank');
+    }
+  });
+});
