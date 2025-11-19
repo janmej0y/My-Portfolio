@@ -1296,3 +1296,110 @@ html {
   color: #000;
   box-shadow: 0 0 20px #fff;
 }
+
+/* ==== SKILLS SECTION ==== */
+.skills-section {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+.skills-container {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.skill-group {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--highlight);
+  padding: 1.8rem;
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+  text-align: center;
+  transition: 0.3s ease-in-out;
+  box-shadow: 0 0 15px rgba(0,255,255,0.15);
+}
+
+.skill-group:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 25px var(--highlight);
+}
+
+.skill-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.skill-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,255,255,0.07);
+  border: 1px solid var(--highlight);
+  padding: 8px 14px;
+  border-radius: 12px;
+  color: var(--highlight);
+  font-weight: 600;
+  box-shadow: 0 0 8px rgba(0,255,255,0.25);
+  transition: 0.3s ease;
+}
+
+.skill-item img {
+  width: 28px;
+  height: 28px;
+}
+
+.skill-item:hover {
+  transform: translateY(-4px);
+  background: var(--highlight);
+  color: #000;
+  box-shadow: 0 0 20px var(--highlight), 0 0 40px var(--highlight);
+}
+
+/* ==== CERTIFICATIONS SECTION ==== */
+.certifications-section {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.cert-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-top: 2rem;
+}
+
+.cert-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--highlight);
+  padding: 2rem 1.5rem;
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+  transition: 0.3s ease-in-out;
+  box-shadow: 0 0 15px rgba(0,255,255,0.15);
+  text-align: center;
+}
+
+.cert-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 25px var(--highlight), 0 0 40px var(--highlight);
+}
+
+.cert-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 8px var(--highlight));
+}
+
+.cert-card h3 {
+  color: var(--highlight);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.cert-card p {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
