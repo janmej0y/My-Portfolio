@@ -338,3 +338,38 @@ window.addEventListener("click", (e) => {
     projectModal.style.display = "none";
   }
 });
+
+/* ==========================
+   COUNT-UP ANIMATION
+========================== */
+const counters = document.querySelectorAll(".count");
+
+const startCounter = (entry) => {
+  if (!entry.isIntersecting) return;
+
+  counters.forEach(counter => {
+    let target = +counter.dataset.target;
+    let count = 0;
+
+    let speed = target / 60; // animation speed
+
+    let update = () => {
+      count += speed;
+      if (count < target) {
+        counter.textContent = Math.floor(count);
+        requestAnimationFrame(update);
+      } else {
+        counter.textContent = target + "+";
+      }
+    };
+    update();
+  });
+
+  counterObserver.unobserve(entry.target);
+};
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(startCounter);
+}, { threshold: 0.4 });
+
+counters.forEach(counter => counterObserver.observe(counter));
