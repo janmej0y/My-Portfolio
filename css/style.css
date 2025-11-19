@@ -1543,3 +1543,71 @@ html {
   font-size: 0.9rem;
   opacity: 0.8;
 }
+/* ============================
+   HERO MOBILE FIXES
+============================ */
+
+@media (max-width: 600px) {
+
+  /* Hero layout */
+  #hero {
+    padding: 3rem 1rem 2rem;
+    text-align: center;
+  }
+
+  #hero .hero-inner {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Title fix */
+  #hero h1 {
+    font-size: 2rem !important;
+    line-height: 2.3rem !important;
+    margin-bottom: 0.8rem;
+  }
+
+  #hero p {
+    font-size: 0.95rem;
+    margin-bottom: 1.4rem;
+  }
+
+  /* Buttons stack cleanly */
+  .hero-buttons,
+  #hero .btn {
+    width: 100%;
+  }
+
+  #hero .btn {
+    margin-bottom: 10px !important;
+    display: block !important;
+    text-align: center;
+    padding: 0.8rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  /* Prevent overlapping */
+  #hero .btn:nth-child(2) {
+    margin-top: 0.5rem !important;
+  }
+}
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+}
+/* Toggle button moves down on mobile */
+@media (max-width: 600px) {
+  #theme-toggle {
+    top: 80px !important;
+    right: 15px !important;
+    z-index: 9999;
+  }
+}
+@media (max-width: 600px) {
+  #particles-js {
+    transform: scale(1.05);
+  }
+}
