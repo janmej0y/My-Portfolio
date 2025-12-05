@@ -156,7 +156,29 @@
     </div>
   </section>
   
-  
+  <!-- 🎮 Neon Snake Game Floating Button -->
+<button id="snake-game-btn" class="snake-btn">🎮</button>
+
+<!-- 🎮 Snake Game Modal -->
+<div id="snake-modal" class="snake-modal">
+  <div class="snake-modal-content">
+    <span id="snake-close" class="snake-close">&times;</span>
+
+    <h2 class="snake-title">NEON SNAKE</h2>
+    <canvas id="snake-canvas" width="400" height="400"></canvas>
+
+    <div class="snake-ui">
+      <button id="snake-start" class="snake-control">Start</button>
+      <button id="snake-restart" class="snake-control">Restart</button>
+      <p class="snake-score">Score: <span id="snake-score">0</span></p>
+    </div>
+  </div>
+</div>
+<!-- Snake Game Sounds -->
+<audio id="eat-sound" src="assets/eat.mp3"></audio>
+<audio id="move-sound" src="assets/movesound.mp3"></audio>
+<audio id="gameover-sound" src="assets/gameover.mp3"></audio>
+
 
   <section id="education" class="education-section fade-in">
     <h2>EDUCATION</h2>
@@ -616,7 +638,44 @@
         <p id="form-status"></p>
       </form>
   
+    </div> 
+    <!-- ========== EASTER EGG HUNT (Feature 2) ========== -->
+<!-- Progress HUD -->
+<div id="egg-hud" class="egg-hud">
+  <div class="egg-hud-inner">
+    <div class="egg-counter">Eggs found: <span id="egg-count">0</span>/5</div>
+    <div class="egg-progress">
+      <div id="egg-progress-bar" class="egg-progress-bar"></div>
     </div>
+    <button id="egg-hint-btn" class="egg-hint-btn" title="Show a hint">🔦 Hint</button>
+  </div>
+</div>
+
+<!-- Hidden eggs (floating clickable items) -->
+<!-- You can move these eggs inside any container or position manually; they're absolute by default -->
+<div id="egg-1" class="egg hidden-egg" data-egg="1" style="top:14%; left:8%;" aria-label="hidden egg 1" tabindex="0"></div>
+<div id="egg-2" class="egg hidden-egg" data-egg="2" style="top:36%; left:78%;" aria-label="hidden egg 2" tabindex="0"></div>
+<div id="egg-3" class="egg hidden-egg" data-egg="3" style="top:64%; left:22%;" aria-label="hidden egg 3" tabindex="0"></div>
+<div id="egg-4" class="egg hidden-egg" data-egg="4" style="top:78%; left:56%;" aria-label="hidden egg 4" tabindex="0"></div>
+<div id="egg-5" class="egg hidden-egg" data-egg="5" style="top:50%; left:46%;" aria-label="hidden egg 5" tabindex="0"></div>
+
+<!-- Unlock modal -->
+<div id="egg-unlock-modal" class="egg-unlock-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="egg-unlock-content">
+    <button id="egg-unlock-close" class="egg-unlock-close" aria-label="Close">&times;</button>
+    <h2>🎉 Secret Unlocked!</h2>
+    <p>You found all 5 eggs — the <strong>Secret Room</strong> is now unlocked.</p>
+    <div class="egg-unlock-actions">
+      <button id="egg-open-secret" class="btn">Enter Secret Room</button>
+      <button id="egg-reset" class="btn">Reset Hunt</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sound effects (optional) -->
+<audio id="egg-found-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-balloon-pop-499.wav"></audio>
+<audio id="egg-hint-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.wav"></audio>
+
   
     <!-- Social Animated Icons -->
     <div class="contact-3-social" aria-label="Social links">

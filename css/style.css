@@ -1611,3 +1611,279 @@ html {
     transform: scale(1.05);
   }
 }
+/* ================================
+   🎮 Neon Snake Floating Button
+================================ */
+.snake-btn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: var(--highlight);
+  color: #000;
+  font-size: 1.8rem;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2200;
+  box-shadow: 0 0 20px var(--highlight), 0 0 40px var(--highlight);
+  transition: 0.3s ease;
+}
+
+.snake-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 30px var(--highlight), 0 0 60px var(--highlight);
+}
+
+/* ================================
+   🎮 Modal Styling
+================================ */
+.snake-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+}
+
+.snake-modal-content {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--highlight);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 18px;
+  text-align: center;
+  width: 420px;
+  box-shadow: 0 0 25px var(--highlight);
+}
+
+.snake-close {
+  float: right;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--highlight);
+  transition: 0.3s;
+}
+
+.snake-close:hover {
+  color: white;
+}
+
+/* Title */
+.snake-title {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: var(--highlight);
+  text-shadow: 0 0 8px var(--highlight);
+}
+
+/* Canvas */
+#snake-canvas {
+  background: rgba(0,0,0,0.5);
+  border: 2px solid var(--highlight);
+  box-shadow: inset 0 0 20px var(--highlight);
+}
+
+/* UI */
+.snake-ui {
+  margin-top: 12px;
+}
+
+.snake-control {
+  padding: 8px 16px;
+  margin: 5px;
+  background: transparent;
+  border: 2px solid var(--highlight);
+  color: var(--highlight);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.snake-control:hover {
+  background: var(--highlight);
+  color: #000;
+  box-shadow: 0 0 20px var(--highlight);
+}
+
+.snake-score {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: var(--highlight);
+  text-shadow: 0 0 8px var(--highlight);
+}
+/* Neon Explosion */
+.explosion {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, #00ffff, transparent);
+  animation: explode 0.4s ease-out forwards;
+}
+
+@keyframes explode {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+/* ========== EASTER EGG HUNT STYLES ========== */
+
+/* HUD */
+.egg-hud {
+  position: fixed;
+  left: 16px;
+  bottom: 18px;
+  z-index: 3500;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(10px);
+  padding: 10px 12px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px var(--highlight-glow);
+  display:flex;
+  gap:10px;
+  align-items:center;
+  min-width:200px;
+}
+
+/* inner */
+.egg-hud-inner{ display:flex; gap:12px; align-items:center; width:100% }
+.egg-counter { color:var(--text-color); font-weight:700; font-size:0.95rem; }
+.egg-progress{ flex:1; height:8px; background:rgba(255,255,255,0.02); border-radius:6px; overflow:hidden; border:1px solid var(--card-border) }
+.egg-progress-bar{ width:0%; height:100%; background:linear-gradient(90deg, var(--highlight), rgba(255,255,255,0.12)); transition:width .5s cubic-bezier(.2,.8,.2,1) }
+
+/* hint button */
+.egg-hint-btn{
+  padding:6px 10px; border-radius:8px; border:1px solid var(--card-border);
+  background:transparent; color:var(--highlight); cursor:pointer; font-weight:700;
+}
+.egg-hint-btn:hover{ background:var(--highlight); color:#000; box-shadow:0 8px 30px var(--highlight-glow) }
+
+/* The eggs (click targets) */
+.egg {
+  position: fixed;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  z-index: 3400;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition: transform .24s ease, opacity .3s ease;
+  filter: drop-shadow(0 10px 24px var(--highlight-glow));
+}
+
+/* initial hidden style (low opacity) */
+.hidden-egg {
+  opacity:0.06;
+  transform: scale(.96);
+  pointer-events:auto;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.06), transparent 60%), linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 2px dashed rgba(255,255,255,0.03);
+}
+
+/* egg visual (glow orb) */
+.hidden-egg::before{
+  content:"";
+  width:72%;
+  height:72%;
+  display:block;
+  border-radius:50%;
+  background: conic-gradient(var(--highlight) 0deg, rgba(255,255,255,0.05) 90deg);
+  box-shadow: 0 0 16px var(--highlight-glow), inset 0 0 8px rgba(255,255,255,0.02);
+  transition: transform .18s ease, opacity .18s ease;
+  transform: scale(0.92);
+}
+
+/* hover -> show */
+.hidden-egg:hover,
+.hidden-egg:focus {
+  opacity:1;
+  transform: scale(1.06);
+}
+.hidden-egg:focus { outline: none; box-shadow: 0 0 24px var(--highlight-glow) }
+
+/* when collected */
+.egg.collected {
+  opacity: 0.0;
+  pointer-events:none;
+  transform: scale(.6);
+}
+
+/* burst animation when collected (temporary element) */
+.egg-burst {
+  position: absolute; width: 8px; height:8px; border-radius:50%;
+  background: var(--highlight); box-shadow:0 0 18px var(--highlight-glow);
+  animation: egg-burst 600ms ease-out forwards;
+}
+@keyframes egg-burst {
+  0% { transform: translateY(0) scale(0.6); opacity:1 }
+  60% { transform: translateY(-30px) scale(1.8); opacity:1 }
+  100% { transform: translateY(-60px) scale(0.2); opacity:0 }
+}
+
+/* Unlock modal */
+.egg-unlock-modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:3600; align-items:center; justify-content:center }
+.egg-unlock-content{
+  width: min(92%, 640px); padding:20px; border-radius:14px; text-align:center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border:1px solid var(--card-border); box-shadow:0 12px 48px var(--highlight-glow);
+}
+.egg-unlock-close{ float:right; font-size:1.8rem; background:none; border:none; color:var(--highlight); cursor:pointer }
+.egg-unlock-actions{ display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap }
+.egg-unlock-actions .btn{ padding:8px 14px; border-radius:10px; border:2px solid var(--highlight) }
+/* ========== EGG HINT ARROW ========== */
+.egg-hint-arrow {
+  position: fixed;
+  width: 56px;
+  height: 56px;
+  z-index: 3700;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  opacity: 1;
+  filter: drop-shadow(0 10px 30px var(--highlight-glow));
+}
+
+/* arrow graphic (triangle + tail) */
+.egg-hint-arrow::before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 18px solid var(--highlight);
+  box-shadow: 0 0 16px var(--highlight-glow);
+  transform: translateY(2px);
+}
+
+/* a soft pulsing halo behind the arrow */
+.egg-hint-arrow::after {
+  content: "";
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--highlight-glow), transparent 40%);
+  opacity: 0.9;
+  transform: scale(0.9);
+  animation: eggHintPulse 1.4s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes eggHintPulse {
+  0% { transform: scale(0.9); opacity: 0.9; }
+  50% { transform: scale(1.12); opacity: 0.7; }
+  100% { transform: scale(0.9); opacity: 0.9; }
+}
+
+/* hide animation */
+.egg-hint-arrow--hide { opacity: 0; transform: scale(0.7) translateY(-8px); transition: opacity .35s ease, transform .35s ease; }
