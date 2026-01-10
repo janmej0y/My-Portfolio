@@ -3,7 +3,7 @@
 A modern, high-tech, and interactive personal portfolio website built with **HTML, CSS, and JavaScript**.  
 It showcases my skills, education, projects, certifications, and contact details.
 
----
+-----
 
 ## ✨ Features
 - ⚡ Animated Hero Section with particle effects  
