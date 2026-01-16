@@ -286,6 +286,18 @@ const projectData = {
     desc: "A personalized offline voice assistant built with Python, using speech recognition and automation."
   },
 
+  renthub: {
+    title: "RentHub",
+    img: "assets/projects/RentHub.png",
+    desc: "Full-stack Room Finder application built with Next.js, Supabase Auth & Storage, featuring CRUD listings, search filters, and responsive UI."
+  },
+
+  baklol: {
+    title: "Baklol ChatBot",
+    img: "assets/projects/baklol.png",
+    desc: "A clean Gemini-style interface, real-time chat experience, and a secure backend API route for handling AI requests."
+  },
+
   coins: {
     title: "Campus Coins",
     img: "assets/projects/coins.png",
