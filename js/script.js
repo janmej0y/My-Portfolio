@@ -782,6 +782,28 @@ window.addEventListener("secret-room-unlocked", (e) => {
   const secretModal = document.getElementById("secret-room-modal");
   if (secretModal) secretModal.style.display = "flex";
 });
+function getDeviceInfo() {
+  const ua = navigator.userAgent;
+
+  const isMobile = /mobile/i.test(ua);
+
+  const browser =
+    ua.includes("Chrome") ? "Chrome" :
+    ua.includes("Firefox") ? "Firefox" :
+    ua.includes("Safari") ? "Safari" :
+    ua.includes("Edg") ? "Edge" :
+    "Unknown";
+
+  const os =
+    ua.includes("Windows") ? "Windows" :
+    ua.includes("Mac") ? "MacOS" :
+    ua.includes("Linux") ? "Linux" :
+    ua.includes("Android") ? "Android" :
+    ua.includes("iPhone") ? "iOS" :
+    "Unknown OS";
+
+  return `${isMobile ? "Mobile" : "Desktop"} | ${browser} | ${os}`;
+}
 async function trackVisitor() {
   try {
     const ipRes = await fetch("https://api.ipify.org?format=json");
@@ -795,28 +817,7 @@ async function trackVisitor() {
       body: JSON.stringify({
         ip: ipData.ip,
         page: window.location.href,
-        getDeviceInfo() {
-          const ua = navigator.userAgent;
-        
-          const isMobile = /mobile/i.test(ua);
-          const browser =
-            ua.includes("Chrome") ? "Chrome" :
-            ua.includes("Firefox") ? "Firefox" :
-            ua.includes("Safari") ? "Safari" :
-            ua.includes("Edge") ? "Edge" :
-            "Unknown";
-        
-          const os =
-            ua.includes("Windows") ? "Windows" :
-            ua.includes("Mac") ? "MacOS" :
-            ua.includes("Linux") ? "Linux" :
-            ua.includes("Android") ? "Android" :
-            ua.includes("iPhone") ? "iOS" :
-            "Unknown OS";
-        
-          return `${isMobile ? "Mobile" : "Desktop"} | ${browser} | ${os}`;
-        },
-        
+        device: getDeviceInfo(),
         time: new Date().toLocaleString()
       })
     });
@@ -826,21 +827,11 @@ async function trackVisitor() {
   }
 }
 
-trackVisitor();
+loadTotalVisitors();
 async function loadTotalVisitors() {
-  const res = await fetch("/api/track", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      ip: "hidden",
-      page: window.location.href,
-      device: "viewer",
-      time: new Date().toLocaleString()
-    })
-  });
-
+  const res = await fetch("/api/track");
   const data = await res.json();
+
   document.getElementById("visitor-count").innerText = data.totalVisits;
 }
-
 loadTotalVisitors();

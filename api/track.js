@@ -6,36 +6,51 @@ const redis = new Redis({
 });
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+
+  // ===============================
+  // 🔹 GET → Return total visits
+  // ===============================
+  if (req.method === "GET") {
+    try {
+      const totalVisits = await redis.get("portfolio:total_visits") || 0;
+      return res.status(200).json({ totalVisits });
+    } catch (error) {
+      return res.status(500).json({ error: "Failed to load count" });
+    }
   }
 
-  const { ip, page, device, time } = req.body;
+  // ===============================
+  // 🔹 POST → Track visitor
+  // ===============================
+  if (req.method === "POST") {
+    const { ip, page, device, time } = req.body;
 
-  try {
-    // 🔥 This increments permanently in database
-    const totalVisits = await redis.incr("portfolio:total_visits");
+    try {
+      const totalVisits = await redis.incr("portfolio:total_visits");
 
-    const message = {
-      content: `👀 **New Visitor**
-      
+      const message = {
+        content: `👀 **New Visitor**
+        
 🌍 IP: ${ip}
 🖥 Device: ${device}
 📄 Page: ${page}
 ⏰ Time: ${time}
 
 📊 TOTAL VISITS (Since Launch): **${totalVisits}**`
-    };
+      };
 
-    await fetch(process.env.DISCORD_WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(message)
-    });
+      await fetch(process.env.DISCORD_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(message)
+      });
 
-    res.status(200).json({ totalVisits });
+      return res.status(200).json({ totalVisits });
 
-  } catch (error) {
-    res.status(500).json({ error: "Tracking failed" });
+    } catch (error) {
+      return res.status(500).json({ error: "Tracking failed" });
+    }
   }
+
+  return res.status(405).json({ message: "Method not allowed" });
 }
