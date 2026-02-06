@@ -795,7 +795,28 @@ async function trackVisitor() {
       body: JSON.stringify({
         ip: ipData.ip,
         page: window.location.href,
-        device: navigator.userAgent,
+        getDeviceInfo() {
+          const ua = navigator.userAgent;
+        
+          const isMobile = /mobile/i.test(ua);
+          const browser =
+            ua.includes("Chrome") ? "Chrome" :
+            ua.includes("Firefox") ? "Firefox" :
+            ua.includes("Safari") ? "Safari" :
+            ua.includes("Edge") ? "Edge" :
+            "Unknown";
+        
+          const os =
+            ua.includes("Windows") ? "Windows" :
+            ua.includes("Mac") ? "MacOS" :
+            ua.includes("Linux") ? "Linux" :
+            ua.includes("Android") ? "Android" :
+            ua.includes("iPhone") ? "iOS" :
+            "Unknown OS";
+        
+          return `${isMobile ? "Mobile" : "Desktop"} | ${browser} | ${os}`;
+        },
+        
         time: new Date().toLocaleString()
       })
     });
