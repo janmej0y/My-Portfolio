@@ -1,56 +1,46 @@
-import { Redis } from "@upstash/redis";
-
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
+let totalVisits = 0; // memory counter (resets on redeploy)
 
 export default async function handler(req, res) {
-
-  // ===============================
-  // 🔹 GET → Return total visits
-  // ===============================
-  if (req.method === "GET") {
-    try {
-      const totalVisits = await redis.get("portfolio:total_visits") || 0;
-      return res.status(200).json({ totalVisits });
-    } catch (error) {
-      return res.status(500).json({ error: "Failed to load count" });
-    }
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
-  // ===============================
-  // 🔹 POST → Track visitor
-  // ===============================
-  if (req.method === "POST") {
-    const { ip, page, device, time } = req.body;
+  const { ip, page, device, time } = req.body;
 
-    try {
-      const totalVisits = await redis.incr("portfolio:total_visits");
+  try {
+    // Increase total visits
+    totalVisits++;
 
-      const message = {
-        content: `👀 **New Visitor**
-        
+    // Get location
+    const geoRes = await fetch(`http://ip-api.com/json/${ip}`);
+    const geoData = await geoRes.json();
+
+    const location = `${geoData.city || "Unknown"}, ${geoData.country || ""}`;
+
+    const message = {
+      content: `👀 **New Visitor**
+      
 🌍 IP: ${ip}
-🖥 Device: ${device}
+📍 Location: ${location}
+🖥️ Device: ${device}
 📄 Page: ${page}
 ⏰ Time: ${time}
 
-📊 TOTAL VISITS (Since Launch): **${totalVisits}**`
-      };
+📊 TOTAL VISITS: **${totalVisits}**`
+    };
 
-      await fetch(process.env.DISCORD_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(message)
-      });
+    await fetch(process.env.DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(message)
+    });
 
-      return res.status(200).json({ totalVisits });
+    res.status(200).json({
+      success: true,
+      totalVisits
+    });
 
-    } catch (error) {
-      return res.status(500).json({ error: "Tracking failed" });
-    }
+  } catch (error) {
+    res.status(500).json({ error: "Tracking failed" });
   }
-
-  return res.status(405).json({ message: "Method not allowed" });
 }

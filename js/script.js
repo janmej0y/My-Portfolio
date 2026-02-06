@@ -782,29 +782,6 @@ window.addEventListener("secret-room-unlocked", (e) => {
   const secretModal = document.getElementById("secret-room-modal");
   if (secretModal) secretModal.style.display = "flex";
 });
-function getDeviceInfo() {
-  const ua = navigator.userAgent;
-
-  const isMobile = /mobile/i.test(ua);
-
-  const browser =
-    ua.includes("Chrome") ? "Chrome" :
-    ua.includes("Firefox") ? "Firefox" :
-    ua.includes("Safari") ? "Safari" :
-    ua.includes("Edg") ? "Edge" :
-    "Unknown";
-
-  const os =
-    ua.includes("Windows") ? "Windows" :
-    ua.includes("Mac") ? "MacOS" :
-    ua.includes("Linux") ? "Linux" :
-    ua.includes("Android") ? "Android" :
-    ua.includes("iPhone") ? "iOS" :
-    "Unknown OS";
-
-  return `${isMobile ? "Mobile" : "Desktop"} | ${browser} | ${os}`;
-}
-
 async function trackVisitor() {
   try {
     const ipRes = await fetch("https://api.ipify.org?format=json");
@@ -812,31 +789,41 @@ async function trackVisitor() {
 
     await fetch("/api/track", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         ip: ipData.ip,
         page: window.location.href,
-        device: getDeviceInfo(),
+        getDeviceInfo() {
+          const ua = navigator.userAgent;
+        
+          const isMobile = /mobile/i.test(ua);
+          const browser =
+            ua.includes("Chrome") ? "Chrome" :
+            ua.includes("Firefox") ? "Firefox" :
+            ua.includes("Safari") ? "Safari" :
+            ua.includes("Edge") ? "Edge" :
+            "Unknown";
+        
+          const os =
+            ua.includes("Windows") ? "Windows" :
+            ua.includes("Mac") ? "MacOS" :
+            ua.includes("Linux") ? "Linux" :
+            ua.includes("Android") ? "Android" :
+            ua.includes("iPhone") ? "iOS" :
+            "Unknown OS";
+        
+          return `${isMobile ? "Mobile" : "Desktop"} | ${browser} | ${os}`;
+        },
+        
         time: new Date().toLocaleString()
       })
     });
 
   } catch (error) {
-    console.log("Tracking failed", error);
+    console.log("Tracking failed");
   }
 }
 
-async function loadTotalVisitors() {
-  try {
-    const res = await fetch("/api/track");
-    const data = await res.json();
-    document.getElementById("visitor-count").innerText = data.totalVisits || 0;
-  } catch (error) {
-    console.log("Failed to load count", error);
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  trackVisitor();
-  loadTotalVisitors();
-});
+trackVisitor();
