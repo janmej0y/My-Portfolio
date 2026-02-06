@@ -804,6 +804,7 @@ function getDeviceInfo() {
 
   return `${isMobile ? "Mobile" : "Desktop"} | ${browser} | ${os}`;
 }
+
 async function trackVisitor() {
   try {
     const ipRes = await fetch("https://api.ipify.org?format=json");
@@ -811,9 +812,7 @@ async function trackVisitor() {
 
     await fetch("/api/track", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ip: ipData.ip,
         page: window.location.href,
@@ -823,15 +822,21 @@ async function trackVisitor() {
     });
 
   } catch (error) {
-    console.log("Tracking failed");
+    console.log("Tracking failed", error);
   }
 }
 
-loadTotalVisitors();
 async function loadTotalVisitors() {
-  const res = await fetch("/api/track");
-  const data = await res.json();
-
-  document.getElementById("visitor-count").innerText = data.totalVisits;
+  try {
+    const res = await fetch("/api/track");
+    const data = await res.json();
+    document.getElementById("visitor-count").innerText = data.totalVisits || 0;
+  } catch (error) {
+    console.log("Failed to load count", error);
+  }
 }
-loadTotalVisitors();
+
+document.addEventListener("DOMContentLoaded", () => {
+  trackVisitor();
+  loadTotalVisitors();
+});
