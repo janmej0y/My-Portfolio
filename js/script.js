@@ -782,3 +782,27 @@ window.addEventListener("secret-room-unlocked", (e) => {
   const secretModal = document.getElementById("secret-room-modal");
   if (secretModal) secretModal.style.display = "flex";
 });
+async function trackVisitor() {
+  try {
+    const ipRes = await fetch("https://api.ipify.org?format=json");
+    const ipData = await ipRes.json();
+
+    await fetch("/api/track", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        ip: ipData.ip,
+        page: window.location.href,
+        device: navigator.userAgent,
+        time: new Date().toLocaleString()
+      })
+    });
+
+  } catch (error) {
+    console.log("Tracking failed");
+  }
+}
+
+trackVisitor();
