@@ -827,3 +827,20 @@ async function trackVisitor() {
 }
 
 trackVisitor();
+async function loadTotalVisitors() {
+  const res = await fetch("/api/track", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      ip: "hidden",
+      page: window.location.href,
+      device: "viewer",
+      time: new Date().toLocaleString()
+    })
+  });
+
+  const data = await res.json();
+  document.getElementById("visitor-count").innerText = data.totalVisits;
+}
+
+loadTotalVisitors();

@@ -1,4 +1,9 @@
-let totalVisits = 0; // memory counter (resets on redeploy)
+import { Redis } from "@upstash/redis";
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -8,25 +13,18 @@ export default async function handler(req, res) {
   const { ip, page, device, time } = req.body;
 
   try {
-    // Increase total visits
-    totalVisits++;
-
-    // Get location
-    const geoRes = await fetch(`http://ip-api.com/json/${ip}`);
-    const geoData = await geoRes.json();
-
-    const location = `${geoData.city || "Unknown"}, ${geoData.country || ""}`;
+    // 🔥 This increments permanently in database
+    const totalVisits = await redis.incr("portfolio:total_visits");
 
     const message = {
       content: `👀 **New Visitor**
       
 🌍 IP: ${ip}
-📍 Location: ${location}
-🖥️ Device: ${device}
+🖥 Device: ${device}
 📄 Page: ${page}
 ⏰ Time: ${time}
 
-📊 TOTAL VISITS: **${totalVisits}**`
+📊 TOTAL VISITS (Since Launch): **${totalVisits}**`
     };
 
     await fetch(process.env.DISCORD_WEBHOOK_URL, {
@@ -35,10 +33,7 @@ export default async function handler(req, res) {
       body: JSON.stringify(message)
     });
 
-    res.status(200).json({
-      success: true,
-      totalVisits
-    });
+    res.status(200).json({ totalVisits });
 
   } catch (error) {
     res.status(500).json({ error: "Tracking failed" });
