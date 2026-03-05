@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
 
 type FlyingItem = {
   index: number;
@@ -38,9 +39,9 @@ export default function PlayfulFooterItems() {
   const [burstSeed, setBurstSeed] = useState(0);
 
   const particles = useMemo(() => {
-    return Array.from({ length: 16 }).map((_, index) => {
-      const angle = (Math.PI * 2 * index) / 16;
-      const distance = 72 + (index % 5) * 12;
+    return Array.from({ length: 32 }).map((_, index) => {
+      const angle = (Math.PI * 2 * index) / 32;
+      const distance = 110 + (index % 8) * 20;
       return {
         id: index,
         dx: Math.cos(angle) * distance,
@@ -203,10 +204,10 @@ export default function PlayfulFooterItems() {
                     onClick={startSequence}
                     animate={{ y: [0, -3 - (actualIndex % 3), 0] }}
                     transition={{
-                      duration: 1.9 + (actualIndex % 3) * 0.3,
+                      duration: DURATIONS.divider + (actualIndex % 3) * 0.3,
                       repeat: Infinity,
                       ease: "easeInOut",
-                      delay: actualIndex * 0.08,
+                      delay: actualIndex * STAGGER.block,
                     }}
                     className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-sm text-white/85 shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
                   >
@@ -221,7 +222,7 @@ export default function PlayfulFooterItems() {
               transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
               className="ml-auto flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200/85"
             >
-              <span className="text-sm">←</span>
+              <span className="text-sm">&larr;</span>
               <span>Touch me to see</span>
             </motion.div>
           </div>
@@ -241,7 +242,7 @@ export default function PlayfulFooterItems() {
             <div className="grid h-full place-items-center">
               <motion.div
                 animate={{ scale: [1, 1.06, 1], opacity: [0.8, 1, 0.8] }}
-                transition={{ duration: 0.9, repeat: Infinity }}
+                transition={{ duration: DURATIONS.divider * 0.47, repeat: Infinity }}
                 className="rounded-xl border border-red-200/70 bg-black/40 px-6 py-4 text-center text-red-100 shadow-[0_14px_40px_rgba(0,0,0,0.5)]"
               >
                 <p className="text-xs uppercase tracking-[0.22em]">Alert</p>
@@ -271,7 +272,7 @@ export default function PlayfulFooterItems() {
               rotate: 24,
             }}
             exit={{ opacity: 0, scale: 0.6 }}
-            transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
             onAnimationComplete={() => handleFlyComplete(flying.index)}
             className="pointer-events-none fixed z-[136] -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-200/60 bg-black/55 px-4 py-2 text-sm font-semibold text-red-100 shadow-[0_16px_45px_rgba(0,0,0,0.6)]"
           >
@@ -284,14 +285,28 @@ export default function PlayfulFooterItems() {
       <AnimatePresence>
         {burstingIndex !== null ? (
           <div className="pointer-events-none fixed inset-0 z-[137]">
+            <motion.span
+              key={`blast-core-${burstSeed}-${burstingIndex}`}
+              className="absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-100/85 blur-sm"
+              initial={{ scale: 0.2, opacity: 0.9 }}
+              animate={{ scale: [0.2, 2.8, 3.4], opacity: [0.9, 0.45, 0] }}
+              transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
+            />
+            <motion.span
+              key={`blast-ring-${burstSeed}-${burstingIndex}`}
+              className="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-red-50/90"
+              initial={{ scale: 0.25, opacity: 1 }}
+              animate={{ scale: [0.25, 3.8, 4.6], opacity: [1, 0.6, 0] }}
+              transition={{ duration: DURATIONS.base + 0.1, ease: EASE_STANDARD }}
+            />
             {particles.map((particle, index) => (
               <motion.span
                 key={`burst-${burstSeed}-${burstingIndex}-${particle.id}`}
-                className="absolute left-1/2 top-1/2 h-2.5 w-2.5 rounded-full bg-red-100"
+                className="absolute left-1/2 top-1/2 h-4 w-4 rounded-full bg-red-100 shadow-[0_0_18px_rgba(254,226,226,0.95)]"
                 initial={{ x: 0, y: 0, opacity: 0, scale: 0.3 }}
-                animate={{ x: particle.dx, y: particle.dy, opacity: [0, 1, 0], scale: [0.3, 1.15, 0.55] }}
+                animate={{ x: particle.dx, y: particle.dy, opacity: [0, 1, 0], scale: [0.3, 1.45, 0.5] }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.58, delay: index * 0.04, ease: "easeOut" }}
+                transition={{ duration: DURATIONS.base + 0.12, delay: index * 0.018, ease: EASE_STANDARD }}
               />
             ))}
           </div>
@@ -300,3 +315,4 @@ export default function PlayfulFooterItems() {
     </div>
   );
 }
+

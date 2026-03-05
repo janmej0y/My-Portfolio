@@ -11,6 +11,7 @@ import Projects from "@/components/Projects";
 import SectionDivider from "@/components/SectionDivider";
 import Skills from "@/components/Skills";
 import VoiceBot from "@/components/VoiceBot";
+import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
 
 export default function HomePageClient() {
   return (
@@ -21,7 +22,7 @@ export default function HomePageClient() {
       <motion.main
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: DURATIONS.slow, ease: EASE_STANDARD }}
       >
         <Hero />
         <SectionDivider />

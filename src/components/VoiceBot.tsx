@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
+import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
 
 type SpeechRecognitionLike = {
   continuous: boolean;
@@ -124,7 +125,7 @@ export default function VoiceBot() {
         className="surface rounded-2xl p-3"
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
+        transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
       >
         <div className="flex items-center gap-3">
           <motion.img
@@ -132,7 +133,7 @@ export default function VoiceBot() {
             alt="Voice assistant bot"
             className="h-12 w-12 rounded-full border border-cyan-300/40 bg-black/35 p-1"
             animate={listening ? { scale: [1, 1.08, 1] } : { scale: 1 }}
-            transition={listening ? { duration: 1, repeat: Infinity } : { duration: 0.2 }}
+            transition={listening ? { duration: DURATIONS.divider * 0.52, repeat: Infinity } : { duration: DURATIONS.fast }}
           />
           <div className="min-w-0">
             <p className="text-xs uppercase tracking-[0.12em] text-cyan-200/90">Voice Bot</p>

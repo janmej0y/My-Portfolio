@@ -1,21 +1,24 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { FormEvent, useEffect, useState } from "react";
 import MagneticButton from "@/components/MagneticButton";
 import PlayfulFooterItems from "@/components/PlayfulFooterItems";
 import StaggerHeading from "@/components/StaggerHeading";
 import { CONTACT_CARDS } from "@/lib/data";
+import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
 
 type FormState = {
   name: string;
   email: string;
   message: string;
 };
+type StatusTone = "idle" | "success" | "error" | "info";
 
 export default function Contact() {
   const [visitors, setVisitors] = useState("Loading...");
   const [status, setStatus] = useState("");
+  const [statusTone, setStatusTone] = useState<StatusTone>("idle");
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<FormState>({ name: "", email: "", message: "" });
   const [company, setCompany] = useState("");
@@ -39,11 +42,21 @@ export default function Contact() {
       .catch(() => setVisitors("Unavailable"));
   }, []);
 
+  useEffect(() => {
+    if (!status || statusTone === "info") return;
+    const timer = window.setTimeout(() => {
+      setStatus("");
+      setStatusTone("idle");
+    }, 3800);
+    return () => window.clearTimeout(timer);
+  }, [status, statusTone]);
+
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (submitting) return;
     setSubmitting(true);
     setStatus("Sending...");
+    setStatusTone("info");
 
     try {
       const response = await fetch("/api/contact", {
@@ -59,6 +72,7 @@ export default function Contact() {
 
       const data = (await response.json()) as { success: boolean; message: string };
       setStatus(data.message);
+      setStatusTone(response.ok && data.success ? "success" : "error");
 
       if (response.ok && data.success) {
         setForm({ name: "", email: "", message: "" });
@@ -66,19 +80,20 @@ export default function Contact() {
       }
     } catch {
       setStatus("Unable to send message right now. Please try again.");
+      setStatusTone("error");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className="px-6 pb-16 pt-8 md:px-12">
+    <section id="contact" className="section-backplate c section-wrap px-6 pb-16 pt-8 md:px-12">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
           className="grid gap-8 lg:grid-cols-[1fr_1.2fr]"
         >
           <div>
@@ -93,10 +108,10 @@ export default function Contact() {
               Open to software engineering roles, security-focused product work, and creative collaborations.
             </p>
 
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <a
                 href="mailto:janmejoymahato529@gmail.com?subject=Hiring%20Inquiry"
-                className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-black"
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-black"
               >
                 Hire Me
               </a>
@@ -104,7 +119,7 @@ export default function Contact() {
                 href={calendlyUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-cyan-300/45 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-cyan-300/45 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200"
               >
                 Book a Call
               </a>
@@ -112,7 +127,7 @@ export default function Contact() {
                 href="/assets/resume.pdf"
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white"
               >
                 Download Resume
               </a>
@@ -172,23 +187,25 @@ export default function Contact() {
               </label>
             </div>
 
-            <div className="mt-5 flex items-center gap-3">
+            <div className="mt-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
               <MagneticButton
                 type="submit"
-                className={`rounded-full px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] ${
-                  submitting ? "bg-white/60 text-black/80" : "bg-white text-black"
+                disabled={submitting}
+                className={`inline-flex min-h-11 rounded-full px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] ${
+                  submitting ? "cursor-not-allowed bg-white/60 text-black/80" : "bg-white text-black"
                 }`}
               >
-                {submitting ? "Sending..." : "Send Message"}
+                {submitting ? (
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-black/20 border-t-black" />
+                    Sending...
+                  </span>
+                ) : (
+                  "Send Message"
+                )}
               </MagneticButton>
               <span
-                className={`text-sm ${
-                  status.toLowerCase().includes("success")
-                    ? "text-emerald-300"
-                    : status.toLowerCase().includes("unable") || status.toLowerCase().includes("wrong")
-                      ? "text-red-300"
-                      : "text-white/55"
-                }`}
+                className={`text-sm ${statusTone === "success" ? "text-emerald-300" : statusTone === "error" ? "text-red-300" : "text-white/55"}`}
               >
                 {status}
               </span>
@@ -198,6 +215,25 @@ export default function Contact() {
 
         <PlayfulFooterItems />
 
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
+          className="mt-10 rounded-2xl border border-cyan-200/20 bg-[linear-gradient(115deg,rgba(34,211,238,0.18),rgba(14,116,144,0.12))] p-5 md:p-6"
+        >
+          <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/80">Final CTA</p>
+          <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <p className="display-title text-2xl font-semibold text-white sm:text-3xl">Let&apos;s Build Something Powerful</p>
+            <a
+              href="#contact"
+              className="interactive-lift inline-flex min-h-11 items-center justify-center rounded-full border border-white/25 bg-black/35 px-5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white"
+            >
+              Start a Project
+            </a>
+          </div>
+        </motion.div>
+
         <footer className="mt-14 border-t border-white/10 pt-6 text-sm text-white/55">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <p>&copy; 2026 Janmejoy Mahato. All rights reserved.</p>
@@ -205,6 +241,28 @@ export default function Contact() {
           </div>
         </footer>
       </div>
+      <AnimatePresence>
+        {status && statusTone !== "info" ? (
+          <motion.div
+            initial={{ opacity: 0, y: -12, x: 10 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            exit={{ opacity: 0, y: -10, x: 8 }}
+            transition={{ duration: DURATIONS.fast, ease: EASE_STANDARD }}
+            className="status-toast"
+            role="status"
+            aria-live="polite"
+          >
+            <span
+              className={`grid h-6 w-6 place-items-center rounded-full text-xs font-semibold ${
+                statusTone === "success" ? "bg-emerald-400/20 text-emerald-200" : "bg-red-400/20 text-red-200"
+              }`}
+            >
+              {statusTone === "success" ? "OK" : "!"}
+            </span>
+            <p className="text-sm text-white/90">{status}</p>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </section>
   );
 }

@@ -12,6 +12,7 @@ const nextConfig = {
       { protocol: "https", hostname: "cdn.iconscout.com" },
       { protocol: "https", hostname: "cdn-icons-png.flaticon.com" },
       { protocol: "https", hostname: "cdn.worldvectorlogo.com" },
+      { protocol: "https", hostname: "upload.wikimedia.org" },
     ],
   },
 };

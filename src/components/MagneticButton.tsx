@@ -12,6 +12,7 @@ type MagneticButtonProps = {
   download?: boolean;
   onClick?: () => void;
   type?: "button" | "submit";
+  disabled?: boolean;
 };
 
 export default function MagneticButton({
@@ -23,6 +24,7 @@ export default function MagneticButton({
   download,
   onClick,
   type = "button",
+  disabled = false,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement | HTMLAnchorElement | null>(null);
 
@@ -65,11 +67,12 @@ export default function MagneticButton({
       ref={ref as never}
       type={type}
       onClick={onClick}
+      disabled={disabled}
       data-magnetic="true"
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.98 }}
+      onMouseMove={disabled ? undefined : handleMove}
+      onMouseLeave={disabled ? undefined : handleLeave}
+      whileHover={disabled ? undefined : { scale: 1.03 }}
+      whileTap={disabled ? undefined : { scale: 0.98 }}
       className={`magnetic inline-flex items-center justify-center transition duration-200 ${className ?? ""}`}
     >
       {children}

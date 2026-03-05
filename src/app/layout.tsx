@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Manrope, Sora } from "next/font/google";
 import "./globals.css";
 import BackgroundFX from "@/components/BackgroundFX";
 import MagneticCursor from "@/components/MagneticCursor";
@@ -7,7 +7,17 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import { CASE_STUDIES, PROJECTS } from "@/lib/data";
 
-const inter = Inter({ subsets: ["latin"], display: "swap" });
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-body",
+});
+
+const sora = Sora({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://janmej0y.vercel.app"),
@@ -66,7 +76,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
   return (
     <html lang="en" className="theme-dark">
-      <body className={inter.className}>
+      <body className={`${manrope.variable} ${sora.variable} font-body`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}

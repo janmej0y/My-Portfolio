@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { DURATIONS, STAGGER } from "@/lib/motion";
 
 type StaggerHeadingProps = {
   text: string;
@@ -14,8 +15,8 @@ const containerVariants = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.035,
-      delayChildren: 0.06,
+      staggerChildren: STAGGER.card * 0.7,
+      delayChildren: STAGGER.block * 0.75,
     },
   },
 };
@@ -33,6 +34,7 @@ export default function StaggerHeading({
   amount = 0.45,
 }: StaggerHeadingProps) {
   const Tag = as;
+  const words = text.split(" ");
 
   return (
     <Tag className={className}>
@@ -43,13 +45,22 @@ export default function StaggerHeading({
         whileInView="show"
         viewport={{ once, amount }}
         variants={containerVariants}
-        transition={{ duration: 0.48 }}
-        className="inline-block whitespace-pre-wrap"
+        transition={{ duration: DURATIONS.base }}
+        className="inline-block"
       >
-        {Array.from(text).map((char, index) => (
-          <motion.span key={`${char}-${index}`} variants={letterVariants} className="inline-block">
-            {char === " " ? "\u00A0" : char}
-          </motion.span>
+        {words.map((word, wordIndex) => (
+          <span key={`${word}-${wordIndex}`} className="inline-block whitespace-nowrap">
+            {Array.from(word).map((char, charIndex) => (
+              <motion.span key={`${wordIndex}-${char}-${charIndex}`} variants={letterVariants} className="inline-block">
+                {char}
+              </motion.span>
+            ))}
+            {wordIndex < words.length - 1 ? (
+              <motion.span variants={letterVariants} className="inline-block">
+                {"\u00A0"}
+              </motion.span>
+            ) : null}
+          </span>
         ))}
       </motion.span>
     </Tag>

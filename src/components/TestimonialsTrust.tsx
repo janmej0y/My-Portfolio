@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { TESTIMONIALS, TRUST_METRICS } from "@/lib/data";
+import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
 
 export default function TestimonialsTrust() {
   return (
@@ -11,6 +12,7 @@ export default function TestimonialsTrust() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
           className="surface rounded-2xl p-6 md:p-8"
         >
           <p className="text-xs uppercase tracking-[0.2em] text-white/45">Trust Signals</p>
@@ -32,7 +34,7 @@ export default function TestimonialsTrust() {
               initial={{ opacity: 0, y: 22 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: index * 0.06 }}
+              transition={{ delay: index * STAGGER.card, duration: DURATIONS.base, ease: EASE_STANDARD }}
               className="surface rounded-xl p-5"
             >
               <p className="text-sm leading-6 text-white/85">"{item.quote}"</p>
@@ -45,4 +47,3 @@ export default function TestimonialsTrust() {
     </section>
   );
 }
-

@@ -3,20 +3,21 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { EDUCATION_ITEMS } from "@/lib/data";
+import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
 import StaggerHeading from "@/components/StaggerHeading";
 
 export default function About() {
   return (
     <>
-      <section id="about" className="px-6 py-6 md:px-12">
+      <section id="about" className="section-backplate a section-wrap px-6 pb-6 pt-4 md:px-12">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
           className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[280px_1fr]"
         >
-          <div className="surface overflow-hidden rounded-2xl">
+          <div className="surface media-frame overflow-hidden rounded-2xl">
             <Image
               src="/assets/profile.jpg"
               alt="Janmejoy Mahato portrait"
@@ -39,6 +40,20 @@ export default function About() {
               I&apos;m a final-year Computer Science student focused on full-stack product development and cybersecurity.
               I enjoy turning complex workflows into clean interfaces, then hardening them for real-world usage.
             </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
+                <p className="text-xs uppercase tracking-[0.14em] text-white/50">Experience</p>
+                <p className="mt-1 text-lg font-semibold text-white/90">3+ Years</p>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
+                <p className="text-xs uppercase tracking-[0.14em] text-white/50">Projects</p>
+                <p className="mt-1 text-lg font-semibold text-white/90">12+ Shipped</p>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
+                <p className="text-xs uppercase tracking-[0.14em] text-white/50">Focus</p>
+                <p className="mt-1 text-lg font-semibold text-white/90">Security + UX</p>
+              </div>
+            </div>
             <div className="mt-6 flex flex-wrap gap-2">
               {[
                 "Full Stack Development",
@@ -46,7 +61,7 @@ export default function About() {
                 "React + Next.js",
                 "Node + API Design",
               ].map((tag) => (
-                <span key={tag} className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/70">
+                <span key={tag} className="interactive-lift rounded-full border border-white/15 px-3 py-1 text-xs text-white/70">
                   {tag}
                 </span>
               ))}
@@ -55,14 +70,14 @@ export default function About() {
         </motion.div>
       </section>
 
-      <section id="education" className="px-6 py-20 md:px-12">
+      <section id="education" className="section-backplate b section-wrap px-6 md:px-12">
         <div className="mx-auto max-w-6xl">
           <motion.h2
             initial={{ opacity: 0, y: 22 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="text-3xl font-semibold"
+            transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
+            className="display-title text-3xl font-semibold"
           >
             Education
           </motion.h2>
@@ -73,7 +88,7 @@ export default function About() {
                 initial={{ opacity: 0, y: 22 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.25 }}
-                transition={{ delay: index * 0.08 }}
+                transition={{ delay: index * STAGGER.block, duration: DURATIONS.base, ease: EASE_STANDARD }}
                 className="surface rounded-xl p-5"
               >
                 <p className="text-sm text-white/55">{item.year}</p>

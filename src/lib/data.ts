@@ -228,7 +228,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
       { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
       { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
       { name: "Bootstrap", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" },
-      { name: "Tailwind", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" },
+      { name: "Tailwind", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" },
       { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
     ],
   },
@@ -286,7 +286,7 @@ export const CERTIFICATIONS: Certification[] = [
   {
     title: "Blue Prism Automation Internship",
     description: "Automation processes and workflow building using RPA tools.",
-    icon: "https://cdn.worldvectorlogo.com/logos/blueprism.svg",
+    icon: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Blue_Prism_logo.svg",
   },
   {
     title: "Full Stack BCT Training",
