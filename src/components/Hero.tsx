@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useMemo, useRef } from "react";
+import ScreamFigure from "@/components/ScreamFigure";
 import { TypeAnimation } from "react-type-animation";
 import GitHubStatsCard from "@/components/GitHubStatsCard";
 import MagneticButton from "@/components/MagneticButton";
@@ -140,8 +141,11 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div className="lg:pt-8">
+        <div className="relative mx-auto w-full max-w-[320px] pb-28 lg:mx-0 lg:pt-8">
           <GitHubStatsCard />
+          <div className="absolute left-1/2 top-full mt-1 -translate-x-1/2 -translate-y-6">
+            <ScreamFigure />
+          </div>
         </div>
       </motion.div>
     </section>
