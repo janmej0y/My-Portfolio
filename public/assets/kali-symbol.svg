@@ -1,0 +1,15 @@
+<svg width="900" height="900" viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="450" cy="450" r="330" stroke="white" stroke-opacity="0.18" stroke-width="3"/>
+  <circle cx="450" cy="450" r="255" stroke="white" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="10 14"/>
+
+  <path d="M451 520C485 488 523 456 565 434C594 418 627 404 664 392C634 422 606 451 581 482C551 519 524 560 500 607L451 520Z" fill="white" fill-opacity="0.17"/>
+  <path d="M449 520C415 488 377 456 335 434C306 418 273 404 236 392C266 422 294 451 319 482C349 519 376 560 400 607L449 520Z" fill="white" fill-opacity="0.17"/>
+
+  <path d="M451 333C489 305 531 285 579 272C546 302 516 332 489 364C463 396 440 430 420 466L451 333Z" fill="white" fill-opacity="0.19"/>
+  <path d="M449 333C411 305 369 285 321 272C354 302 384 332 411 364C437 396 460 430 480 466L449 333Z" fill="white" fill-opacity="0.19"/>
+
+  <path d="M416 620C436 585 451 554 461 528C472 554 487 585 507 620C480 614 443 614 416 620Z" fill="white" fill-opacity="0.23"/>
+
+  <path d="M450 250L464 294L510 295L473 323L486 366L450 340L414 366L427 323L390 295L436 294L450 250Z" fill="white" fill-opacity="0.2"/>
+</svg>
+
