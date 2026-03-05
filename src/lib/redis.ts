@@ -1,13 +1,19 @@
 import { Redis } from "@upstash/redis";
 
-const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
-const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+let redisClient: Redis | null = null;
 
-if (!redisUrl || !redisToken) {
-  throw new Error("Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN in environment.");
+export function isRedisConfigured() {
+  return Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
 }
 
-export const redis = new Redis({
-  url: redisUrl,
-  token: redisToken,
-});
+export function getRedis() {
+  if (!isRedisConfigured()) return null;
+  if (redisClient) return redisClient;
+
+  redisClient = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL as string,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
+  });
+
+  return redisClient;
+}

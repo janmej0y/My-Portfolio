@@ -5,6 +5,9 @@ import { useEffect } from "react";
 
 export default function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
     const lenis = new Lenis({
       duration: 1.1,
       smoothWheel: true,

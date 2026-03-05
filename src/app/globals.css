@@ -24,6 +24,11 @@ body {
   text-rendering: geometricPrecision;
 }
 
+.theme-dark body {
+  background: #000000;
+  background-image: none;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -57,9 +62,35 @@ body {
 }
 
 .surface {
+  position: relative;
+  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.02);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
   backdrop-filter: blur(10px);
+  transition: transform 0.34s ease, border-color 0.34s ease, box-shadow 0.34s ease, background 0.34s ease;
+}
+
+.surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.34s ease;
+  background: radial-gradient(circle at 20% 10%, rgba(56, 189, 248, 0.2), transparent 42%);
+}
+
+@media (pointer: fine) {
+  .surface:hover {
+    transform: translateY(-6px);
+    border-color: rgba(148, 163, 184, 0.45);
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45), 0 1px 0 rgba(255, 255, 255, 0.12) inset;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+  }
+
+  .surface:hover::before {
+    opacity: 1;
+  }
 }
 
 .bg-fx-wrap {
@@ -125,16 +156,65 @@ body {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url("/assets/kali-symbol.svg");
+  background-image: url("/assets/kali-dragon-red.png");
   background-repeat: no-repeat;
   background-position: center 56%;
   background-size: min(48vw, 560px);
-  opacity: 0.07;
-  filter: grayscale(1) contrast(1.1);
+  opacity: 0.13;
+  filter: grayscale(0.2) contrast(1.28) brightness(1.12) saturate(1.08);
+}
+
+.kali-3d-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  perspective: 1200px;
+}
+
+.kali-3d-bg::before,
+.kali-3d-bg::after {
+  content: "";
+  position: absolute;
+  width: min(52vw, 620px);
+  height: min(52vw, 620px);
+  background-image: url("/assets/kali-dragon-red.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transform-style: preserve-3d;
+  will-change: transform, filter, opacity;
+}
+
+.kali-3d-bg::before {
+  opacity: 0.26;
+  transform: translate3d(0, 7vh, -40px) rotateX(58deg) rotateZ(-12deg) scale(1.04);
+  filter: saturate(1.18) brightness(1.08) drop-shadow(0 26px 56px rgba(239, 68, 68, 0.38));
+  animation: kaliFloat 13s ease-in-out infinite alternate;
+}
+
+.kali-3d-bg::after {
+  opacity: 0.2;
+  transform: translate3d(0, 9vh, -70px) rotateX(58deg) rotateZ(-12deg) scale(1.08);
+  filter: blur(8px) saturate(1.2) brightness(1.05) drop-shadow(0 34px 72px rgba(239, 68, 68, 0.35));
 }
 
 .theme-dark .aurora {
   opacity: 0.35;
+}
+
+.theme-dark .linux-watermark {
+  opacity: 0.21;
+}
+
+.theme-dark .kali-3d-bg::before {
+  opacity: 0.35;
+}
+
+.theme-dark .kali-3d-bg::after {
+  opacity: 0.29;
 }
 
 .theme-bright .aurora,
@@ -216,11 +296,26 @@ body {
   }
 }
 
+@keyframes kaliFloat {
+  0% {
+    transform: translate3d(-1.5vw, 6.8vh, -40px) rotateX(58deg) rotateZ(-13deg) scale(1.03);
+  }
+  100% {
+    transform: translate3d(1.5vw, 7.6vh, -40px) rotateX(58deg) rotateZ(-10deg) scale(1.07);
+  }
+}
+
 @media (max-width: 768px) {
   .linux-watermark {
     background-size: min(72vw, 360px);
     background-position: center 60%;
     opacity: 0.055;
+  }
+
+  .kali-3d-bg::before,
+  .kali-3d-bg::after {
+    width: min(78vw, 420px);
+    height: min(78vw, 420px);
   }
 
   .bg-grid {

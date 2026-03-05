@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { redis } from "@/lib/redis";
+import { getRedis, isRedisConfigured } from "@/lib/redis";
 
 const TOTAL_VISITS_KEY = "portfolio:total_visits";
 
@@ -17,7 +17,10 @@ export async function POST(req: NextRequest) {
     const headerIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
     const ip = headerIp || req.headers.get("x-real-ip") || "Unknown";
 
-    totalVisits = await redis.incr(TOTAL_VISITS_KEY);
+    const redis = getRedis();
+    if (redis) {
+      totalVisits = await redis.incr(TOTAL_VISITS_KEY);
+    }
 
     let location = "Unknown";
     try {
@@ -41,17 +44,18 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true, totalVisits });
+    return NextResponse.json({ success: true, totalVisits, redisConfigured: isRedisConfigured() });
   } catch {
-    return NextResponse.json({ success: false, totalVisits });
+    return NextResponse.json({ success: false, totalVisits, redisConfigured: isRedisConfigured() });
   }
 }
 
 export async function GET() {
   try {
-    const totalVisits = Number((await redis.get<number>(TOTAL_VISITS_KEY)) ?? 0);
-    return NextResponse.json({ success: true, totalVisits });
+    const redis = getRedis();
+    const totalVisits = redis ? Number((await redis.get<number>(TOTAL_VISITS_KEY)) ?? 0) : 0;
+    return NextResponse.json({ success: true, totalVisits, redisConfigured: isRedisConfigured() });
   } catch {
-    return NextResponse.json({ success: false, totalVisits: 0 }, { status: 500 });
+    return NextResponse.json({ success: false, totalVisits: 0, redisConfigured: isRedisConfigured() }, { status: 500 });
   }
 }

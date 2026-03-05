@@ -19,6 +19,7 @@ export default function Contact() {
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<FormState>({ name: "", email: "", message: "" });
   const [company, setCompany] = useState("");
+  const calendlyUrl = "https://calendly.com/janmejoymahato529/30min";
 
   useEffect(() => {
     const page = window.location.pathname;
@@ -92,6 +93,31 @@ export default function Contact() {
               Open to software engineering roles, security-focused product work, and creative collaborations.
             </p>
 
+            <div className="mt-5 flex flex-wrap gap-2">
+              <a
+                href="mailto:janmejoymahato529@gmail.com?subject=Hiring%20Inquiry"
+                className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-black"
+              >
+                Hire Me
+              </a>
+              <a
+                href={calendlyUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-cyan-300/45 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200"
+              >
+                Book a Call
+              </a>
+              <a
+                href="/assets/resume.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white"
+              >
+                Download Resume
+              </a>
+            </div>
+
             <div className="mt-8 space-y-3">
               {CONTACT_CARDS.map((card) => (
                 <a key={card.title} href={card.href} className="surface block rounded-xl p-4 hover:border-white/20">
@@ -155,7 +181,17 @@ export default function Contact() {
               >
                 {submitting ? "Sending..." : "Send Message"}
               </MagneticButton>
-              <span className="text-sm text-white/55">{status}</span>
+              <span
+                className={`text-sm ${
+                  status.toLowerCase().includes("success")
+                    ? "text-emerald-300"
+                    : status.toLowerCase().includes("unable") || status.toLowerCase().includes("wrong")
+                      ? "text-red-300"
+                      : "text-white/55"
+                }`}
+              >
+                {status}
+              </span>
             </div>
           </form>
         </motion.div>

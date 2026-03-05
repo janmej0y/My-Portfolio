@@ -1,38 +1,20 @@
-"use client";
+import type { Metadata } from "next";
+import HomePageClient from "@/components/HomePageClient";
 
-import { motion } from "framer-motion";
-import About from "@/components/About";
-import CaseStudies from "@/components/CaseStudies";
-import CommandPalette from "@/components/CommandPalette";
-import Contact from "@/components/Contact";
-import Hero from "@/components/Hero";
-import Navbar from "@/components/Navbar";
-import Projects from "@/components/Projects";
-import SectionDivider from "@/components/SectionDivider";
-import Skills from "@/components/Skills";
+export const metadata: Metadata = {
+  title: "Janmejoy Mahato | Full Stack Developer Portfolio",
+  description:
+    "Premium portfolio of Janmejoy Mahato showcasing full-stack projects, cybersecurity work, and engineering case studies.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Janmejoy Mahato | Full Stack Developer Portfolio",
+    description:
+      "Explore projects, case studies, and security-focused product work by Janmejoy Mahato.",
+    url: "/",
+    images: [{ url: "/assets/profile.jpg", width: 1200, height: 630, alt: "Janmejoy Mahato Portfolio" }],
+  },
+};
 
 export default function HomePage() {
-  return (
-    <>
-      <Navbar />
-      <CommandPalette />
-      <motion.main
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <Hero />
-        <SectionDivider />
-        <About />
-        <SectionDivider />
-        <Projects />
-        <SectionDivider />
-        <CaseStudies />
-        <SectionDivider />
-        <Skills />
-        <SectionDivider />
-        <Contact />
-      </motion.main>
-    </>
-  );
+  return <HomePageClient />;
 }

@@ -22,6 +22,10 @@ export type Project = {
   tech: string[];
   liveUrl?: string;
   githubUrl: string;
+  highlights?: string[];
+  architecture?: string;
+  screenshots?: string[];
+  metrics?: string[];
 };
 
 export type Skill = {

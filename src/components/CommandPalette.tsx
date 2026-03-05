@@ -31,10 +31,22 @@ export default function CommandPalette() {
         run: () => document.querySelector(`#${item.id}`)?.scrollIntoView({ behavior: "smooth" }),
       })),
       {
+        id: "contact",
+        label: "Go to Contact",
+        hint: "#contact",
+        run: () => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" }),
+      },
+      {
         id: "resume",
         label: "Open Resume",
         hint: "PDF",
         run: () => window.open("/assets/resume.pdf", "_blank", "noopener,noreferrer"),
+      },
+      {
+        id: "secret",
+        label: "Open Secret Room",
+        hint: "/secret",
+        run: () => (window.location.href = "/secret"),
       },
       {
         id: "github",
@@ -47,6 +59,36 @@ export default function CommandPalette() {
         label: "Open LinkedIn",
         hint: "External",
         run: () => window.open("https://linkedin.com/in/janmej0y", "_blank", "noopener,noreferrer"),
+      },
+      {
+        id: "theme-dark",
+        label: "Switch Theme: Dark",
+        hint: "Theme",
+        run: () => {
+          document.documentElement.classList.remove("theme-bright", "theme-cyber", "bright-mode");
+          document.documentElement.classList.add("theme-dark");
+          localStorage.setItem("theme-preset", "dark");
+        },
+      },
+      {
+        id: "theme-bright",
+        label: "Switch Theme: Bright",
+        hint: "Theme",
+        run: () => {
+          document.documentElement.classList.remove("theme-dark", "theme-cyber", "bright-mode");
+          document.documentElement.classList.add("theme-bright");
+          localStorage.setItem("theme-preset", "bright");
+        },
+      },
+      {
+        id: "theme-cyber",
+        label: "Switch Theme: Cyber",
+        hint: "Theme",
+        run: () => {
+          document.documentElement.classList.remove("theme-dark", "theme-bright", "bright-mode");
+          document.documentElement.classList.add("theme-cyber");
+          localStorage.setItem("theme-preset", "cyber");
+        },
       },
     ],
     [],
@@ -159,4 +201,3 @@ export default function CommandPalette() {
     </>
   );
 }
-

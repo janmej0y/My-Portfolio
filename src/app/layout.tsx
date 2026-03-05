@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://janmej0y.vercel.app"),
   title: "Janmejoy Mahato | Portfolio",
   description: "Minimal designer-style portfolio of Janmejoy Mahato.",
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Janmejoy Mahato | Portfolio",
     description: "Full stack developer",
@@ -20,6 +21,12 @@ export const metadata: Metadata = {
     siteName: "Janmejoy Portfolio",
     images: [{ url: "/assets/profile.jpg", width: 1200, height: 630, alt: "Janmejoy Mahato" }],
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Janmejoy Mahato | Portfolio",
+    description: "Full stack developer and security-minded engineer.",
+    images: ["/assets/profile.jpg"],
   },
 };
 
@@ -72,6 +79,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <BackgroundFX />
           <ScrollProgressBar />
           <div aria-hidden="true" className="linux-watermark" />
+          <div aria-hidden="true" className="kali-3d-bg" />
           <MagneticCursor />
           <div className="relative z-10">{children}</div>
         </SmoothScrollProvider>

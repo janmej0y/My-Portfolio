@@ -53,6 +53,18 @@ export const PROJECTS: Project[] = [
     tech: ["Node.js", "Express", "MongoDB", "JWT"],
     liveUrl: "https://online-voting-system-henna.vercel.app/",
     githubUrl: "https://github.com/janmej0y/Online-Voting-System",
+    highlights: [
+      "JWT authentication with role-based route guards.",
+      "One-vote-per-user validation on server-side write paths.",
+      "Admin controls for election state transitions.",
+    ],
+    architecture: "Client -> Express API -> Auth Middleware -> MongoDB",
+    screenshots: [
+      "/assets/projects/voting.png",
+      "/assets/projects/voting.png",
+      "/assets/projects/voting.png",
+    ],
+    metrics: ["Secure vote integrity checks", "Role-based access control", "Production deploy ready"],
   },
   {
     key: "voice",
@@ -76,6 +88,18 @@ export const PROJECTS: Project[] = [
     tech: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase"],
     liveUrl: "https://rent-hub-two.vercel.app/",
     githubUrl: "https://github.com/janmej0y/RentHub",
+    highlights: [
+      "Full-stack listing creation and management workflow.",
+      "Typed UI and API layer for predictable behavior.",
+      "Responsive search and filtering across listings.",
+    ],
+    architecture: "Next.js App Router -> Server Actions/API -> Supabase",
+    screenshots: [
+      "/assets/projects/RentHub.png",
+      "/assets/projects/RentHub.png",
+      "/assets/projects/RentHub.png",
+    ],
+    metrics: ["Fast listing publish UX", "Mobile responsive", "Optimized first-load assets"],
   },
   {
     key: "baklol",
@@ -88,6 +112,18 @@ export const PROJECTS: Project[] = [
     tech: ["Next.js", "Tailwind CSS", "MongoDB", "Gemini API"],
     liveUrl: "https://baklol-chatbot.vercel.app/",
     githubUrl: "https://github.com/janmej0y/Baklol-Chatbot",
+    highlights: [
+      "Conversational AI interface with streaming response UX.",
+      "Session persistence for better continuity.",
+      "Clear loading and error states for reliability.",
+    ],
+    architecture: "Next.js Frontend -> API Layer -> Gemini -> MongoDB",
+    screenshots: [
+      "/assets/projects/baklol.png",
+      "/assets/projects/baklol.png",
+      "/assets/projects/baklol.png",
+    ],
+    metrics: ["Real-time style interaction", "Conversation continuity", "Clean mobile UI"],
   },
   {
     key: "coins",
@@ -181,28 +217,6 @@ export const CASE_STUDIES: CaseStudy[] = [
     ],
     stack: ["Node.js", "Express", "MongoDB", "JWT"],
     link: "https://online-voting-system-henna.vercel.app/",
-  },
-  {
-    slug: "baklol-chatbot",
-    title: "Kurmi Chatbot - Real-Time AI Experience",
-    role: "Product + Full-Stack",
-    period: "2025",
-    summary:
-      "Delivered a Gemini-style conversational interface focused on responsiveness, readability, and API reliability.",
-    challenge:
-      "The main issue was chat UX degradation under rapid input, with occasional request collision and poor message continuity.",
-    approach: [
-      "Redesigned message state handling to avoid race conditions between local and remote updates.",
-      "Added clear loading/error states for every response cycle to preserve user trust.",
-      "Improved prompt/request shaping for more stable answer quality across sessions.",
-    ],
-    impact: [
-      "Reduced broken conversation states under rapid user interactions.",
-      "Increased session completion by improving feedback and error recovery UX.",
-      "Created a reusable architecture for future assistant-style product features.",
-    ],
-    stack: ["Next.js", "MongoDB", "Gemini API", "Tailwind CSS"],
-    link: "https://baklol-chatbot.vercel.app/",
   },
 ];
 
