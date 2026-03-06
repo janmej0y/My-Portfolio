@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
 type ContactPayload = {
   name?: string;
@@ -53,33 +53,46 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const resendFromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
-    const contactToEmail = process.env.CONTACT_TO_EMAIL || "janmejoymahato529@gmail.com";
+    const smtpUser = process.env.SMTP_USER || process.env.CONTACT_FROM_EMAIL;
+    const gmailAppPassword = process.env.GMAIL_APP_PASSWORD;
+    const contactToEmail = process.env.CONTACT_TO_EMAIL || "borj18237@gmail.com";
 
-    if (!resendApiKey) {
+    if (!smtpUser || !gmailAppPassword) {
       return NextResponse.json(
         { success: false, message: "Contact service is not configured. Please try again later." },
         { status: 500 },
       );
     }
 
-    const resend = new Resend(resendApiKey);
-    const { error } = await resend.emails.send({
-      from: resendFromEmail,
-      to: [contactToEmail],
-      subject: `Portfolio Contact: ${name}`,
-      text: `New portfolio contact message\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-      replyTo: email,
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: smtpUser,
+        pass: gmailAppPassword.replace(/\s+/g, ""),
+      },
     });
 
-    if (error) {
-      console.error("Resend email delivery failed:", error);
+    try {
+      await transporter.sendMail({
+        from: `"Portfolio Contact" <${smtpUser}>`,
+        to: contactToEmail,
+        subject: `Portfolio Contact: ${name}`,
+        text: `New portfolio contact message\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+        html: `<p><strong>New portfolio contact message</strong></p>
+<p><strong>Name:</strong> ${name}</p>
+<p><strong>Email:</strong> ${email}</p>
+<p><strong>Message:</strong></p>
+<p>${message.replace(/\n/g, "<br/>")}</p>`,
+        replyTo: email,
+      });
+    } catch (error) {
+      console.error("Gmail SMTP delivery failed:", error);
       return NextResponse.json(
         {
           success: false,
-          message:
-            "Email delivery failed. Verify RESEND_FROM_EMAIL uses a verified sender/domain in Resend, then try again.",
+          message: "Email delivery failed. Verify SMTP_USER and GMAIL_APP_PASSWORD, then try again.",
         },
         { status: 502 },
       );
@@ -91,7 +104,7 @@ export async function POST(req: NextRequest) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: `New Portfolio Contact\nName: ${name}\nEmail: ${email}\nMessage: ${message}\nDelivered via: Resend`,
+          content: `New Portfolio Contact\nName: ${name}\nEmail: ${email}\nMessage: ${message}\nDelivered via: Gmail SMTP`,
         }),
       });
     }
