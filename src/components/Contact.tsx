@@ -22,7 +22,7 @@ export default function Contact() {
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<FormState>({ name: "", email: "", message: "" });
   const [company, setCompany] = useState("");
-  const calendlyUrl = "https://calendly.com/janmejoymahato529/30min";
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com/borj18237/30min";
 
   useEffect(() => {
     const page = window.location.pathname;
@@ -101,17 +101,17 @@ export default function Contact() {
             <div className="mt-4">
               <StaggerHeading
                 text="Let's Build Something Great"
-                className="text-4xl font-semibold tracking-tight md:text-5xl"
+                className="display-title text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl"
               />
             </div>
-            <p className="mt-4 max-w-md text-[#9ca3af]">
+            <p className="mt-4 max-w-md text-sm leading-6 text-[#9ca3af] sm:text-base">
               Open to software engineering roles, security-focused product work, and creative collaborations.
             </p>
 
             <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <a
                 href="mailto:janmejoymahato529@gmail.com?subject=Hiring%20Inquiry"
-                className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-black"
+                className="interactive-lift inline-flex min-h-11 items-center justify-center rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-black"
               >
                 Hire Me
               </a>
@@ -119,7 +119,7 @@ export default function Contact() {
                 href={calendlyUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-11 items-center justify-center rounded-full border border-cyan-300/45 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200"
+                className="interactive-lift inline-flex min-h-11 items-center justify-center rounded-full border border-cyan-300/45 bg-cyan-300/[0.05] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200"
               >
                 Book a Call
               </a>
@@ -127,7 +127,7 @@ export default function Contact() {
                 href="/assets/resume.pdf"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white"
+                className="interactive-lift inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 bg-white/[0.03] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white"
               >
                 Download Resume
               </a>
@@ -137,13 +137,13 @@ export default function Contact() {
               {CONTACT_CARDS.map((card) => (
                 <a key={card.title} href={card.href} className="surface block rounded-xl p-4 hover:border-white/20">
                   <p className="text-xs uppercase tracking-[0.2em] text-white/45">{card.title}</p>
-                  <p className="mt-1 text-white/85">{card.value}</p>
+                  <p className="mt-1 break-words text-white/85">{card.value}</p>
                 </a>
               ))}
             </div>
           </div>
 
-          <form onSubmit={onSubmit} className="surface rounded-2xl p-6">
+          <form onSubmit={onSubmit} className="surface rounded-2xl p-5 sm:p-6">
             <div className="grid gap-4">
               <label className="hidden" aria-hidden="true">
                 Company
@@ -162,7 +162,7 @@ export default function Contact() {
                   required
                   value={form.name}
                   onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
-                  className="mt-2 w-full rounded-md border border-white/15 bg-transparent px-3 py-2.5 text-white outline-none focus:border-white/35"
+                  className="mt-2 min-h-11 w-full rounded-md border border-white/15 bg-transparent px-3 py-2.5 text-white outline-none focus:border-white/35"
                 />
               </label>
               <label className="text-sm text-white/75">
@@ -172,7 +172,7 @@ export default function Contact() {
                   type="email"
                   value={form.email}
                   onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-                  className="mt-2 w-full rounded-md border border-white/15 bg-transparent px-3 py-2.5 text-white outline-none focus:border-white/35"
+                  className="mt-2 min-h-11 w-full rounded-md border border-white/15 bg-transparent px-3 py-2.5 text-white outline-none focus:border-white/35"
                 />
               </label>
               <label className="text-sm text-white/75">
@@ -191,7 +191,7 @@ export default function Contact() {
               <MagneticButton
                 type="submit"
                 disabled={submitting}
-                className={`inline-flex min-h-11 rounded-full px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] ${
+                className={`inline-flex min-h-11 items-center justify-center rounded-full px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] ${
                   submitting ? "cursor-not-allowed bg-white/60 text-black/80" : "bg-white text-black"
                 }`}
               >
@@ -205,7 +205,7 @@ export default function Contact() {
                 )}
               </MagneticButton>
               <span
-                className={`text-sm ${statusTone === "success" ? "text-emerald-300" : statusTone === "error" ? "text-red-300" : "text-white/55"}`}
+                className={`text-sm sm:max-w-[280px] ${statusTone === "success" ? "text-emerald-300" : statusTone === "error" ? "text-red-300" : "text-white/55"}`}
               >
                 {status}
               </span>
@@ -224,7 +224,7 @@ export default function Contact() {
         >
           <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/80">Final CTA</p>
           <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <p className="display-title text-2xl font-semibold text-white sm:text-3xl">Let&apos;s Build Something Powerful</p>
+            <p className="display-title text-2xl font-semibold leading-tight text-white sm:text-3xl">Let&apos;s Build Something Powerful</p>
             <a
               href="#contact"
               className="interactive-lift inline-flex min-h-11 items-center justify-center rounded-full border border-white/25 bg-black/35 px-5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white"

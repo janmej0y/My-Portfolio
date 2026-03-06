@@ -102,8 +102,8 @@ function ProjectCard({ project, index, onView }: { project: Project; index: numb
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         </div>
 
-        <h3 className="mt-4 text-2xl font-semibold text-white">{project.title}</h3>
-        <p className="mt-2 text-sm text-white/75">{project.shortDescription}</p>
+        <h3 className="mt-4 text-xl font-semibold leading-tight text-white sm:text-2xl">{project.title}</h3>
+        <p className="mt-2 line-clamp-3 text-sm leading-6 text-white/75">{project.shortDescription}</p>
 
         <div className="mt-4 grid gap-2 sm:grid-cols-3">
           {stats.map((item) => (
@@ -114,16 +114,16 @@ function ProjectCard({ project, index, onView }: { project: Project; index: numb
           ))}
         </div>
 
-        <div className="mt-4 flex items-center gap-3 border-t border-white/10 pt-3">
-          <button onClick={onView} className="interactive-lift rounded-full border border-white/25 px-3 py-1.5 text-xs uppercase tracking-[0.14em] text-white">
+        <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-white/10 pt-3">
+          <button onClick={onView} className="interactive-lift inline-flex min-h-10 items-center justify-center rounded-full border border-white/25 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-white">
             Open Case
           </button>
           {project.liveUrl ? (
-            <a href={project.liveUrl} target="_blank" rel="noreferrer" className="interactive-lift rounded-full border border-cyan-300/35 px-3 py-1.5 text-xs uppercase tracking-[0.14em] text-cyan-100">
+            <a href={project.liveUrl} target="_blank" rel="noreferrer" className="interactive-lift inline-flex min-h-10 items-center justify-center rounded-full border border-cyan-300/35 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-100">
               Live Demo
             </a>
           ) : null}
-          <a href={project.githubUrl} target="_blank" rel="noreferrer" className="interactive-lift rounded-full border border-white/20 px-3 py-1.5 text-xs uppercase tracking-[0.14em] text-white/85">
+          <a href={project.githubUrl} target="_blank" rel="noreferrer" className="interactive-lift inline-flex min-h-10 items-center justify-center rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-white/85">
             Code
           </a>
         </div>
@@ -165,8 +165,8 @@ function FeaturedProject({ project, onView }: { project: Project; onView: () => 
               </span>
             ))}
           </div>
-          <h3 className="display-title text-3xl font-semibold text-white md:text-4xl">{project.title}</h3>
-          <p className="max-w-2xl text-sm text-white/78">{project.longDescription}</p>
+          <h3 className="display-title text-2xl font-semibold leading-tight text-white sm:text-3xl md:text-4xl">{project.title}</h3>
+          <p className="max-w-2xl text-sm leading-6 text-white/78">{project.longDescription}</p>
           <div className="flex flex-wrap gap-2">
             {project.tech.slice(0, 5).map((tech) => (
               <span key={`featured-tech-${tech}`} className="impact-chip">
@@ -174,12 +174,12 @@ function FeaturedProject({ project, onView }: { project: Project; onView: () => 
               </span>
             ))}
           </div>
-          <div className="flex flex-wrap gap-3 pt-1">
-            <button onClick={onView} className="interactive-lift rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-black">
+          <div className="flex flex-wrap gap-2.5 pt-1">
+            <button onClick={onView} className="interactive-lift inline-flex min-h-10 items-center justify-center rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-black">
               Explore Case
             </button>
             {project.liveUrl ? (
-              <a href={project.liveUrl} target="_blank" rel="noreferrer" className="interactive-lift rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white">
+              <a href={project.liveUrl} target="_blank" rel="noreferrer" className="interactive-lift inline-flex min-h-10 items-center justify-center rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white">
                 Visit Live
               </a>
             ) : null}
@@ -270,8 +270,8 @@ export default function Projects() {
         >
           <div className="space-y-3">
             <p className="text-sm uppercase tracking-[0.26em] text-white/50">Selected Work</p>
-            <StaggerHeading text="Cyber Project Panel" className="display-title text-4xl font-semibold tracking-tight md:text-5xl" />
-            <p className="max-w-3xl text-sm text-white/70">
+            <StaggerHeading text="Cyber Project Panel" className="display-title text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl" />
+            <p className="max-w-3xl text-sm leading-6 text-white/70">
               Measurable outcomes, security-aware engineering, and polished delivery. Browse by category, explore case studies, and inspect implementation depth.
             </p>
           </div>
@@ -282,7 +282,7 @@ export default function Projects() {
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
-                  className={`relative z-10 min-h-11 overflow-hidden rounded-xl px-3 py-2 text-xs uppercase tracking-[0.15em] transition ${
+                  className={`relative z-10 min-h-11 overflow-hidden rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-[0.15em] transition ${
                     activeFilter === filter ? "text-white" : "text-white/70 hover:text-white"
                   }`}
                 >
@@ -294,7 +294,7 @@ export default function Projects() {
                     />
                   ) : null}
                   <span className="relative z-10">
-                  {filter} <span className="text-white/45">({filterCounts[filter]})</span>
+                    {filter} <span className="text-white/45">({filterCounts[filter]})</span>
                   </span>
                 </button>
               ))}
@@ -312,7 +312,7 @@ export default function Projects() {
             <select
               value={activeTech}
               onChange={(event) => setActiveTech(event.target.value)}
-              className="min-h-11 rounded-xl border border-white/15 bg-black/25 px-4 py-3 text-sm text-white outline-none focus:border-white/40"
+              className="min-h-11 w-full rounded-xl border border-white/15 bg-black/25 px-4 py-3 text-sm text-white outline-none focus:border-white/40 md:w-auto"
               aria-label="Filter by technology"
             >
               {techFilters.map((tech) => (
@@ -366,16 +366,16 @@ export default function Projects() {
               exit={{ y: 26, opacity: 0 }}
               transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
               onClick={(event) => event.stopPropagation()}
-              className="surface w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl p-6"
+              className="surface max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl p-4 sm:p-6"
             >
-              <div className="sticky top-0 z-10 -mx-6 -mt-6 mb-4 flex items-center justify-between border-b border-white/10 bg-black/72 px-6 py-4 backdrop-blur">
+              <div className="sticky top-0 z-10 -mx-4 -mt-4 mb-4 flex items-center justify-between border-b border-white/10 bg-black/72 px-4 py-4 backdrop-blur sm:-mx-6 sm:-mt-6 sm:px-6">
                 <div>
-                  <h3 className="text-2xl font-semibold">{selectedProject.title}</h3>
+                  <h3 className="text-xl font-semibold sm:text-2xl">{selectedProject.title}</h3>
                   <p className="mt-1 text-xs uppercase tracking-[0.14em] text-white/55">
                     Screenshot {selectedSlide + 1} of {selectedScreenshots.length}
                   </p>
                 </div>
-                <button onClick={() => setSelected(null)} className="interactive-lift rounded-full border border-white/20 px-3 py-1 text-xs uppercase tracking-[0.14em] text-white/85">
+                <button onClick={() => setSelected(null)} className="interactive-lift inline-flex min-h-10 items-center justify-center rounded-full border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-white/85">
                   Close
                 </button>
               </div>
@@ -463,13 +463,13 @@ export default function Projects() {
                 </div>
               ) : null}
 
-              <div className="mt-6 flex flex-wrap gap-3">
+              <div className="mt-6 flex flex-wrap gap-2.5">
                 {selectedProject.liveUrl ? (
-                  <a href={selectedProject.liveUrl} target="_blank" rel="noreferrer" className="interactive-lift rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-black">
+                  <a href={selectedProject.liveUrl} target="_blank" rel="noreferrer" className="interactive-lift inline-flex min-h-10 items-center justify-center rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-black">
                     Live Demo
                   </a>
                 ) : null}
-                <a href={selectedProject.githubUrl} target="_blank" rel="noreferrer" className="interactive-lift rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white">
+                <a href={selectedProject.githubUrl} target="_blank" rel="noreferrer" className="interactive-lift inline-flex min-h-10 items-center justify-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white">
                   GitHub
                 </a>
               </div>

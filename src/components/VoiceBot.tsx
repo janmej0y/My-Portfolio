@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
 
 type SpeechRecognitionLike = {
@@ -17,143 +17,400 @@ type SpeechRecognitionLike = {
 
 type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
 
+type ChatMessage = {
+  id: string;
+  role: "assistant" | "user";
+  text: string;
+};
+
+type ChatStyle = "normal" | "funny" | "savage";
+
+const quickPrompts = [
+  "Best project for hiring?",
+  "What tech stack do you use most?",
+  "Tell me about your education",
+  "How can I contact you?",
+];
+const TOUR_SECTIONS = ["hero", "about", "education", "projects", "case-studies", "skills", "certifications", "contact"] as const;
+
 function getSpeechRecognitionCtor(): SpeechRecognitionCtor | null {
   if (typeof window === "undefined") return null;
-  const maybe = (window as Window & { webkitSpeechRecognition?: SpeechRecognitionCtor; SpeechRecognition?: SpeechRecognitionCtor });
-  return maybe.SpeechRecognition ?? maybe.webkitSpeechRecognition ?? null;
-}
-
-function applyTheme(theme: "dark" | "bright" | "cyber") {
-  document.documentElement.classList.remove("theme-dark", "theme-bright", "theme-cyber", "bright-mode");
-  document.documentElement.classList.add(`theme-${theme}`);
-  localStorage.setItem("theme-preset", theme);
+  const maybeWindow = window as Window & {
+    SpeechRecognition?: SpeechRecognitionCtor;
+    webkitSpeechRecognition?: SpeechRecognitionCtor;
+  };
+  return maybeWindow.SpeechRecognition ?? maybeWindow.webkitSpeechRecognition ?? null;
 }
 
 export default function VoiceBot() {
+  const [open, setOpen] = useState(true);
+  const [input, setInput] = useState("");
+  const [sending, setSending] = useState(false);
   const [listening, setListening] = useState(false);
-  const [status, setStatus] = useState("Say: go to projects / open resume / dark theme");
-  const [lastCommand, setLastCommand] = useState("");
+  const [voiceOutput, setVoiceOutput] = useState(true);
+  const [chatStyle, setChatStyle] = useState<ChatStyle>("funny");
+  const [tourActive, setTourActive] = useState(false);
+  const [tourIndex, setTourIndex] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: "welcome",
+      role: "assistant",
+      text: "I am JanBot. Ask me anything about Janmejoy's projects, skills, education, or contact details.",
+    },
+  ]);
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const messagesRef = useRef<ChatMessage[]>(messages);
+  const scrollTimerRef = useRef<number | null>(null);
 
-  const recognition = useMemo(() => {
-    const Ctor = getSpeechRecognitionCtor();
-    if (!Ctor) return null;
-    const instance = new Ctor();
-    instance.continuous = false;
-    instance.interimResults = false;
-    instance.lang = "en-US";
-    return instance;
+  useEffect(() => {
+    messagesRef.current = messages;
+    scrollerRef.current?.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    return () => {
+      recognitionRef.current?.stop();
+      if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+    };
   }, []);
 
-  const runCommand = (spoken: string) => {
-    const text = spoken.toLowerCase();
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolling(true);
+      if (scrollTimerRef.current) window.clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = window.setTimeout(() => setIsScrolling(false), 180);
+    };
 
-    const sectionMatch = text.match(/(hero|about|education|projects|skills|contact)/);
-    if (sectionMatch?.[1]) {
-      const section = sectionMatch[1];
-      document.getElementById(section)?.scrollIntoView({ behavior: "smooth", block: "start" });
-      setStatus(`Navigated to ${section}.`);
-      return;
-    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (scrollTimerRef.current) window.clearTimeout(scrollTimerRef.current);
+    };
+  }, []);
 
-    if (text.includes("open resume")) {
-      window.open("/assets/resume.pdf", "_blank", "noopener,noreferrer");
-      setStatus("Opened resume.");
-      return;
-    }
-    if (text.includes("open github")) {
-      window.open("https://github.com/janmej0y", "_blank", "noopener,noreferrer");
-      setStatus("Opened GitHub.");
-      return;
-    }
-    if (text.includes("open linkedin")) {
-      window.open("https://linkedin.com/in/janmej0y", "_blank", "noopener,noreferrer");
-      setStatus("Opened LinkedIn.");
-      return;
-    }
-    if (text.includes("open secret")) {
-      window.location.href = "/secret";
-      return;
-    }
-    if (text.includes("dark theme")) {
-      applyTheme("dark");
-      setStatus("Theme set to dark.");
-      return;
-    }
-    if (text.includes("bright theme")) {
-      applyTheme("bright");
-      setStatus("Theme set to bright.");
-      return;
-    }
-    if (text.includes("cyber theme")) {
-      applyTheme("cyber");
-      setStatus("Theme set to cyber.");
-      return;
-    }
-
-    setStatus("Command not recognized. Try: go to projects, open resume, dark theme.");
+  const scrollToSection = (id: string) => {
+    const section = document.getElementById(id);
+    if (!section) return false;
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    return true;
   };
 
-  const startListening = () => {
-    if (!recognition) {
-      setStatus("Voice recognition is not supported in this browser.");
+  const goToTourStep = (index: number) => {
+    const safeIndex = ((index % TOUR_SECTIONS.length) + TOUR_SECTIONS.length) % TOUR_SECTIONS.length;
+    const target = TOUR_SECTIONS[safeIndex];
+    const ok = scrollToSection(target);
+    if (ok) setTourIndex(safeIndex);
+    return ok;
+  };
+
+  const speakReply = (text: string) => {
+    if (!voiceOutput || typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1;
+    utterance.pitch = 1.02;
+    utterance.lang = "en-US";
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const sendQuestion = async (question: string) => {
+    const cleanQuestion = question.trim();
+    if (!cleanQuestion || sending) return;
+    const normalized = cleanQuestion.toLowerCase();
+    const sectionAliases: Record<string, string> = {
+      hero: "hero",
+      about: "about",
+      education: "education",
+      projects: "projects",
+      "case studies": "case-studies",
+      "case-studies": "case-studies",
+      skills: "skills",
+      certifications: "certifications",
+      contact: "contact",
+    };
+    const directSection = Object.entries(sectionAliases).find(([phrase]) =>
+      normalized.includes(`go to ${phrase}`) || normalized.includes(`scroll to ${phrase}`) || normalized.includes(`open ${phrase}`),
+    );
+
+    if (directSection) {
+      const targetId = directSection[1];
+      const ok = scrollToSection(targetId);
+      if (ok) {
+        const idx = TOUR_SECTIONS.findIndex((section) => section === targetId);
+        if (idx >= 0) setTourIndex(idx);
+        addAssistantMessage(`Taking you to ${targetId.replace("-", " ")} section. Smooth landing complete.`);
+      } else {
+        addAssistantMessage("That section was not found. Try: go to hero section or go to contact section.");
+      }
       return;
     }
 
-    recognition.onresult = (event) => {
-      const spoken = event.results[0]?.[0]?.transcript?.trim() ?? "";
-      setLastCommand(spoken);
-      runCommand(spoken);
+    if (normalized.includes("take me through") || normalized.includes("walk through") || normalized.includes("portfolio tour")) {
+      setTourActive(true);
+      const ok = goToTourStep(tourIndex);
+      if (ok) addAssistantMessage("Tour mode activated. I will guide section by section. Sit back, scroll spy style.");
+      return;
+    }
+    if (normalized.includes("next section") || normalized === "next") {
+      const ok = goToTourStep(tourIndex + 1);
+      if (ok) addAssistantMessage(`Jumping to ${TOUR_SECTIONS[(tourIndex + 1) % TOUR_SECTIONS.length]}. Guided missile deployed.`);
+      return;
+    }
+    if (normalized.includes("stop tour")) {
+      setTourActive(false);
+      addAssistantMessage("Tour paused. Manual mode restored.");
+      return;
+    }
+
+    const userMsg: ChatMessage = { id: `u-${Date.now()}`, role: "user", text: cleanQuestion };
+    const nextMessages = [...messagesRef.current, userMsg];
+    setMessages(nextMessages);
+    setSending(true);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: nextMessages.map((m) => ({ role: m.role, text: m.text })),
+          style: chatStyle,
+        }),
+      });
+
+      const data = (await response.json()) as { success: boolean; reply?: string; message?: string };
+      const reply =
+        response.ok && data.success && data.reply
+          ? data.reply
+          : data.message || "JanBot is reloading its humor engine. Try again in a moment.";
+
+      setMessages((prev) => {
+        const assistantReply: ChatMessage = { id: `a-${Date.now()}`, role: "assistant", text: reply };
+        const withReply = [...prev, assistantReply];
+        messagesRef.current = withReply;
+        return withReply;
+      });
+      speakReply(reply);
+    } catch {
+      const fallback = "Network glitch. JanBot tripped over a cable, but your portfolio details are still legendary.";
+      setMessages((prev) => {
+        const fallbackReply: ChatMessage = { id: `a-${Date.now()}`, role: "assistant", text: fallback };
+        const withFallback = [...prev, fallbackReply];
+        messagesRef.current = withFallback;
+        return withFallback;
+      });
+      speakReply(fallback);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!tourActive) return;
+    const timer = window.setInterval(() => {
+      setTourIndex((prev) => {
+        const next = (prev + 1) % TOUR_SECTIONS.length;
+        goToTourStep(next);
+        if (next === TOUR_SECTIONS.length - 1) {
+          setTourActive(false);
+          addAssistantMessage("Tour complete. Portfolio conquered. You now know the map better than Google.");
+        }
+        return next;
+      });
+    }, 4200);
+
+    return () => window.clearInterval(timer);
+  }, [tourActive]);
+
+  const onSend = async (event?: FormEvent) => {
+    event?.preventDefault();
+    const question = input.trim();
+    if (!question) return;
+    setInput("");
+    await sendQuestion(question);
+  };
+
+  const addAssistantMessage = (text: string) => {
+    setMessages((prev) => {
+      const assistantMsg: ChatMessage = { id: `a-${Date.now()}`, role: "assistant", text };
+      const next = [...prev, assistantMsg];
+      messagesRef.current = next;
+      return next;
+    });
+    speakReply(text);
+  };
+
+  const onVoiceToggle = () => {
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false);
+      return;
+    }
+
+    const Ctor = getSpeechRecognitionCtor();
+    if (!Ctor) {
+      addAssistantMessage("Voice input is not supported in this browser. Type your message and I will still roast politely.");
+      return;
+    }
+
+    const recognition = new Ctor();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+    recognitionRef.current = recognition;
+    setListening(true);
+
+    recognition.onresult = async (event) => {
+      const transcript = event.results[0]?.[0]?.transcript?.trim() ?? "";
+      if (!transcript) return;
+      setInput(transcript);
+      await sendQuestion(transcript);
+      setInput("");
     };
 
     recognition.onerror = () => {
       setListening(false);
-      setStatus("Voice command failed. Please try again.");
+      addAssistantMessage("I heard static noise from the digital universe. Tap Mic and try again.");
     };
 
     recognition.onend = () => {
       setListening(false);
     };
 
-    setStatus("Listening...");
-    setListening(true);
     recognition.start();
   };
 
+  const starterPrompts = useMemo(() => quickPrompts, []);
+
   return (
-    <div className="fixed bottom-5 right-5 z-[128] w-[min(88vw,270px)]">
+    <div className="pointer-events-none fixed bottom-5 right-5 z-[128] w-[min(92vw,360px)]">
       <motion.div
-        className="surface rounded-2xl p-3"
+        className={`pointer-events-auto overflow-hidden rounded-2xl border border-cyan-300/20 bg-black/18 shadow-[0_10px_24px_rgba(2,6,23,0.24)] backdrop-blur-sm transition-opacity ${
+          isScrolling ? "opacity-55" : "opacity-95"
+        }`}
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
       >
-        <div className="flex items-center gap-3">
-          <motion.img
+        <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 px-3 py-2.5">
+          <img
             src="/assets/voice-bot.png"
-            alt="Voice assistant bot"
-            className="h-12 w-12 rounded-full border border-cyan-300/40 bg-black/35 p-1"
-            animate={listening ? { scale: [1, 1.08, 1] } : { scale: 1 }}
-            transition={listening ? { duration: DURATIONS.divider * 0.52, repeat: Infinity } : { duration: DURATIONS.fast }}
+            alt="JanBot assistant"
+            className="h-10 w-10 rounded-full border border-cyan-300/40 bg-black/35 p-1"
           />
-          <div className="min-w-0">
-            <p className="text-xs uppercase tracking-[0.12em] text-cyan-200/90">Voice Bot</p>
-            <p className="truncate text-xs text-white/65">{lastCommand || "Awaiting command"}</p>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs uppercase tracking-[0.14em] text-cyan-200/90">AI Voice Bot</p>
+            <p className="truncate text-xs text-white/65">{listening ? "Listening..." : "Ask by voice or text"}</p>
           </div>
           <button
             type="button"
-            onClick={startListening}
-            aria-label="Start voice command"
-            className={`ml-auto rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
+            onClick={() => setVoiceOutput((prev) => !prev)}
+            aria-label={voiceOutput ? "Mute voice output" : "Enable voice output"}
+            className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
+              voiceOutput
+                ? "border-emerald-300/50 bg-emerald-400/15 text-emerald-100"
+                : "border-white/20 bg-black/30 text-white/70"
+            }`}
+          >
+            {voiceOutput ? "Voice" : "Mute"}
+          </button>
+          <button
+            type="button"
+            onClick={onVoiceToggle}
+            aria-label={listening ? "Stop listening" : "Start voice input"}
+            className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
               listening
-                ? "border-emerald-300/60 bg-emerald-400/20 text-emerald-200"
+                ? "border-fuchsia-300/60 bg-fuchsia-400/18 text-fuchsia-100"
                 : "border-cyan-300/50 bg-cyan-400/15 text-cyan-100"
             }`}
-            data-magnetic="true"
           >
-            {listening ? "On" : "Speak"}
+            {listening ? "Stop" : "Mic"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => !prev)}
+            aria-label={open ? "Collapse chat" : "Expand chat"}
+            className="rounded-full border border-cyan-300/50 bg-cyan-400/15 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-cyan-100"
+          >
+            {open ? "Hide" : "Chat"}
           </button>
         </div>
-        <p className="mt-2 text-xs text-white/70">{status}</p>
+
+        {open ? (
+          <div className="p-3">
+            <div className="mb-2 flex items-center gap-1.5">
+              <span className="rounded-full border border-white/20 bg-black/28 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/75">
+                Voice command: go to projects section
+              </span>
+              <span className="ml-auto text-[10px] uppercase tracking-[0.12em] text-white/45">{tourActive ? "Tour On" : "Tour Off"}</span>
+            </div>
+
+            <div className="mb-2 flex items-center gap-1.5">
+              {(["normal", "funny", "savage"] as ChatStyle[]).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setChatStyle(mode)}
+                  className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] transition ${
+                    chatStyle === mode
+                      ? "border-cyan-300/60 bg-cyan-400/20 text-cyan-100"
+                      : "border-white/20 bg-black/28 text-white/70"
+                  }`}
+                >
+                  {mode}
+                </button>
+              ))}
+              <span className="ml-auto text-[10px] uppercase tracking-[0.12em] text-white/45">Mode</span>
+            </div>
+
+            <div ref={scrollerRef} className="max-h-64 space-y-2 overflow-y-auto pr-1">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`rounded-xl px-3 py-2 text-xs leading-5 ${
+                    message.role === "assistant"
+                      ? "border border-cyan-300/25 bg-cyan-400/10 text-cyan-50"
+                      : "ml-6 border border-white/18 bg-white/8 text-white/90"
+                  }`}
+                >
+                  {message.text}
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {starterPrompts.map((prompt) => (
+                <button
+                  key={prompt}
+                  type="button"
+                  onClick={() => setInput(prompt)}
+                  className="rounded-full border border-white/15 bg-black/30 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-white/75 hover:text-white"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+
+            <form onSubmit={onSend} className="mt-2.5 flex items-center gap-2">
+              <input
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                placeholder="Ask something about Janmejoy..."
+                className="h-10 w-full rounded-full border border-white/15 bg-black/35 px-3 text-xs text-white outline-none placeholder:text-white/45 focus:border-cyan-300/45"
+                aria-label="Ask portfolio chatbot"
+                disabled={sending}
+              />
+              <button
+                type="submit"
+                disabled={sending}
+                className="inline-flex h-10 items-center justify-center rounded-full border border-cyan-300/50 bg-cyan-400/15 px-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-cyan-100 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {sending ? "..." : "Send"}
+              </button>
+            </form>
+          </div>
+        ) : null}
       </motion.div>
     </div>
   );

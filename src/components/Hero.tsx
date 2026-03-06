@@ -35,6 +35,7 @@ export default function Hero() {
     ],
     [],
   );
+  const trustChips = useMemo(() => ["Security-first", "Full-stack", "Open to roles"], []);
 
   return (
     <section
@@ -66,7 +67,7 @@ export default function Hero() {
         style={shouldReduceMotion ? undefined : { y: foregroundY, opacity: contentOpacity }}
         className="mx-auto grid w-full max-w-6xl gap-8 will-change-transform lg:grid-cols-[1fr_320px] lg:items-start"
       >
-        <div>
+        <div className="max-w-4xl">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -76,15 +77,15 @@ export default function Hero() {
             Available for full-time roles
           </motion.p>
 
-          <div className="mt-5 max-w-4xl">
+          <div className="mt-5 mr-8 rounded-2xl border border-white/10 bg-black/20 p-4 backdrop-blur-sm sm:mr-12 sm:p-5 lg:mr-16">
             <p className="font-display text-sm uppercase tracking-[0.26em] text-white/70 sm:text-base">Hello, I&apos;m</p>
-            <h1 className="display-title mt-2 text-[2.3rem] font-semibold leading-[1.02] text-white sm:text-[3.35rem] lg:text-[5.4rem]">
+            <h1 className="display-title mt-2 text-[2.2rem] font-semibold leading-[1.02] text-white sm:text-[3.15rem] lg:text-[5rem]">
               JANMEJOY
             </h1>
             <StaggerHeading
               as="h2"
               text="Secure Builder of Modern Products"
-              className="display-title mt-3 text-xl font-semibold leading-tight text-white/82 sm:text-2xl lg:text-3xl"
+              className="display-title mt-3 max-w-3xl text-xl font-semibold leading-tight text-white/84 sm:text-2xl lg:text-3xl"
             />
           </div>
 
@@ -92,7 +93,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.24, duration: DURATIONS.base, ease: EASE_STANDARD }}
-            className="mt-5 flex min-h-[2.4em] max-w-4xl items-center text-xl font-medium text-white/85 sm:text-2xl lg:text-4xl"
+            className="mt-5 flex min-h-[2.4em] max-w-3xl items-center text-xl font-medium text-white/85 sm:text-2xl lg:text-[2.2rem]"
           >
             <TypeAnimation
               sequence={typingSequence}
@@ -110,11 +111,24 @@ export default function Hero() {
             />
           </motion.h2>
 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.28, duration: DURATIONS.base, ease: EASE_STANDARD }}
+            className="mt-4 flex flex-wrap gap-2"
+          >
+            {trustChips.map((chip) => (
+              <span key={chip} className="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-cyan-100/90">
+                {chip}
+              </span>
+            ))}
+          </motion.div>
+
           <motion.p
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.32, duration: DURATIONS.base, ease: EASE_STANDARD }}
-            className="mt-7 max-w-2xl text-base leading-7 text-[#9ca3af]"
+            className="mt-6 max-w-2xl text-sm leading-7 text-[#9ca3af] sm:text-base"
           >
             I design and build secure, performant digital products with a clean visual language and strong engineering fundamentals.
           </motion.p>
@@ -123,32 +137,39 @@ export default function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: DURATIONS.base, ease: EASE_STANDARD }}
-            className="mt-8 flex flex-col items-stretch gap-3 sm:mt-10 sm:flex-row sm:items-center"
+            className="mt-8 flex flex-col items-stretch gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center"
           >
             <MagneticButton
               href="#projects"
-              className="inline-flex min-h-11 justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-black"
+              className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-black"
             >
               View Projects
             </MagneticButton>
             <MagneticButton
               href="/assets/resume.pdf"
               download
-              className="inline-flex min-h-11 justify-center rounded-full border border-white/20 px-6 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-white"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 bg-white/[0.03] px-6 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-white"
             >
               Resume
             </MagneticButton>
           </motion.div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[320px] pb-28 lg:mx-0 lg:pt-8">
+        <div className="relative mx-auto w-full max-w-[320px] pb-24 sm:pb-28 lg:mx-0 lg:pt-8">
           <GitHubStatsCard />
           <div className="absolute left-1/2 top-full mt-1 -translate-x-1/2 -translate-y-6">
             <ScreamFigure />
           </div>
         </div>
       </motion.div>
-
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7, duration: DURATIONS.fast, ease: EASE_STANDARD }}
+        className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.22em] text-white/38"
+      >
+        Scroll to explore
+      </motion.p>
     </section>
   );
 }
