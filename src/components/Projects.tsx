@@ -259,7 +259,7 @@ export default function Projects() {
   const gridProjects = featured ? visible.slice(1) : visible;
 
   return (
-    <section id="projects" className="section-backplate b section-wrap px-6 md:px-12">
+    <section id="projects" className="section-backplate b section-wrap px-5 sm:px-6 md:px-12">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -269,8 +269,8 @@ export default function Projects() {
           className="flex flex-col gap-6"
         >
           <div className="space-y-3">
-            <p className="text-sm uppercase tracking-[0.26em] text-white/50">Selected Work</p>
-            <StaggerHeading text="Cyber Project Panel" className="display-title text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl" />
+            <p className="text-sm uppercase tracking-[0.26em] text-white/50">Build Vault</p>
+            <StaggerHeading text="Shipped systems with real surface area" className="display-title text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl" />
             <p className="max-w-3xl text-sm leading-6 text-white/70">
               Measurable outcomes, security-aware engineering, and polished delivery. Browse by category, explore case studies, and inspect implementation depth.
             </p>
@@ -368,8 +368,8 @@ export default function Projects() {
               onClick={(event) => event.stopPropagation()}
               className="surface max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl p-4 sm:p-6"
             >
-              <div className="sticky top-0 z-10 -mx-4 -mt-4 mb-4 flex items-center justify-between border-b border-white/10 bg-black/72 px-4 py-4 backdrop-blur sm:-mx-6 sm:-mt-6 sm:px-6">
-                <div>
+              <div className="sticky top-0 z-10 -mx-4 -mt-4 mb-4 flex flex-wrap items-start justify-between gap-3 border-b border-white/10 bg-black/72 px-4 py-4 backdrop-blur sm:-mx-6 sm:-mt-6 sm:px-6">
+                <div className="min-w-0">
                   <h3 className="text-xl font-semibold sm:text-2xl">{selectedProject.title}</h3>
                   <p className="mt-1 text-xs uppercase tracking-[0.14em] text-white/55">
                     Screenshot {selectedSlide + 1} of {selectedScreenshots.length}

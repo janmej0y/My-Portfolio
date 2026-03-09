@@ -6,8 +6,6 @@ type IncomingMessage = {
   text: string;
 };
 
-type ChatStyle = "normal" | "funny" | "savage";
-
 function buildPortfolioContext() {
   const projects = PROJECTS.map((p) => `${p.title} [${p.category}] - ${p.shortDescription}. Stack: ${p.tech.join(", ")}`).join("\n");
   const education = EDUCATION_ITEMS.map((e) => `${e.degree} | ${e.institute} | ${e.year} | ${e.score}`).join("\n");
@@ -56,9 +54,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Chat service is not configured." }, { status: 500 });
     }
 
-    const body = (await req.json()) as { messages?: IncomingMessage[]; style?: ChatStyle };
+    const body = (await req.json()) as { messages?: IncomingMessage[] };
     const incoming = (body.messages ?? []).slice(-10);
-    const style: ChatStyle = body.style === "funny" || body.style === "savage" ? body.style : "normal";
 
     if (!incoming.length) {
       return NextResponse.json({ success: false, message: "No chat messages provided." }, { status: 400 });
@@ -79,11 +76,8 @@ export async function POST(req: NextRequest) {
       {
         role: "system",
         content:
-          style === "savage"
-            ? "Mode: SAVAGE. Be extra funny and highly argumentative with spicy one-liners, but never abusive, hateful, or vulgar. Roast ideas, not people."
-            : style === "funny"
-              ? "Mode: FUNNY. Be playful, witty, and clearly humorous with light debate energy."
-              : "Mode: NORMAL. Be clear and professional with mild humor and soft argumentative style.",
+          "Mode: AUTO SARCASM. Be witty, sharp, playful, and confidently roasting by default. " +
+          "Keep the humor spicy but never abusive, hateful, sexually explicit, or vulgar. Roast weak questions and bad assumptions, not protected traits or personal identity.",
       },
       {
         role: "system",
@@ -110,7 +104,7 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         model: "llama-3.1-8b-instant",
-        temperature: style === "savage" ? 1 : style === "funny" ? 0.95 : 0.75,
+        temperature: 0.95,
         max_tokens: 350,
         messages,
       }),

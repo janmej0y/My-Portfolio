@@ -87,7 +87,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="section-backplate c section-wrap px-6 pb-16 pt-8 md:px-12">
+    <section id="contact" className="section-backplate c section-wrap px-5 pb-16 pt-8 sm:px-6 md:px-12">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -97,10 +97,10 @@ export default function Contact() {
           className="grid gap-8 lg:grid-cols-[1fr_1.2fr]"
         >
           <div>
-            <p className="text-sm uppercase tracking-[0.26em] text-white/50">Contact</p>
+            <p className="text-sm uppercase tracking-[0.26em] text-white/50">Signal Line</p>
             <div className="mt-4">
               <StaggerHeading
-                text="Let's Build Something Great"
+                text="Start the next build before someone else does."
                 className="display-title text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl"
               />
             </div>
@@ -222,9 +222,9 @@ export default function Contact() {
           transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
           className="mt-10 rounded-2xl border border-cyan-200/20 bg-[linear-gradient(115deg,rgba(34,211,238,0.18),rgba(14,116,144,0.12))] p-5 md:p-6"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/80">Final CTA</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/80">Last Call</p>
           <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <p className="display-title text-2xl font-semibold leading-tight text-white sm:text-3xl">Let&apos;s Build Something Powerful</p>
+            <p className="display-title text-2xl font-semibold leading-tight text-white sm:text-3xl">Let&apos;s launch something sharp and hard to ignore</p>
             <a
               href="#contact"
               className="interactive-lift inline-flex min-h-11 items-center justify-center rounded-full border border-white/25 bg-black/35 px-5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white"

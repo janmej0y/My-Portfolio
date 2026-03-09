@@ -11,13 +11,13 @@ import type {
 } from "@/types/portfolio";
 
 export const NAV_ITEMS: NavItem[] = [
-  { id: "about", label: "About" },
-  { id: "education", label: "Education" },
-  { id: "projects", label: "Projects" },
-  { id: "case-studies", label: "Case Studies" },
-  { id: "skills", label: "Skills" },
-  { id: "certifications", label: "Certifications" },
-  { id: "contact", label: "Contact" },
+  { id: "about", label: "Origin" },
+  { id: "education", label: "Launchpad" },
+  { id: "projects", label: "Build Vault" },
+  { id: "case-studies", label: "Deep Dives" },
+  { id: "skills", label: "Arsenal" },
+  { id: "certifications", label: "Proof Stack" },
+  { id: "contact", label: "Signal" },
 ];
 
 export const EDUCATION_ITEMS: EducationItem[] = [

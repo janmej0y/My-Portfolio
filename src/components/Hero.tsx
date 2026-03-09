@@ -41,7 +41,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative flex min-h-screen items-center overflow-hidden px-6 pb-8 pt-24 md:px-12 md:pt-28"
+      className="relative flex min-h-screen items-center overflow-hidden px-5 pb-12 pt-24 sm:px-6 md:px-12 md:pb-8 md:pt-28"
     >
       <motion.div
         aria-hidden="true"
@@ -77,14 +77,14 @@ export default function Hero() {
             Available for full-time roles
           </motion.p>
 
-          <div className="mt-5 mr-8 rounded-2xl border border-white/10 bg-black/20 p-4 backdrop-blur-sm sm:mr-12 sm:p-5 lg:mr-16">
-            <p className="font-display text-sm uppercase tracking-[0.26em] text-white/70 sm:text-base">Hello, I&apos;m</p>
+          <div className="mt-5 mr-0 rounded-2xl border border-white/10 bg-black/20 p-4 backdrop-blur-sm sm:mr-6 sm:p-5 lg:mr-16">
+            <p className="font-display text-xs uppercase tracking-[0.24em] text-white/70 sm:text-sm sm:tracking-[0.26em] md:text-base">Hello, I&apos;m</p>
             <h1 className="display-title mt-2 text-[2.2rem] font-semibold leading-[1.02] text-white sm:text-[3.15rem] lg:text-[5rem]">
               JANMEJOY
             </h1>
             <StaggerHeading
               as="h2"
-              text="Secure Builder of Modern Products"
+              text="Secure Builder of Digital Systems"
               className="display-title mt-3 max-w-3xl text-xl font-semibold leading-tight text-white/84 sm:text-2xl lg:text-3xl"
             />
           </div>
@@ -118,7 +118,7 @@ export default function Hero() {
             className="mt-4 flex flex-wrap gap-2"
           >
             {trustChips.map((chip) => (
-              <span key={chip} className="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-cyan-100/90">
+              <span key={chip} className="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-100/90">
                 {chip}
               </span>
             ))}
@@ -155,7 +155,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[320px] pb-24 sm:pb-28 lg:mx-0 lg:pt-8">
+        <div className="relative mx-auto w-full max-w-[280px] pb-20 sm:max-w-[320px] sm:pb-28 lg:mx-0 lg:pt-8">
           <GitHubStatsCard />
           <div className="absolute left-1/2 top-full mt-1 -translate-x-1/2 -translate-y-6">
             <ScreamFigure />

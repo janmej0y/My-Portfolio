@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
 
 type SpeechRecognitionLike = {
@@ -23,8 +24,6 @@ type ChatMessage = {
   text: string;
 };
 
-type ChatStyle = "normal" | "funny" | "savage";
-
 const quickPrompts = [
   "Best project for hiring?",
   "What tech stack do you use most?",
@@ -43,12 +42,11 @@ function getSpeechRecognitionCtor(): SpeechRecognitionCtor | null {
 }
 
 export default function VoiceBot() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [listening, setListening] = useState(false);
   const [voiceOutput, setVoiceOutput] = useState(true);
-  const [chatStyle, setChatStyle] = useState<ChatStyle>("funny");
   const [tourActive, setTourActive] = useState(false);
   const [tourIndex, setTourIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -175,7 +173,6 @@ export default function VoiceBot() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: nextMessages.map((m) => ({ role: m.role, text: m.text })),
-          style: chatStyle,
         }),
       });
 
@@ -281,63 +278,65 @@ export default function VoiceBot() {
     recognition.start();
   };
 
-  const starterPrompts = useMemo(() => quickPrompts, []);
-
   return (
-    <div className="pointer-events-none fixed bottom-5 right-5 z-[128] w-[min(92vw,360px)]">
-      <motion.div
-        className={`pointer-events-auto overflow-hidden rounded-2xl border border-cyan-300/20 bg-black/18 shadow-[0_10px_24px_rgba(2,6,23,0.24)] backdrop-blur-sm transition-opacity ${
-          isScrolling ? "opacity-55" : "opacity-95"
-        }`}
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
-      >
-        <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 px-3 py-2.5">
-          <img
-            src="/assets/voice-bot.png"
-            alt="JanBot assistant"
-            className="h-10 w-10 rounded-full border border-cyan-300/40 bg-black/35 p-1"
-          />
-          <div className="min-w-0 flex-1">
-            <p className="text-xs uppercase tracking-[0.14em] text-cyan-200/90">AI Voice Bot</p>
-            <p className="truncate text-xs text-white/65">{listening ? "Listening..." : "Ask by voice or text"}</p>
+    <div className="pointer-events-none fixed bottom-4 right-4 z-[128] w-[min(calc(100vw-1rem),360px)] sm:bottom-5 sm:right-5 sm:w-[min(92vw,360px)]">
+      {open ? (
+        <motion.div
+          className={`pointer-events-auto overflow-hidden rounded-2xl border border-cyan-300/20 bg-black/18 shadow-[0_10px_24px_rgba(2,6,23,0.24)] backdrop-blur-sm transition-opacity ${
+            isScrolling ? "opacity-55" : "opacity-95"
+          }`}
+          initial={{ opacity: 0, y: 14, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
+        >
+          <div className="flex flex-wrap items-center gap-2 border-b border-white/10 bg-black/25 px-3 py-2.5 sm:flex-nowrap sm:gap-3">
+            <Image
+              src="/assets/voice-bot.png"
+              alt="JanBot assistant"
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full border border-cyan-300/40 bg-black/35 p-1"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="text-xs uppercase tracking-[0.14em] text-cyan-200/90">AI Voice Bot</p>
+              <p className="truncate text-xs text-white/65">
+                {listening ? "Listening..." : "Sarcastic mode locked in"}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setVoiceOutput((prev) => !prev)}
+              aria-label={voiceOutput ? "Mute voice output" : "Enable voice output"}
+              className={`rounded-full border px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] sm:px-3 sm:text-[11px] ${
+                voiceOutput
+                  ? "border-emerald-300/50 bg-emerald-400/15 text-emerald-100"
+                  : "border-white/20 bg-black/30 text-white/70"
+              }`}
+            >
+              {voiceOutput ? "Voice" : "Mute"}
+            </button>
+            <button
+              type="button"
+              onClick={onVoiceToggle}
+              aria-label={listening ? "Stop listening" : "Start voice input"}
+              className={`rounded-full border px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] sm:px-3 sm:text-[11px] ${
+                listening
+                  ? "border-fuchsia-300/60 bg-fuchsia-400/18 text-fuchsia-100"
+                  : "border-cyan-300/50 bg-cyan-400/15 text-cyan-100"
+              }`}
+            >
+              {listening ? "Stop" : "Mic"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Collapse chat"
+              className="rounded-full border border-cyan-300/50 bg-cyan-400/15 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-100 sm:px-3 sm:text-[11px]"
+            >
+              Hide
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => setVoiceOutput((prev) => !prev)}
-            aria-label={voiceOutput ? "Mute voice output" : "Enable voice output"}
-            className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
-              voiceOutput
-                ? "border-emerald-300/50 bg-emerald-400/15 text-emerald-100"
-                : "border-white/20 bg-black/30 text-white/70"
-            }`}
-          >
-            {voiceOutput ? "Voice" : "Mute"}
-          </button>
-          <button
-            type="button"
-            onClick={onVoiceToggle}
-            aria-label={listening ? "Stop listening" : "Start voice input"}
-            className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
-              listening
-                ? "border-fuchsia-300/60 bg-fuchsia-400/18 text-fuchsia-100"
-                : "border-cyan-300/50 bg-cyan-400/15 text-cyan-100"
-            }`}
-          >
-            {listening ? "Stop" : "Mic"}
-          </button>
-          <button
-            type="button"
-            onClick={() => setOpen((prev) => !prev)}
-            aria-label={open ? "Collapse chat" : "Expand chat"}
-            className="rounded-full border border-cyan-300/50 bg-cyan-400/15 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-cyan-100"
-          >
-            {open ? "Hide" : "Chat"}
-          </button>
-        </div>
 
-        {open ? (
           <div className="p-3">
             <div className="mb-2 flex items-center gap-1.5">
               <span className="rounded-full border border-white/20 bg-black/28 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/75">
@@ -347,24 +346,13 @@ export default function VoiceBot() {
             </div>
 
             <div className="mb-2 flex items-center gap-1.5">
-              {(["normal", "funny", "savage"] as ChatStyle[]).map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  onClick={() => setChatStyle(mode)}
-                  className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] transition ${
-                    chatStyle === mode
-                      ? "border-cyan-300/60 bg-cyan-400/20 text-cyan-100"
-                      : "border-white/20 bg-black/28 text-white/70"
-                  }`}
-                >
-                  {mode}
-                </button>
-              ))}
-              <span className="ml-auto text-[10px] uppercase tracking-[0.12em] text-white/45">Mode</span>
+              <span className="rounded-full border border-red-300/30 bg-red-400/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-red-100">
+                Automatic sarcastic roast mode
+              </span>
+              <span className="ml-auto text-[10px] uppercase tracking-[0.12em] text-white/45">Auto</span>
             </div>
 
-            <div ref={scrollerRef} className="max-h-64 space-y-2 overflow-y-auto pr-1">
+            <div ref={scrollerRef} className="max-h-56 space-y-2 overflow-y-auto pr-1 sm:max-h-64">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -380,7 +368,7 @@ export default function VoiceBot() {
             </div>
 
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {starterPrompts.map((prompt) => (
+              {quickPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   type="button"
@@ -410,8 +398,32 @@ export default function VoiceBot() {
               </button>
             </form>
           </div>
-        ) : null}
-      </motion.div>
+        </motion.div>
+      ) : (
+        <motion.button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Open JanBot"
+          className={`pointer-events-auto ml-auto flex items-center gap-3 rounded-2xl border border-cyan-300/25 bg-black/30 px-3 py-2 shadow-[0_10px_24px_rgba(2,6,23,0.24)] backdrop-blur-sm transition-opacity ${
+            isScrolling ? "opacity-55" : "opacity-95"
+          }`}
+          initial={{ opacity: 0, y: 14, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
+        >
+          <Image
+            src="/assets/voice-bot.png"
+            alt="JanBot assistant"
+            width={48}
+            height={48}
+            className="h-12 w-12 rounded-full border border-cyan-300/40 bg-black/35 p-1"
+          />
+          <div className="text-left">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200/90">Open JanBot</p>
+            <p className="text-[11px] text-white/60">Tap to unlock chat and voice</p>
+          </div>
+        </motion.button>
+      )}
     </div>
   );
 }

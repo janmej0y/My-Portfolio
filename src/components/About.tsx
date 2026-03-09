@@ -9,13 +9,13 @@ import StaggerHeading from "@/components/StaggerHeading";
 export default function About() {
   return (
     <>
-      <section id="about" className="section-backplate a section-wrap px-6 pb-6 pt-4 md:px-12">
+      <section id="about" className="section-backplate a section-wrap px-5 pb-6 pt-4 sm:px-6 md:px-12">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
-          className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[280px_1fr]"
+          className="mx-auto grid max-w-6xl gap-8 md:grid-cols-[260px_1fr] lg:gap-10"
         >
           <div className="surface media-frame overflow-hidden rounded-2xl">
             <Image
@@ -28,11 +28,11 @@ export default function About() {
           </div>
 
           <div className="surface rounded-2xl p-8 md:p-10">
-            <p className="text-sm uppercase tracking-[0.26em] text-white/50">About</p>
+            <p className="text-sm uppercase tracking-[0.26em] text-white/50">Origin Story</p>
             <div className="mt-4">
               <StaggerHeading
                 as="h3"
-                text="Builder, security-minded engineer."
+                text="Code, curiosity, and a security-first mindset."
                 className="text-3xl font-semibold tracking-tight md:text-4xl"
               />
             </div>
@@ -70,16 +70,15 @@ export default function About() {
         </motion.div>
       </section>
 
-      <section id="education" className="section-backplate b section-wrap px-6 md:px-12">
+      <section id="education" className="section-backplate b section-wrap px-5 sm:px-6 md:px-12">
         <div className="mx-auto max-w-6xl">
           <motion.h2
             initial={{ opacity: 0, y: 22 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
-            className="display-title text-3xl font-semibold"
           >
-            Education
+            Learning Runway
           </motion.h2>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {EDUCATION_ITEMS.map((item, index) => (

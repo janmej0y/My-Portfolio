@@ -133,7 +133,7 @@ export default function CommandPalette() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 left-5 z-[90] rounded-full border border-white/15 bg-black/55 px-3 py-2 text-xs text-white/75 backdrop-blur-xl transition hover:text-white"
+        className="fixed bottom-5 left-5 z-[90] hidden rounded-full border border-white/15 bg-black/55 px-3 py-2 text-xs text-white/75 backdrop-blur-xl transition hover:text-white md:block"
         aria-label="Open command palette"
       >
         Ctrl/Cmd + K

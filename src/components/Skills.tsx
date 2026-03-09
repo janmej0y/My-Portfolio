@@ -9,7 +9,7 @@ import StaggerHeading from "@/components/StaggerHeading";
 export default function Skills() {
   return (
     <>
-      <section id="skills" className="section-backplate c section-wrap px-6 md:px-12">
+      <section id="skills" className="section-backplate c section-wrap px-5 sm:px-6 md:px-12">
         <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -17,7 +17,8 @@ export default function Skills() {
             viewport={{ once: true }}
             transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
           >
-            <StaggerHeading text="Skills" className="display-title text-4xl font-semibold tracking-tight" />
+            <p className="text-sm uppercase tracking-[0.26em] text-white/50">Arsenal</p>
+            <StaggerHeading text="Tools I reach for when things need to ship" className="display-title mt-3 text-4xl font-semibold tracking-tight" />
           </motion.div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -52,7 +53,7 @@ export default function Skills() {
         </div>
       </section>
 
-      <section id="certifications" className="section-backplate a section-wrap px-6 pt-0 md:px-12">
+      <section id="certifications" className="section-backplate a section-wrap px-5 pt-0 sm:px-6 md:px-12">
         <div className="mx-auto max-w-6xl">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -61,7 +62,7 @@ export default function Skills() {
             transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
             className="display-title text-4xl font-semibold tracking-tight"
           >
-            Certifications
+            Proof Stack
           </motion.h2>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">

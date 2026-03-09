@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MagneticButton from "@/components/MagneticButton";
 import { NAV_ITEMS } from "@/lib/data";
 import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
@@ -12,6 +12,7 @@ export default function Navbar() {
   const [active, setActive] = useState("hero");
   const [themePreset, setThemePreset] = useState<ThemePreset>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const sectionIds = useMemo(() => ["hero", ...NAV_ITEMS.map((item) => item.id)], []);
 
   const applyTheme = (preset: ThemePreset) => {
     document.documentElement.classList.remove("theme-dark", "theme-bright", "theme-cyber", "bright-mode");
@@ -20,17 +21,24 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    setThemePreset("dark");
-    applyTheme("dark");
+    const savedPreset = window.localStorage.getItem("theme-preset");
+    const nextPreset: ThemePreset =
+      savedPreset === "bright" || savedPreset === "cyber" || savedPreset === "dark" ? savedPreset : "dark";
+
+    setThemePreset(nextPreset);
+    applyTheme(nextPreset);
   }, []);
 
   useEffect(() => {
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((node): node is HTMLElement => Boolean(node));
+
     const onScroll = () => {
       const y = window.scrollY + 180;
       let section = "hero";
-      ["hero", ...NAV_ITEMS.map((item) => item.id)].forEach((id) => {
-        const node = document.getElementById(id);
-        if (node && y >= node.offsetTop) section = id;
+      sections.forEach((node) => {
+        if (y >= node.offsetTop) section = node.id;
       });
       setActive(section);
     };
@@ -38,7 +46,7 @@ export default function Navbar() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [sectionIds]);
 
   useEffect(() => {
     const onResize = () => {
@@ -63,8 +71,8 @@ export default function Navbar() {
       transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
       className="fixed inset-x-0 top-0 z-50"
     >
-      <div className="mx-auto mt-4 flex w-[min(96%,1120px)] items-center justify-between rounded-full border border-white/10 bg-black/55 px-4 py-3 backdrop-blur-xl md:px-6">
-        <a href="#hero" className="text-sm font-semibold tracking-[0.22em] text-white">
+      <div className="mx-auto mt-3 flex w-[min(96%,1120px)] items-center justify-between rounded-[28px] border border-white/10 bg-black/55 px-3 py-3 backdrop-blur-xl sm:px-4 md:mt-4 md:rounded-full md:px-6">
+        <a href="#hero" className="text-xs font-semibold tracking-[0.2em] text-white sm:text-sm sm:tracking-[0.22em]">
           JANMEJOY
         </a>
 
@@ -107,7 +115,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white md:hidden"
+            className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white md:hidden"
             aria-label="Toggle mobile menu"
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-nav-menu"
@@ -145,6 +153,20 @@ export default function Navbar() {
                   {item.label}
                 </a>
               ))}
+              <div className="mt-2 grid grid-cols-3 gap-2 rounded-xl border border-white/10 bg-black/35 p-2">
+                {(["dark", "bright", "cyber"] as ThemePreset[]).map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => changeTheme(preset)}
+                    className={`min-h-10 rounded-lg px-2 text-[10px] font-semibold uppercase tracking-[0.12em] ${
+                      themePreset === preset ? "bg-white text-black" : "text-white/70"
+                    }`}
+                  >
+                    {preset}
+                  </button>
+                ))}
+              </div>
               <a
                 href="#contact"
                 onClick={() => setMobileMenuOpen(false)}

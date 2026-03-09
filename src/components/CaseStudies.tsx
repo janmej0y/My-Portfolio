@@ -6,7 +6,7 @@ import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
 
 export default function CaseStudies() {
   return (
-    <section id="case-studies" className="section-backplate b section-wrap px-6 md:px-12">
+    <section id="case-studies" className="section-backplate b section-wrap px-5 sm:px-6 md:px-12">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -15,8 +15,8 @@ export default function CaseStudies() {
           transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
           className="mb-10"
         >
-          <p className="text-sm uppercase tracking-[0.26em] text-white/50">Proof of Work</p>
-          <h2 className="display-title mt-3 text-4xl font-semibold tracking-tight md:text-5xl">Flagship Case Studies</h2>
+          <p className="text-sm uppercase tracking-[0.26em] text-white/50">Deep Dives</p>
+          <h2 className="display-title mt-3 text-4xl font-semibold tracking-tight md:text-5xl">Breakdowns behind the strongest builds</h2>
           <p className="mt-4 max-w-3xl text-[#9ca3af]">
             Selected projects with concrete problem context, engineering decisions, and measurable outcomes.
           </p>
