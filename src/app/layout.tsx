@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { Manrope, Sora } from "next/font/google";
 import "./globals.css";
 import BackgroundFX from "@/components/BackgroundFX";
-import MagneticCursor from "@/components/MagneticCursor";
+import InteractionFX from "@/components/InteractionFX";
+import PageLoader from "@/components/PageLoader";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import ThemeTransition from "@/components/ThemeTransition";
 import { CASE_STUDIES, PROJECTS } from "@/lib/data";
 
 const manrope = Manrope({
@@ -86,11 +88,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           dangerouslySetInnerHTML={{ __html: JSON.stringify(workJsonLd) }}
         />
         <SmoothScrollProvider>
+          <PageLoader />
+          <ThemeTransition />
           <BackgroundFX />
           <ScrollProgressBar />
           <div aria-hidden="true" className="linux-watermark" />
           <div aria-hidden="true" className="kali-3d-bg" />
-          <MagneticCursor />
+          <InteractionFX />
           <div className="relative z-10">{children}</div>
         </SmoothScrollProvider>
       </body>

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
+import { smoothScrollToTarget } from "@/lib/scroll";
 
 type SpeechRecognitionLike = {
   continuous: boolean;
@@ -91,7 +92,7 @@ export default function VoiceBot() {
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
     if (!section) return false;
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    smoothScrollToTarget(section);
     return true;
   };
 

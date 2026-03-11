@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useMemo, useRef } from "react";
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { MouseEvent, useMemo, useRef } from "react";
 import ScreamFigure from "@/components/ScreamFigure";
 import { TypeAnimation } from "react-type-animation";
 import GitHubStatsCard from "@/components/GitHubStatsCard";
@@ -12,6 +12,10 @@ import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const shouldReduceMotion = useReducedMotion();
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const smoothX = useSpring(pointerX, { stiffness: 110, damping: 18 });
+  const smoothY = useSpring(pointerY, { stiffness: 110, damping: 18 });
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -23,6 +27,11 @@ export default function Hero() {
   const foregroundY = useTransform(scrollYProgress, [0, 1], [0, -170]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.82, 1], [1, 0.92, 0.82]);
   const glowOpacity = useTransform(scrollYProgress, [0, 1], [0.85, 0.25]);
+  const heroX = useTransform(smoothX, [-24, 24], [-12, 12]);
+  const heroY = useTransform(smoothY, [-24, 24], [-8, 8]);
+  const statsX = useTransform(smoothX, [-24, 24], [10, -10]);
+  const statsY = useTransform(smoothY, [-24, 24], [8, -8]);
+  const chipY = useTransform(smoothY, [-24, 24], [-4, 4]);
 
   const typingSequence = useMemo(
     () => [
@@ -37,10 +46,26 @@ export default function Hero() {
   );
   const trustChips = useMemo(() => ["Security-first", "Full-stack", "Open to roles"], []);
 
+  const onMove = (event: MouseEvent<HTMLElement>) => {
+    if (shouldReduceMotion || window.innerWidth < 768) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 48;
+    const y = ((event.clientY - rect.top) / rect.height - 0.5) * 48;
+    pointerX.set(x);
+    pointerY.set(y);
+  };
+
+  const onLeave = () => {
+    pointerX.set(0);
+    pointerY.set(0);
+  };
+
   return (
     <section
       ref={sectionRef}
       id="hero"
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
       className="relative flex min-h-screen items-center overflow-hidden px-5 pb-12 pt-24 sm:px-6 md:px-12 md:pb-8 md:pt-28"
     >
       <motion.div
@@ -64,7 +89,7 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        style={shouldReduceMotion ? undefined : { y: foregroundY, opacity: contentOpacity }}
+        style={shouldReduceMotion ? undefined : { x: heroX, y: foregroundY, opacity: contentOpacity }}
         className="mx-auto grid w-full max-w-6xl gap-8 will-change-transform lg:grid-cols-[1fr_320px] lg:items-start"
       >
         <div className="max-w-4xl">
@@ -115,6 +140,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.28, duration: DURATIONS.base, ease: EASE_STANDARD }}
+            style={shouldReduceMotion ? undefined : { y: chipY }}
             className="mt-4 flex flex-wrap gap-2"
           >
             {trustChips.map((chip) => (
@@ -155,12 +181,20 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[280px] pb-20 sm:max-w-[320px] sm:pb-28 lg:mx-0 lg:pt-8">
-          <GitHubStatsCard />
+        <motion.div
+          style={shouldReduceMotion ? undefined : { x: statsX, y: statsY }}
+          className="relative mx-auto w-full max-w-[280px] pb-20 sm:max-w-[320px] sm:pb-28 lg:mx-0 lg:pt-8"
+        >
+          <motion.div
+            animate={shouldReduceMotion ? undefined : { y: [0, -8, 0] }}
+            transition={shouldReduceMotion ? undefined : { duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <GitHubStatsCard />
+          </motion.div>
           <div className="absolute left-1/2 top-full mt-1 -translate-x-1/2 -translate-y-6">
             <ScreamFigure />
           </div>
-        </div>
+        </motion.div>
       </motion.div>
       <motion.p
         initial={{ opacity: 0 }}

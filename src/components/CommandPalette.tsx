@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { NAV_ITEMS } from "@/lib/data";
+import { smoothScrollToTarget } from "@/lib/scroll";
 
 type Command = {
   id: string;
@@ -22,25 +23,31 @@ export default function CommandPalette() {
         id: "hero",
         label: "Go to Hero",
         hint: "#hero",
-        run: () => document.querySelector("#hero")?.scrollIntoView({ behavior: "smooth" }),
+        run: () => smoothScrollToTarget("#hero"),
       },
       ...NAV_ITEMS.map((item) => ({
         id: item.id,
         label: `Go to ${item.label}`,
         hint: `#${item.id}`,
-        run: () => document.querySelector(`#${item.id}`)?.scrollIntoView({ behavior: "smooth" }),
+        run: () => smoothScrollToTarget(`#${item.id}`),
       })),
       {
         id: "contact",
         label: "Go to Contact",
         hint: "#contact",
-        run: () => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" }),
+        run: () => smoothScrollToTarget("#contact"),
       },
       {
         id: "resume",
         label: "Open Resume",
         hint: "PDF",
         run: () => window.open("/assets/resume.pdf", "_blank", "noopener,noreferrer"),
+      },
+      {
+        id: "games",
+        label: "Open Game Hub",
+        hint: "/games",
+        run: () => (window.location.href = "/games"),
       },
       {
         id: "secret",

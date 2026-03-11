@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { FormEvent, useEffect, useState } from "react";
 import MagneticButton from "@/components/MagneticButton";
 import PlayfulFooterItems from "@/components/PlayfulFooterItems";
@@ -22,6 +22,7 @@ export default function Contact() {
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<FormState>({ name: "", email: "", message: "" });
   const [company, setCompany] = useState("");
+  const [successPulse, setSuccessPulse] = useState(0);
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com/borj18237/30min";
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export default function Contact() {
       if (response.ok && data.success) {
         setForm({ name: "", email: "", message: "" });
         setCompany("");
+        setSuccessPulse((prev) => prev + 1);
       }
     } catch {
       setStatus("Unable to send message right now. Please try again.");
@@ -89,13 +91,44 @@ export default function Contact() {
   return (
     <section id="contact" className="section-backplate c section-wrap px-5 pb-16 pt-8 sm:px-6 md:px-12">
       <div className="mx-auto max-w-6xl">
+        <LayoutGroup>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
-          className="grid gap-8 lg:grid-cols-[1fr_1.2fr]"
+          className="relative grid gap-8 lg:grid-cols-[1fr_1.2fr]"
         >
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              key={`contact-pulse-${successPulse}`}
+              aria-hidden="true"
+              initial={{ opacity: 0.4, scale: 0.2 }}
+              animate={{ opacity: 0, scale: 2.8 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.95, ease: EASE_STANDARD }}
+              className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-300/45"
+            />
+          </AnimatePresence>
+          <AnimatePresence mode="popLayout">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <motion.span
+                key={`contact-trail-${successPulse}-${index}`}
+                aria-hidden="true"
+                initial={{ opacity: successPulse ? 0.82 : 0, scaleX: 0.35, rotate: index * 60 }}
+                animate={{
+                  opacity: 0,
+                  scaleX: 1.45,
+                  x: Math.cos((index / 6) * Math.PI * 2) * 120,
+                  y: Math.sin((index / 6) * Math.PI * 2) * 120,
+                  rotate: index * 60,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.72, ease: EASE_STANDARD, delay: index * 0.03 }}
+                className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[3px] w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-cyan-300 via-white/85 to-transparent"
+              />
+            ))}
+          </AnimatePresence>
           <div>
             <p className="text-sm uppercase tracking-[0.26em] text-white/50">Signal Line</p>
             <div className="mt-4">
@@ -143,7 +176,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <form onSubmit={onSubmit} className="surface rounded-2xl p-5 sm:p-6">
+          <form onSubmit={onSubmit} className="surface relative z-10 rounded-2xl p-5 sm:p-6">
             <div className="grid gap-4">
               <label className="hidden" aria-hidden="true">
                 Company
@@ -188,22 +221,39 @@ export default function Contact() {
             </div>
 
             <div className="mt-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-              <MagneticButton
-                type="submit"
-                disabled={submitting}
-                className={`inline-flex min-h-11 items-center justify-center rounded-full px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] ${
-                  submitting ? "cursor-not-allowed bg-white/60 text-black/80" : "bg-white text-black"
-                }`}
-              >
-                {submitting ? (
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-black/20 border-t-black" />
-                    Sending...
-                  </span>
+              <AnimatePresence mode="wait">
+                {statusTone === "success" ? (
+                  <motion.div
+                    key="contact-success-pill"
+                    layoutId="contact-submit-pill"
+                    initial={{ opacity: 0, scale: 0.94 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.94 }}
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-emerald-300/35 bg-emerald-300/12 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200"
+                  >
+                    Signal Sent
+                  </motion.div>
                 ) : (
-                  "Send Message"
+                  <motion.div key="contact-submit-wrap" layoutId="contact-submit-pill">
+                    <MagneticButton
+                      type="submit"
+                      disabled={submitting}
+                      className={`inline-flex min-h-11 items-center justify-center rounded-full px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] ${
+                        submitting ? "cursor-not-allowed bg-white/60 text-black/80" : "bg-white text-black"
+                      }`}
+                    >
+                      {submitting ? (
+                        <span className="inline-flex items-center gap-2">
+                          <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-black/20 border-t-black" />
+                          Sending...
+                        </span>
+                      ) : (
+                        "Send Message"
+                      )}
+                    </MagneticButton>
+                  </motion.div>
                 )}
-              </MagneticButton>
+              </AnimatePresence>
               <span
                 className={`text-sm sm:max-w-[280px] ${statusTone === "success" ? "text-emerald-300" : statusTone === "error" ? "text-red-300" : "text-white/55"}`}
               >
@@ -212,6 +262,7 @@ export default function Contact() {
             </div>
           </form>
         </motion.div>
+        </LayoutGroup>
 
         <PlayfulFooterItems />
 

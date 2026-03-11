@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import About from "@/components/About";
-import CaseStudies from "@/components/CaseStudies";
 import CommandPalette from "@/components/CommandPalette";
 import Contact from "@/components/Contact";
 import Hero from "@/components/Hero";
@@ -29,8 +28,6 @@ export default function HomePageClient() {
         <About />
         <SectionDivider />
         <Projects />
-        <SectionDivider />
-        <CaseStudies />
         <SectionDivider />
         <Skills />
         <SectionDivider />

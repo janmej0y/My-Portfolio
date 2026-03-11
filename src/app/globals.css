@@ -12,7 +12,7 @@
   --radius-card: 20px;
   --shadow-soft: 0 12px 32px rgba(2, 6, 23, 0.35);
   --shadow-strong: 0 22px 56px rgba(2, 6, 23, 0.45);
-  --space-section: clamp(4rem, 8vw, 6rem);
+  --space-section: clamp(2.6rem, 5vw, 4.1rem);
 }
 
 .font-body {
@@ -27,10 +27,10 @@ html,
 body {
   background: var(--bg);
   color: var(--text);
+  overscroll-behavior-y: none;
 }
 
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 5.5rem;
 }
 
@@ -43,6 +43,24 @@ body {
   text-rendering: geometricPrecision;
   font-family: var(--font-body), "Segoe UI", sans-serif;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 .theme-dark body {
@@ -465,6 +483,10 @@ body {
 }
 
 @media (max-width: 768px) {
+  .surface {
+    backdrop-filter: blur(6px);
+  }
+
   .linux-watermark {
     background-size: min(72vw, 360px);
     background-position: center 60%;
@@ -477,12 +499,20 @@ body {
     height: min(78vw, 420px);
   }
 
+  .kali-3d-bg::after {
+    display: none;
+  }
+
   .bg-grid {
     opacity: 0.08;
   }
 
   .bg-spotlight {
     opacity: 0.28;
+  }
+
+  .aurora {
+    filter: blur(42px);
   }
 
   .section-wrap {

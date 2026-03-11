@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import MagneticButton from "@/components/MagneticButton";
 import { NAV_ITEMS } from "@/lib/data";
@@ -61,6 +62,7 @@ export default function Navbar() {
 
   const changeTheme = (preset: ThemePreset) => {
     setThemePreset(preset);
+    window.dispatchEvent(new CustomEvent("portfolio-theme-transition", { detail: { preset } }));
     applyTheme(preset);
   };
 
@@ -86,6 +88,9 @@ export default function Navbar() {
               {item.label}
             </a>
           ))}
+          <Link href="/games" className="link-underline text-sm text-cyan-100 transition hover:text-white">
+            Game Hub
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -135,6 +140,14 @@ export default function Navbar() {
             className="mx-auto mt-2 w-[min(96%,1120px)] rounded-2xl border border-white/10 bg-black/75 p-4 backdrop-blur-xl md:hidden"
           >
             <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
+              <Link
+                href="/games"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex min-h-11 items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-cyan-100 transition hover:bg-white/10 hover:text-white"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.85)]" aria-hidden="true" />
+                Game Hub
+              </Link>
               {NAV_ITEMS.map((item) => (
                 <a
                   key={item.id}

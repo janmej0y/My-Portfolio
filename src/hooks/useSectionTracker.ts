@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { smoothScrollToTarget } from "@/lib/scroll";
 
 const DEFAULT_SECTION_IDS = ["hero", "about", "skills", "projects", "contact"];
 
@@ -45,8 +46,7 @@ export function useSectionTracker(options: UseSectionTrackerOptions = {}) {
   const goToNextSection = () => {
     const nextIndex = activeIndex >= sectionIds.length - 1 ? 0 : activeIndex + 1;
     const targetId = sectionIds[nextIndex];
-    const target = document.getElementById(targetId);
-    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    smoothScrollToTarget(`#${targetId}`);
   };
 
   return {
