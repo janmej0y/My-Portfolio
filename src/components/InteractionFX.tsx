@@ -223,12 +223,18 @@ export default function InteractionFX() {
         {cursorTrail.map((item) => (
           <motion.div
             key={item.id}
-            initial={{ opacity: enabled ? 0.2 : 0.18, scale: enabled ? 0.55 : 0.72 }}
-            animate={{ opacity: enabled ? 0.06 : 0.1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.2 }}
-            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-            className={`pointer-events-none fixed rounded-full blur-[3px] ${
-              enabled ? "z-[137] h-4 w-4 bg-cyan-200/22" : "z-[134] h-5 w-5 bg-cyan-300/20"
+            initial={{
+              opacity: enabled ? 0.18 : 0.22,
+              scaleX: enabled ? 0.55 : 0.45,
+              scaleY: enabled ? 0.55 : 0.95,
+            }}
+            animate={{ opacity: enabled ? 0.06 : 0.08, scaleX: 1, scaleY: enabled ? 1 : 1.35 }}
+            exit={{ opacity: 0, scaleX: 1.24, scaleY: enabled ? 1.2 : 1.65 }}
+            transition={{ duration: enabled ? 0.24 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className={`pointer-events-none fixed rounded-full ${
+              enabled
+                ? "z-[137] h-4 w-4 bg-cyan-200/22 blur-[3px]"
+                : "z-[134] h-4 w-10 bg-gradient-to-r from-cyan-300/0 via-cyan-300/24 to-cyan-200/0 blur-[6px]"
             }`}
             style={{ left: item.x, top: item.y, translateX: "-50%", translateY: "-50%" }}
           />
@@ -285,14 +291,14 @@ export default function InteractionFX() {
               initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.7 }}
-              className="pointer-events-none fixed z-[138] h-16 w-16 rounded-full bg-cyan-300/18 blur-2xl"
+              className="pointer-events-none fixed z-[138] h-20 w-20 rounded-full bg-cyan-300/14 blur-2xl"
               style={{ left: touchPoint.x, top: touchPoint.y, translateX: "-50%", translateY: "-50%" }}
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.7 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.7 }}
-              className="pointer-events-none fixed z-[139] h-8 w-8 rounded-full border border-cyan-100/55 bg-white/8"
+              className="pointer-events-none fixed z-[139] h-10 w-10 rounded-full border border-cyan-100/45 bg-white/6"
               style={{ left: touchPoint.x, top: touchPoint.y, translateX: "-50%", translateY: "-50%" }}
             />
           </>
