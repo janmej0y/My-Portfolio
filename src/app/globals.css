@@ -28,7 +28,7 @@ html,
 body {
   background: var(--bg);
   color: var(--text);
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: auto;
   overflow-x: hidden;
 }
 
@@ -45,7 +45,7 @@ body {
   text-rendering: geometricPrecision;
   font-family: var(--font-body), "Segoe UI", sans-serif;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
+  touch-action: auto;
 }
 
 html.lenis,
@@ -504,6 +504,17 @@ html.lenis body {
 }
 
 @media (max-width: 768px) {
+  html,
+  body {
+    overscroll-behavior-y: auto;
+  }
+
+  body,
+  main,
+  section {
+    touch-action: auto;
+  }
+
   .surface {
     backdrop-filter: blur(6px);
   }
