@@ -71,11 +71,15 @@ export default function Navbar() {
       initial={{ y: -48, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
-      className="fixed inset-x-0 top-0 z-50"
+      className="fixed inset-x-0 top-0 z-[170]"
     >
-      <div className="mx-auto mt-3 flex w-[min(96%,1120px)] items-center justify-between rounded-[28px] border border-white/10 bg-black/55 px-3 py-3 backdrop-blur-xl sm:px-4 md:mt-4 md:rounded-full md:px-6">
-        <a href="#hero" className="text-xs font-semibold tracking-[0.2em] text-white sm:text-sm sm:tracking-[0.22em]">
-          JANMEJOY
+      <div className="mx-auto mt-3 flex w-[min(96%,1120px)] items-center justify-between gap-3 rounded-[28px] border border-white/10 bg-black/72 px-3 py-3 backdrop-blur-xl sm:px-4 md:mt-4 md:rounded-full md:px-6">
+        <a
+          href="#hero"
+          className="inline-flex min-w-0 max-w-[calc(100%-5.75rem)] items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold tracking-[0.18em] text-white sm:max-w-none sm:text-sm sm:tracking-[0.22em] md:border-0 md:bg-transparent md:px-0 md:py-0"
+        >
+          <span className="truncate max-[380px]:hidden">JANMEJOY</span>
+          <span className="hidden max-[380px]:inline">JM</span>
         </a>
 
         <nav className="hidden items-center gap-5 md:flex" aria-label="Primary navigation">
@@ -93,7 +97,7 @@ export default function Navbar() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2 md:ml-auto">
           <div className="hidden items-center rounded-full border border-white/15 bg-black/30 p-1 md:flex">
             {(["dark", "bright", "cyber"] as ThemePreset[]).map((preset) => (
               <button
@@ -120,11 +124,16 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white md:hidden"
+            className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-cyan-300/55 bg-[linear-gradient(135deg,rgba(8,20,32,0.96),rgba(2,10,18,0.82))] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-50 shadow-[0_14px_34px_rgba(2,6,23,0.34)] md:hidden"
             aria-label="Toggle mobile menu"
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-nav-menu"
           >
+            <span className="flex flex-col gap-[3px]" aria-hidden="true">
+              <span className={`h-[2px] w-4 rounded-full bg-current transition ${mobileMenuOpen ? "translate-y-[5px] rotate-45" : ""}`} />
+              <span className={`h-[2px] w-4 rounded-full bg-current transition ${mobileMenuOpen ? "opacity-0" : ""}`} />
+              <span className={`h-[2px] w-4 rounded-full bg-current transition ${mobileMenuOpen ? "-translate-y-[5px] -rotate-45" : ""}`} />
+            </span>
             {mobileMenuOpen ? "Close" : "Menu"}
           </button>
         </div>
@@ -137,7 +146,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: DURATIONS.fast, ease: EASE_STANDARD }}
-            className="mx-auto mt-2 w-[min(96%,1120px)] rounded-2xl border border-white/10 bg-black/75 p-4 backdrop-blur-xl md:hidden"
+            className="mx-auto mt-2 w-[min(96%,1120px)] rounded-2xl border border-cyan-300/20 bg-black/82 p-4 shadow-[0_16px_48px_rgba(2,6,23,0.42)] backdrop-blur-xl md:hidden"
           >
             <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
               <Link

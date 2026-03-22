@@ -31,7 +31,7 @@ const quickPrompts = [
   "Tell me about your education",
   "How can I contact you?",
 ];
-const TOUR_SECTIONS = ["hero", "about", "education", "projects", "case-studies", "skills", "certifications", "contact"] as const;
+const TOUR_SECTIONS = ["hero", "about", "education", "projects", "skills", "certifications", "contact"] as const;
 
 function getSpeechRecognitionCtor(): SpeechRecognitionCtor | null {
   if (typeof window === "undefined") return null;
@@ -43,6 +43,7 @@ function getSpeechRecognitionCtor(): SpeechRecognitionCtor | null {
 }
 
 export default function VoiceBot() {
+  const [isCompact, setIsCompact] = useState(false);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -89,6 +90,14 @@ export default function VoiceBot() {
     };
   }, []);
 
+  useEffect(() => {
+    const syncViewport = () => setIsCompact(window.innerWidth < 768);
+
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+    return () => window.removeEventListener("resize", syncViewport);
+  }, []);
+
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
     if (!section) return false;
@@ -123,8 +132,6 @@ export default function VoiceBot() {
       about: "about",
       education: "education",
       projects: "projects",
-      "case studies": "case-studies",
-      "case-studies": "case-studies",
       skills: "skills",
       certifications: "certifications",
       contact: "contact",
@@ -339,19 +346,23 @@ export default function VoiceBot() {
           </div>
 
           <div className="p-3">
-            <div className="mb-2 flex items-center gap-1.5">
-              <span className="rounded-full border border-white/20 bg-black/28 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/75">
-                Voice command: go to projects section
-              </span>
-              <span className="ml-auto text-[10px] uppercase tracking-[0.12em] text-white/45">{tourActive ? "Tour On" : "Tour Off"}</span>
-            </div>
+            {!isCompact ? (
+              <div className="mb-2 flex items-center gap-1.5">
+                <span className="rounded-full border border-white/20 bg-black/28 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/75">
+                  Voice command: go to projects section
+                </span>
+                <span className="ml-auto text-[10px] uppercase tracking-[0.12em] text-white/45">{tourActive ? "Tour On" : "Tour Off"}</span>
+              </div>
+            ) : null}
 
-            <div className="mb-2 flex items-center gap-1.5">
-              <span className="rounded-full border border-red-300/30 bg-red-400/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-red-100">
-                Automatic sarcastic roast mode
-              </span>
-              <span className="ml-auto text-[10px] uppercase tracking-[0.12em] text-white/45">Auto</span>
-            </div>
+            {!isCompact ? (
+              <div className="mb-2 flex items-center gap-1.5">
+                <span className="rounded-full border border-red-300/30 bg-red-400/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-red-100">
+                  Automatic sarcastic roast mode
+                </span>
+                <span className="ml-auto text-[10px] uppercase tracking-[0.12em] text-white/45">Auto</span>
+              </div>
+            ) : null}
 
             <div ref={scrollerRef} className="max-h-56 space-y-2 overflow-y-auto pr-1 sm:max-h-64">
               {messages.map((message) => (
@@ -368,18 +379,20 @@ export default function VoiceBot() {
               ))}
             </div>
 
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {quickPrompts.map((prompt) => (
-                <button
-                  key={prompt}
-                  type="button"
-                  onClick={() => setInput(prompt)}
-                  className="rounded-full border border-white/15 bg-black/30 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-white/75 hover:text-white"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
+            {!isCompact ? (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {quickPrompts.map((prompt) => (
+                  <button
+                    key={prompt}
+                    type="button"
+                    onClick={() => setInput(prompt)}
+                    className="rounded-full border border-white/15 bg-black/30 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-white/75 hover:text-white"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            ) : null}
 
             <form onSubmit={onSend} className="mt-2.5 flex items-center gap-2">
               <input

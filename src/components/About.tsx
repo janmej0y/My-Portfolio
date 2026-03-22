@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import { MouseEvent } from "react";
-import { EDUCATION_ITEMS } from "@/lib/data";
+import { EDUCATION_ITEMS, EXPERIENCE_ITEMS } from "@/lib/data";
 import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
 import StaggerHeading from "@/components/StaggerHeading";
 
@@ -117,6 +117,41 @@ export default function About() {
           >
             Learning Runway
           </motion.h2>
+          <div className="mt-6 grid gap-4">
+            {EXPERIENCE_ITEMS.map((item, index) => (
+              <motion.article
+                key={`${item.company}-${item.role}`}
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ delay: index * STAGGER.block, duration: DURATIONS.base, ease: EASE_STANDARD }}
+                className="surface rounded-[24px] p-5 md:p-6"
+              >
+                <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+                  <div className="min-w-0">
+                    <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/80">Experience</p>
+                    <h3 className="mt-2 text-2xl font-semibold tracking-tight text-white md:text-[2rem]">{item.role}</h3>
+                    <p className="mt-2 text-base text-white/78">
+                      {item.company} <span className="text-white/45">- {item.employmentType}</span>
+                    </p>
+                    <p className="mt-1 text-sm text-white/52">{item.period}</p>
+                    <p className="mt-1 text-sm text-white/52">{item.location}</p>
+                  </div>
+                  <div className="rounded-full border border-cyan-300/20 bg-cyan-400/[0.08] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
+                    Current Role
+                  </div>
+                </div>
+                <p className="mt-5 max-w-4xl text-base leading-8 text-[#9ca3af]">{item.description}</p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {item.skills.map((skill) => (
+                    <span key={skill} className="impact-chip">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </motion.article>
+            ))}
+          </div>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {EDUCATION_ITEMS.map((item, index) => (
               <motion.article

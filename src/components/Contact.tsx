@@ -16,6 +16,7 @@ type FormState = {
 type StatusTone = "idle" | "success" | "error" | "info";
 
 export default function Contact() {
+  const [showCelebration, setShowCelebration] = useState(false);
   const [visitors, setVisitors] = useState("Loading...");
   const [status, setStatus] = useState("");
   const [statusTone, setStatusTone] = useState<StatusTone>("idle");
@@ -24,6 +25,17 @@ export default function Contact() {
   const [company, setCompany] = useState("");
   const [successPulse, setSuccessPulse] = useState(0);
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com/borj18237/30min";
+
+  useEffect(() => {
+    const syncViewport = () => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setShowCelebration(window.innerWidth >= 768 && !prefersReducedMotion);
+    };
+
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+    return () => window.removeEventListener("resize", syncViewport);
+  }, []);
 
   useEffect(() => {
     const page = window.location.pathname;
@@ -99,36 +111,40 @@ export default function Contact() {
           transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
           className="relative grid gap-8 lg:grid-cols-[1fr_1.2fr]"
         >
-          <AnimatePresence mode="popLayout">
-            <motion.div
-              key={`contact-pulse-${successPulse}`}
-              aria-hidden="true"
-              initial={{ opacity: 0.4, scale: 0.2 }}
-              animate={{ opacity: 0, scale: 2.8 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.95, ease: EASE_STANDARD }}
-              className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-300/45"
-            />
-          </AnimatePresence>
-          <AnimatePresence mode="popLayout">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <motion.span
-                key={`contact-trail-${successPulse}-${index}`}
-                aria-hidden="true"
-                initial={{ opacity: successPulse ? 0.82 : 0, scaleX: 0.35, rotate: index * 60 }}
-                animate={{
-                  opacity: 0,
-                  scaleX: 1.45,
-                  x: Math.cos((index / 6) * Math.PI * 2) * 120,
-                  y: Math.sin((index / 6) * Math.PI * 2) * 120,
-                  rotate: index * 60,
-                }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.72, ease: EASE_STANDARD, delay: index * 0.03 }}
-                className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[3px] w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-cyan-300 via-white/85 to-transparent"
-              />
-            ))}
-          </AnimatePresence>
+          {showCelebration ? (
+            <>
+              <AnimatePresence mode="popLayout">
+                <motion.div
+                  key={`contact-pulse-${successPulse}`}
+                  aria-hidden="true"
+                  initial={{ opacity: 0.4, scale: 0.2 }}
+                  animate={{ opacity: 0, scale: 2.8 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.95, ease: EASE_STANDARD }}
+                  className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-300/45"
+                />
+              </AnimatePresence>
+              <AnimatePresence mode="popLayout">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <motion.span
+                    key={`contact-trail-${successPulse}-${index}`}
+                    aria-hidden="true"
+                    initial={{ opacity: successPulse ? 0.82 : 0, scaleX: 0.35, rotate: index * 60 }}
+                    animate={{
+                      opacity: 0,
+                      scaleX: 1.45,
+                      x: Math.cos((index / 6) * Math.PI * 2) * 120,
+                      y: Math.sin((index / 6) * Math.PI * 2) * 120,
+                      rotate: index * 60,
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.72, ease: EASE_STANDARD, delay: index * 0.03 }}
+                    className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[3px] w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-cyan-300 via-white/85 to-transparent"
+                  />
+                ))}
+              </AnimatePresence>
+            </>
+          ) : null}
           <div>
             <p className="text-sm uppercase tracking-[0.26em] text-white/50">Signal Line</p>
             <div className="mt-4">
@@ -140,6 +156,24 @@ export default function Contact() {
             <p className="mt-4 max-w-md text-sm leading-6 text-[#9ca3af] sm:text-base">
               Open to software engineering roles, security-focused product work, and creative collaborations.
             </p>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <div className="metric-card card-3d px-4 py-4">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-white/42">Response</p>
+                <p className="mt-2 text-lg font-semibold text-white">{"< 24h"}</p>
+                <p className="mt-1 text-xs text-white/55">Fast reply for hiring and project outreach.</p>
+              </div>
+              <div className="metric-card card-3d px-4 py-4">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-white/42">Mode</p>
+                <p className="mt-2 text-lg font-semibold text-white">Remote Ready</p>
+                <p className="mt-1 text-xs text-white/55">Comfortable with async collaboration and shipping.</p>
+              </div>
+              <div className="metric-card card-3d px-4 py-4">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-white/42">Focus</p>
+                <p className="mt-2 text-lg font-semibold text-white">Product + Security</p>
+                <p className="mt-1 text-xs text-white/55">Best fit for modern engineering and interface work.</p>
+              </div>
+            </div>
 
             <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <a

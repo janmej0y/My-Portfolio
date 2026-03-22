@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Manrope, Sora } from "next/font/google";
 import "./globals.css";
-import BackgroundFX from "@/components/BackgroundFX";
-import InteractionFX from "@/components/InteractionFX";
-import PageLoader from "@/components/PageLoader";
-import ScrollProgressBar from "@/components/ScrollProgressBar";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
-import ThemeTransition from "@/components/ThemeTransition";
 import { CASE_STUDIES, PROJECTS } from "@/lib/data";
+
+const BackgroundFX = dynamic(() => import("@/components/BackgroundFX"), { ssr: false });
+const InteractionFX = dynamic(() => import("@/components/InteractionFX"), { ssr: false });
+const PageLoader = dynamic(() => import("@/components/PageLoader"), { ssr: false });
+const ScrollProgressBar = dynamic(() => import("@/components/ScrollProgressBar"), { ssr: false });
+const ThemeTransition = dynamic(() => import("@/components/ThemeTransition"), { ssr: false });
 
 const manrope = Manrope({
   subsets: ["latin"],

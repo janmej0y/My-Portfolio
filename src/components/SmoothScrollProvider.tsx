@@ -7,16 +7,17 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
-    if (prefersReducedMotion) return;
+    const compactViewport = window.innerWidth < 1024;
+    if (prefersReducedMotion || coarsePointer || compactViewport) return;
 
     const lenis = new Lenis({
-      duration: coarsePointer ? 0.8 : 1,
+      duration: 0.95,
       smoothWheel: true,
-      wheelMultiplier: coarsePointer ? 0.8 : 0.9,
-      touchMultiplier: coarsePointer ? 0.95 : 1.05,
-      lerp: coarsePointer ? 0.12 : 0.085,
-      syncTouch: coarsePointer,
-      syncTouchLerp: coarsePointer ? 0.12 : 0.08,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1,
+      lerp: 0.085,
+      syncTouch: false,
+      syncTouchLerp: 0.08,
       anchors: true,
     });
 

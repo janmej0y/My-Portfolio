@@ -10,6 +10,16 @@ export type EducationItem = {
   score: string;
 };
 
+export type ExperienceItem = {
+  role: string;
+  company: string;
+  employmentType: string;
+  period: string;
+  location: string;
+  description: string;
+  skills: string[];
+};
+
 export type ProjectCategory = "all" | "web" | "app" | "tools";
 
 export type Project = {
@@ -19,6 +29,7 @@ export type Project = {
   image: string;
   shortDescription: string;
   longDescription: string;
+  resultLine?: string;
   tech: string[];
   liveUrl?: string;
   githubUrl: string;

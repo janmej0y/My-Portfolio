@@ -22,6 +22,7 @@ const ITEMS = [
 ];
 
 export default function PlayfulFooterItems() {
+  const [interactiveEnabled, setInteractiveEnabled] = useState(false);
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
   const timersRef = useRef<number[]>([]);
   const runningRef = useRef(false);
@@ -48,6 +49,17 @@ export default function PlayfulFooterItems() {
         dy: Math.sin(angle) * distance,
       };
     });
+  }, []);
+
+  useEffect(() => {
+    const syncViewport = () => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setInteractiveEnabled(window.innerWidth >= 1024 && !prefersReducedMotion);
+    };
+
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+    return () => window.removeEventListener("resize", syncViewport);
   }, []);
 
   useEffect(() => {
@@ -184,6 +196,27 @@ export default function PlayfulFooterItems() {
   };
 
   const visibleItems = sequenceStarted ? ITEMS.slice(launchedCount) : ITEMS;
+
+  if (!interactiveEnabled) {
+    return (
+      <div className="mt-12">
+        <p className="mb-4 text-xs uppercase tracking-[0.2em] text-white/45">Focus Areas</p>
+        <div className="surface rounded-2xl p-4 md:p-5">
+          <div className="flex flex-wrap gap-2.5">
+            {ITEMS.map((item) => (
+              <span
+                key={item.label}
+                className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-sm text-white/85"
+              >
+                <span className="mr-1.5">{item.emoji}</span>
+                {item.label}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-12">

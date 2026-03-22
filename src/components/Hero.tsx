@@ -66,7 +66,7 @@ export default function Hero() {
       id="hero"
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      className="relative flex min-h-screen items-center overflow-hidden px-5 pb-12 pt-24 sm:px-6 md:px-12 md:pb-8 md:pt-28"
+      className="relative flex min-h-[92svh] items-center overflow-hidden px-5 pb-10 pt-24 sm:min-h-screen sm:px-6 md:px-12 md:pb-8 md:pt-28"
     >
       <motion.div
         aria-hidden="true"
@@ -183,7 +183,7 @@ export default function Hero() {
 
         <motion.div
           style={shouldReduceMotion ? undefined : { x: statsX, y: statsY }}
-          className="relative mx-auto w-full max-w-[280px] pb-20 sm:max-w-[320px] sm:pb-28 lg:mx-0 lg:pt-8"
+          className="relative mx-auto w-full max-w-[280px] pb-14 sm:max-w-[320px] sm:pb-20 lg:mx-0 lg:pt-8"
         >
           <motion.div
             animate={shouldReduceMotion ? undefined : { y: [0, -8, 0] }}

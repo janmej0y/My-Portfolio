@@ -3,6 +3,7 @@ import type {
   Certification,
   ContactCard,
   EducationItem,
+  ExperienceItem,
   NavItem,
   Project,
   SkillGroup,
@@ -49,6 +50,7 @@ export const PROJECTS: Project[] = [
     shortDescription: "Secure online platform for voting with authentication.",
     longDescription:
       "A secure online voting system built with Node.js, Express, MongoDB, and JWT authentication.",
+    resultLine: "Security-first workflow with trusted vote handling.",
     tech: ["Node.js", "Express", "MongoDB", "JWT"],
     liveUrl: "https://online-voting-system-henna.vercel.app/",
     githubUrl: "https://github.com/janmej0y/Online-Voting-System",
@@ -73,6 +75,7 @@ export const PROJECTS: Project[] = [
     shortDescription: "A personalized offline voice-controlled assistant.",
     longDescription:
       "A personalized offline voice assistant built with Python, speech recognition, and automation.",
+    resultLine: "Hands-free assistance with fast local task flow.",
     tech: ["Python", "Speech Recognition", "AI"],
     githubUrl: "https://github.com/janmej0y/Voice-assistant",
   },
@@ -84,6 +87,7 @@ export const PROJECTS: Project[] = [
     shortDescription: "Full-stack Room Finder application.",
     longDescription:
       "A full-stack room finder built with Next.js, TypeScript, Tailwind CSS, and Supabase.",
+    resultLine: "Faster property discovery with cleaner user decisions.",
     tech: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase"],
     liveUrl: "https://rent-hub-two.vercel.app/",
     githubUrl: "https://github.com/janmej0y/RentHub",
@@ -108,6 +112,7 @@ export const PROJECTS: Project[] = [
     shortDescription: "A personalized real-time chat with Gemini style AI.",
     longDescription:
       "A Gemini-style chatbot interface with a real-time conversational experience.",
+    resultLine: "Real-time AI replies with better conversation continuity.",
     tech: ["Next.js", "Tailwind CSS", "MongoDB", "Gemini API"],
     liveUrl: "https://baklol-chatbot.vercel.app/",
     githubUrl: "https://github.com/janmej0y/Baklol-Chatbot",
@@ -132,6 +137,7 @@ export const PROJECTS: Project[] = [
     shortDescription: "Income and expenses tracking web app.",
     longDescription:
       "A simple income and expense tracking application built using HTML, CSS, and JavaScript.",
+    resultLine: "Increased clarity around daily money movement.",
     tech: ["HTML", "CSS", "JavaScript"],
     liveUrl: "https://campuscoins.netlify.app/",
     githubUrl: "https://github.com/janmej0y/campuscoins",
@@ -143,6 +149,7 @@ export const PROJECTS: Project[] = [
     image: "/assets/projects/music.png",
     shortDescription: "Web-based interactive music player.",
     longDescription: "A modern web-based music player with a clean UI and playlist support.",
+    resultLine: "Smoother listening flow with a focused interface.",
     tech: ["HTML", "CSS", "JavaScript"],
     liveUrl: "https://music-player-rosy-xi.vercel.app/",
     githubUrl: "https://github.com/janmej0y/Music-Player",
@@ -155,6 +162,7 @@ export const PROJECTS: Project[] = [
     shortDescription: "Fun prediction tool calculating the end of the world.",
     longDescription:
       "A fun prediction tool that calculates an imaginary end-of-world date for entertainment.",
+    resultLine: "Playful interaction wrapped in a memorable visual concept.",
     tech: ["JavaScript", "UI Design"],
     liveUrl: "https://janmej0y.github.io/FutureHax/",
     githubUrl: "https://github.com/janmej0y/FutureHax",
@@ -166,6 +174,7 @@ export const PROJECTS: Project[] = [
     image: "/assets/projects/Weather.jpeg",
     shortDescription: "Live weather updates using API.",
     longDescription: "A weather app that fetches real-time data from an open weather API.",
+    resultLine: "Reliable weather snapshots with clean delivery.",
     tech: ["API", "JavaScript", "HTML"],
     liveUrl: "https://janmej0y.github.io/Weather-App/",
     githubUrl: "https://github.com/janmej0y/Weather-App",
@@ -301,6 +310,19 @@ export const CERTIFICATIONS: Certification[] = [
     title: "AI-ML Virtual Internship",
     description: "Machine learning models and real-world AI development.",
     icon: "https://cdn-icons-png.flaticon.com/512/4712/4712100.png",
+  },
+];
+
+export const EXPERIENCE_ITEMS: ExperienceItem[] = [
+  {
+    role: "Frontend Developer Intern",
+    company: "Springer Capital Investments LLC",
+    employmentType: "Internship",
+    period: "Mar 2026 - Present · 1 mo",
+    location: "Remote",
+    description:
+      "Working on real-world product interfaces using Next.js, React, and TypeScript to build responsive and user-friendly experiences.",
+    skills: ["Next.js", "TypeScript", "React"],
   },
 ];
 
