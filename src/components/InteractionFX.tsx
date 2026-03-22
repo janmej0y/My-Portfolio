@@ -28,6 +28,12 @@ type TouchPoint = {
   y: number;
 };
 
+type ActiveTouch = {
+  startX: number;
+  startY: number;
+  moved: boolean;
+};
+
 export default function InteractionFX() {
   const shouldReduceMotion = useReducedMotion();
   const [enabled, setEnabled] = useState(false);
@@ -44,6 +50,7 @@ export default function InteractionFX() {
   const touchHideTimerRef = useRef<number | null>(null);
   const lastTrailRef = useRef(0);
   const stuckRectRef = useRef<DOMRect | null>(null);
+  const activeTouchRef = useRef<ActiveTouch | null>(null);
 
   const dotX = useSpring(-100, { stiffness: 900, damping: 48 });
   const dotY = useSpring(-100, { stiffness: 900, damping: 48 });
@@ -125,51 +132,111 @@ export default function InteractionFX() {
       setCursorLabel("");
     };
 
+    const showTouchPoint = (x: number, y: number, duration = 180) => {
+      setTouchPoint({ visible: true, x, y });
+      if (touchHideTimerRef.current) window.clearTimeout(touchHideTimerRef.current);
+      touchHideTimerRef.current = window.setTimeout(() => {
+        setTouchPoint((prev) => ({ ...prev, visible: false }));
+      }, duration);
+    };
+
     const onPointerDown = (event: PointerEvent) => {
+      if (coarse || event.pointerType === "touch") return;
       spawnRipple(event.clientX, event.clientY, 132);
       spawnParticleBurst(event.clientX, event.clientY);
+    };
 
-      if (coarse || event.pointerType === "touch") {
-        setTouchPoint({ visible: true, x: event.clientX, y: event.clientY });
-        if (touchHideTimerRef.current) window.clearTimeout(touchHideTimerRef.current);
-        touchHideTimerRef.current = window.setTimeout(() => {
-          setTouchPoint((prev) => ({ ...prev, visible: false }));
-        }, 180);
+    const onTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      activeTouchRef.current = { startX: touch.clientX, startY: touch.clientY, moved: false };
+      showTouchPoint(touch.clientX, touch.clientY, 240);
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      const activeTouch = activeTouchRef.current;
+      if (activeTouch) {
+        const distance = Math.hypot(touch.clientX - activeTouch.startX, touch.clientY - activeTouch.startY);
+        if (distance > 10) activeTouch.moved = true;
       }
+
+      showTouchPoint(touch.clientX, touch.clientY, 120);
+
+      if (shouldReduceMotion) return;
+      const now = Date.now();
+      if (now - lastTrailRef.current < 42) return;
+      lastTrailRef.current = now;
+      cursorTrailIdRef.current += 1;
+      const nextTrail = { id: cursorTrailIdRef.current, x: touch.clientX, y: touch.clientY };
+      setCursorTrail((prev) => [...prev.slice(-4), nextTrail]);
+      window.setTimeout(() => {
+        setCursorTrail((prev) => prev.filter((item) => item.id !== nextTrail.id));
+      }, 220);
+    };
+
+    const onTouchEnd = (event: TouchEvent) => {
+      const activeTouch = activeTouchRef.current;
+      const touch = event.changedTouches[0];
+      if (!touch || !activeTouch) {
+        activeTouchRef.current = null;
+        return;
+      }
+
+      if (!activeTouch.moved) {
+        spawnRipple(touch.clientX, touch.clientY, 144);
+        spawnParticleBurst(touch.clientX, touch.clientY);
+        showTouchPoint(touch.clientX, touch.clientY, 200);
+      } else {
+        showTouchPoint(touch.clientX, touch.clientY, 90);
+      }
+
+      activeTouchRef.current = null;
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     document.addEventListener("mouseover", onOver, { passive: true });
     document.addEventListener("mouseout", onOut, { passive: true });
     window.addEventListener("pointerdown", onPointerDown, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", onOut);
       window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
       if (touchHideTimerRef.current) window.clearTimeout(touchHideTimerRef.current);
     };
   }, [dotX, dotY, ringX, ringY, glowX, glowY, expanded, shouldReduceMotion]);
 
   return (
     <>
+      <AnimatePresence>
+        {cursorTrail.map((item) => (
+          <motion.div
+            key={item.id}
+            initial={{ opacity: enabled ? 0.2 : 0.18, scale: enabled ? 0.55 : 0.72 }}
+            animate={{ opacity: enabled ? 0.06 : 0.1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.2 }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className={`pointer-events-none fixed rounded-full blur-[3px] ${
+              enabled ? "z-[137] h-4 w-4 bg-cyan-200/22" : "z-[134] h-5 w-5 bg-cyan-300/20"
+            }`}
+            style={{ left: item.x, top: item.y, translateX: "-50%", translateY: "-50%" }}
+          />
+        ))}
+      </AnimatePresence>
+
       {enabled ? (
         <>
-          <AnimatePresence>
-            {cursorTrail.map((item) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0.2, scale: 0.55 }}
-                animate={{ opacity: 0.06, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.2 }}
-                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-none fixed z-[137] h-4 w-4 rounded-full bg-cyan-200/22 blur-[3px]"
-                style={{ left: item.x, top: item.y, translateX: "-50%", translateY: "-50%" }}
-              />
-            ))}
-          </AnimatePresence>
-
           <motion.div
             aria-hidden="true"
             className="pointer-events-none fixed z-[138] h-24 w-24 rounded-full bg-cyan-300/10 blur-3xl"
