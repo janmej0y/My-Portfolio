@@ -22,18 +22,6 @@ type ParticleBurst = {
   y: number;
 };
 
-type TouchPoint = {
-  visible: boolean;
-  x: number;
-  y: number;
-};
-
-type ActiveTouch = {
-  startX: number;
-  startY: number;
-  moved: boolean;
-};
-
 export default function InteractionFX() {
   const shouldReduceMotion = useReducedMotion();
   const [enabled, setEnabled] = useState(false);
@@ -42,15 +30,12 @@ export default function InteractionFX() {
   const [ripples, setRipples] = useState<Ripple[]>([]);
   const [cursorTrail, setCursorTrail] = useState<CursorTrail[]>([]);
   const [particleBursts, setParticleBursts] = useState<ParticleBurst[]>([]);
-  const [touchPoint, setTouchPoint] = useState<TouchPoint>({ visible: false, x: -100, y: -100 });
 
   const rippleIdRef = useRef(0);
   const cursorTrailIdRef = useRef(0);
   const burstIdRef = useRef(0);
-  const touchHideTimerRef = useRef<number | null>(null);
   const lastTrailRef = useRef(0);
   const stuckRectRef = useRef<DOMRect | null>(null);
-  const activeTouchRef = useRef<ActiveTouch | null>(null);
 
   const dotX = useSpring(-100, { stiffness: 900, damping: 48 });
   const dotY = useSpring(-100, { stiffness: 900, damping: 48 });
@@ -62,6 +47,7 @@ export default function InteractionFX() {
   useEffect(() => {
     const coarse = window.matchMedia("(pointer: coarse)").matches;
     setEnabled(!coarse);
+    if (coarse) return;
 
     const interactiveSelector = "a, button, [role='button'], .magnetic, [data-magnetic='true'], input, textarea, select";
 
@@ -85,8 +71,6 @@ export default function InteractionFX() {
     };
 
     const onMove = (event: MouseEvent) => {
-      if (coarse) return;
-
       let x = event.clientX;
       let y = event.clientY;
 
@@ -115,7 +99,6 @@ export default function InteractionFX() {
     };
 
     const onOver = (event: MouseEvent) => {
-      if (coarse) return;
       const target = (event.target as HTMLElement | null)?.closest<HTMLElement>(interactiveSelector);
       if (!target) return;
       setExpanded(true);
@@ -124,7 +107,6 @@ export default function InteractionFX() {
     };
 
     const onOut = (event: MouseEvent) => {
-      if (coarse) return;
       const target = (event.target as HTMLElement | null)?.closest<HTMLElement>(interactiveSelector);
       if (!target) return;
       setExpanded(false);
@@ -132,88 +114,22 @@ export default function InteractionFX() {
       setCursorLabel("");
     };
 
-    const showTouchPoint = (x: number, y: number, duration = 180) => {
-      setTouchPoint({ visible: true, x, y });
-      if (touchHideTimerRef.current) window.clearTimeout(touchHideTimerRef.current);
-      touchHideTimerRef.current = window.setTimeout(() => {
-        setTouchPoint((prev) => ({ ...prev, visible: false }));
-      }, duration);
-    };
-
     const onPointerDown = (event: PointerEvent) => {
-      if (coarse || event.pointerType === "touch") return;
+      if (event.pointerType === "touch") return;
       spawnRipple(event.clientX, event.clientY, 132);
       spawnParticleBurst(event.clientX, event.clientY);
-    };
-
-    const onTouchStart = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      if (!touch) return;
-      activeTouchRef.current = { startX: touch.clientX, startY: touch.clientY, moved: false };
-      showTouchPoint(touch.clientX, touch.clientY, 240);
-    };
-
-    const onTouchMove = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      if (!touch) return;
-      const activeTouch = activeTouchRef.current;
-      if (activeTouch) {
-        const distance = Math.hypot(touch.clientX - activeTouch.startX, touch.clientY - activeTouch.startY);
-        if (distance > 10) activeTouch.moved = true;
-      }
-
-      showTouchPoint(touch.clientX, touch.clientY, 120);
-
-      if (shouldReduceMotion) return;
-      const now = Date.now();
-      if (now - lastTrailRef.current < 42) return;
-      lastTrailRef.current = now;
-      cursorTrailIdRef.current += 1;
-      const nextTrail = { id: cursorTrailIdRef.current, x: touch.clientX, y: touch.clientY };
-      setCursorTrail((prev) => [...prev.slice(-4), nextTrail]);
-      window.setTimeout(() => {
-        setCursorTrail((prev) => prev.filter((item) => item.id !== nextTrail.id));
-      }, 220);
-    };
-
-    const onTouchEnd = (event: TouchEvent) => {
-      const activeTouch = activeTouchRef.current;
-      const touch = event.changedTouches[0];
-      if (!touch || !activeTouch) {
-        activeTouchRef.current = null;
-        return;
-      }
-
-      if (!activeTouch.moved) {
-        spawnRipple(touch.clientX, touch.clientY, 144);
-        spawnParticleBurst(touch.clientX, touch.clientY);
-        showTouchPoint(touch.clientX, touch.clientY, 200);
-      } else {
-        showTouchPoint(touch.clientX, touch.clientY, 90);
-      }
-
-      activeTouchRef.current = null;
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     document.addEventListener("mouseover", onOver, { passive: true });
     document.addEventListener("mouseout", onOut, { passive: true });
     window.addEventListener("pointerdown", onPointerDown, { passive: true });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
-    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", onOut);
       window.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", onTouchEnd);
-      window.removeEventListener("touchcancel", onTouchEnd);
-      if (touchHideTimerRef.current) window.clearTimeout(touchHideTimerRef.current);
     };
   }, [dotX, dotY, ringX, ringY, glowX, glowY, expanded, shouldReduceMotion]);
 
@@ -283,27 +199,6 @@ export default function InteractionFX() {
           </AnimatePresence>
         </>
       ) : null}
-
-      <AnimatePresence>
-        {touchPoint.visible ? (
-          <>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.7 }}
-              className="pointer-events-none fixed z-[138] h-20 w-20 rounded-full bg-cyan-300/14 blur-2xl"
-              style={{ left: touchPoint.x, top: touchPoint.y, translateX: "-50%", translateY: "-50%" }}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.7 }}
-              className="pointer-events-none fixed z-[139] h-10 w-10 rounded-full border border-cyan-100/45 bg-white/6"
-              style={{ left: touchPoint.x, top: touchPoint.y, translateX: "-50%", translateY: "-50%" }}
-            />
-          </>
-        ) : null}
-      </AnimatePresence>
 
       <AnimatePresence>
         {ripples.map((ripple) => (

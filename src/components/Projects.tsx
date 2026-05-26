@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import StaggerHeading from "@/components/StaggerHeading";
+import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { PROJECTS } from "@/lib/data";
 import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
 import type { Project, ProjectCategory } from "@/types/portfolio";
@@ -39,6 +40,17 @@ function getStats(project: Project) {
   ];
 }
 
+function getProjectSignals(project: Project) {
+  const signals = [
+    project.liveUrl ? "Live" : "Repo only",
+    project.tech.some((tech) => /node|express|nestjs|laravel|php|prisma|mongo|postgres|supabase/i.test(tech)) ? "Backend" : null,
+    project.tech.some((tech) => /ai|gemini|openai|llm/i.test(tech)) ? "AI" : null,
+    project.tech.some((tech) => /jwt|auth|security/i.test(tech)) || /auth|secure|role/i.test(project.longDescription) ? "Security" : null,
+  ].filter(Boolean);
+
+  return Array.from(new Set(signals)).slice(0, 3) as string[];
+}
+
 function ProjectShowcaseCard({
   project,
   onOpen,
@@ -56,7 +68,7 @@ function ProjectShowcaseCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
       whileHover={{ y: -6 }}
-      className={`group relative overflow-hidden rounded-[30px] border ${style.ring} bg-[linear-gradient(180deg,rgba(7,12,24,0.96),rgba(3,8,18,0.92))] shadow-[0_24px_60px_rgba(2,6,23,0.34)]`}
+      className={`project-card group relative overflow-hidden rounded-[30px] border ${style.ring} bg-[linear-gradient(180deg,rgba(7,12,24,0.96),rgba(3,8,18,0.92))] shadow-[0_24px_60px_rgba(2,6,23,0.34)]`}
     >
       <div className={`absolute inset-0 bg-gradient-to-br ${style.glow}`} />
       <div className="relative z-10">
@@ -86,8 +98,15 @@ function ProjectShowcaseCard({
           </div>
         </div>
 
-        <div className="space-y-5 p-5">
-          <div className="space-y-3">
+          <div className="space-y-5 p-5">
+            <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              {getProjectSignals(project).map((signal) => (
+                <span key={`${project.key}-${signal}`} className="rounded-full border border-white/12 bg-white/[0.05] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/72">
+                  {signal}
+                </span>
+              ))}
+            </div>
             <h3 className="display-title text-2xl font-semibold tracking-tight text-white">{project.title}</h3>
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-cyan-100/78">{resultLine}</p>
             <p className="line-clamp-3 text-sm leading-7 text-white/70">{project.shortDescription}</p>
@@ -152,6 +171,7 @@ export default function Projects() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [selectedSlide, setSelectedSlide] = useState(0);
+  const { play } = useSoundEffects();
 
   const techFilters = useMemo(() => {
     const all = PROJECTS.flatMap((project) => project.tech);
@@ -176,6 +196,7 @@ export default function Projects() {
   const selectedScreenshots = selectedProject?.screenshots?.length ? selectedProject.screenshots : selectedProject ? [selectedProject.image] : [];
 
   const openProject = (key: string) => {
+    play("open");
     setSelectedKey(key);
     setSelectedSlide(0);
   };
@@ -188,7 +209,7 @@ export default function Projects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
-          className="relative overflow-hidden rounded-[36px] border border-white/12 bg-[radial-gradient(circle_at_18%_14%,rgba(34,211,238,0.18),transparent_24%),radial-gradient(circle_at_84%_18%,rgba(244,114,182,0.14),transparent_20%),linear-gradient(180deg,rgba(4,10,18,0.92),rgba(2,6,14,0.84))] p-5 md:p-7"
+          className="project-showcase-panel relative overflow-hidden rounded-[36px] border border-white/12 bg-[radial-gradient(circle_at_18%_14%,rgba(34,211,238,0.18),transparent_24%),radial-gradient(circle_at_84%_18%,rgba(244,114,182,0.14),transparent_20%),linear-gradient(180deg,rgba(4,10,18,0.92),rgba(2,6,14,0.84))] p-5 md:p-7"
         >
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.028)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.028)_1px,transparent_1px)] bg-[size:34px_34px] opacity-[0.18]" />
           <div className="relative z-10">
@@ -222,7 +243,10 @@ export default function Projects() {
                   <button
                     key={filter}
                     type="button"
-                    onClick={() => setActiveFilter(filter)}
+                    onClick={() => {
+                      play("tap");
+                      setActiveFilter(filter);
+                    }}
                     className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
                       activeFilter === filter
                         ? "border-cyan-300/45 bg-cyan-400/[0.12] text-cyan-100"
@@ -243,7 +267,10 @@ export default function Projects() {
                 />
                 <select
                   value={activeTech}
-                  onChange={(event) => setActiveTech(event.target.value)}
+                  onChange={(event) => {
+                    play("switch");
+                    setActiveTech(event.target.value);
+                  }}
                   className="min-h-11 appearance-none rounded-2xl border border-cyan-300/20 bg-[#07111d] px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/45"
                   aria-label="Filter by technology"
                 >
@@ -276,7 +303,10 @@ export default function Projects() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: DURATIONS.fast, ease: EASE_STANDARD }}
-            onClick={() => setSelectedKey(null)}
+            onClick={() => {
+              play("tap");
+              setSelectedKey(null);
+            }}
             className="fixed inset-0 z-[110] flex items-center justify-center bg-black/75 p-4"
           >
             <motion.div
@@ -296,7 +326,10 @@ export default function Projects() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setSelectedKey(null)}
+                  onClick={() => {
+                    play("tap");
+                    setSelectedKey(null);
+                  }}
                   className="interactive-lift inline-flex min-h-10 items-center justify-center rounded-full border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-white/85"
                 >
                   Close
@@ -321,7 +354,10 @@ export default function Projects() {
                     <button
                       key={`${shot}-${index}`}
                       type="button"
-                      onClick={() => setSelectedSlide(index)}
+                      onClick={() => {
+                        play("tap");
+                        setSelectedSlide(index);
+                      }}
                       className={`showcase-shell media-frame relative h-14 overflow-hidden rounded-md border ${
                         selectedSlide === index ? "border-cyan-300/70" : "border-white/15"
                       }`}
@@ -346,13 +382,45 @@ export default function Projects() {
               {selectedProject.highlights?.length ? (
                 <div className="mt-5">
                   <p className="text-xs uppercase tracking-[0.18em] text-white/45">Key Features</p>
-                  <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-white/80">
+                  <ul className="mt-2 grid gap-2 text-sm text-white/80 sm:grid-cols-2">
                     {selectedProject.highlights.map((item) => (
-                      <li key={item}>{item}</li>
+                      <li key={item} className="rounded-xl border border-white/10 bg-white/[0.035] px-3 py-2 leading-6">
+                        {item}
+                      </li>
                     ))}
                   </ul>
                 </div>
               ) : null}
+
+              {selectedProject.architecture ? (
+                <div className="mt-5 rounded-2xl border border-cyan-300/18 bg-cyan-400/[0.06] p-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-cyan-100/70">Architecture</p>
+                  <p className="mt-2 font-mono text-sm leading-7 text-cyan-50/88">{selectedProject.architecture}</p>
+                </div>
+              ) : null}
+
+              <div className="mt-5 flex flex-wrap gap-3 border-t border-white/10 pt-5">
+                {selectedProject.liveUrl ? (
+                  <a
+                    href={selectedProject.liveUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => play("open")}
+                    className="interactive-lift inline-flex min-h-11 items-center justify-center rounded-full bg-white px-5 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-black"
+                  >
+                    Live Demo
+                  </a>
+                ) : null}
+                <a
+                  href={selectedProject.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => play("open")}
+                  className="interactive-lift inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white"
+                >
+                  Source Code
+                </a>
+              </div>
             </motion.div>
           </motion.div>
         ) : null}

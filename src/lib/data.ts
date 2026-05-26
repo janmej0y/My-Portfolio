@@ -43,6 +43,56 @@ export const EDUCATION_ITEMS: EducationItem[] = [
 
 export const PROJECTS: Project[] = [
   {
+    key: "vampforge",
+    category: "web",
+    title: "VampForge",
+    image: "/assets/projects/vampforge.png",
+    shortDescription: "AI career platform for developer identity, resumes, and interview prep.",
+    longDescription:
+      "An AI career platform built with Next.js, React, TypeScript, Tailwind CSS, and Firebase for resume optimization, interview preparation, portfolio generation, GitHub deployment, and animated dashboards.",
+    resultLine: "Career-ready developer workspace with AI-assisted launch tools.",
+    tech: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Firebase"],
+    liveUrl: "https://vamp-forge.vercel.app/",
+    githubUrl: "https://github.com/janmej0y/VampForge",
+    highlights: [
+      "ATS resume optimization flow for developer profiles.",
+      "Interview preparation and portfolio generation features.",
+      "Animated dashboards with GitHub deployment support.",
+    ],
+    architecture: "Next.js Frontend -> Firebase Services -> AI-Assisted Career Tools",
+    screenshots: [
+      "/assets/projects/vampforge.png",
+      "/assets/projects/vampforge.png",
+      "/assets/projects/vampforge.png",
+    ],
+    metrics: ["AI-assisted career workflows", "Firebase-ready deployment", "Animated dashboard UX"],
+  },
+  {
+    key: "tapas-grocery",
+    category: "web",
+    title: "Tapas-Grocery",
+    image: "/assets/projects/tapas-grocery.png",
+    shortDescription: "Local e-commerce platform with cart, checkout, delivery, and admin tools.",
+    longDescription:
+      "A local e-commerce platform built with Next.js, TypeScript, Tailwind CSS, and Supabase, featuring cart, checkout, delivery tracking, multilingual UI, admin analytics, maps, and secure Supabase authentication.",
+    resultLine: "Neighborhood shopping flow with admin-ready commerce tools.",
+    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase"],
+    liveUrl: "https://tapas-grocery.vercel.app/",
+    githubUrl: "https://github.com/janmej0y/Tapas-Grocery",
+    highlights: [
+      "Cart, checkout, and delivery tracking workflows.",
+      "Multilingual storefront experience with maps support.",
+      "Admin analytics and secure Supabase authentication.",
+    ],
+    architecture: "Next.js App -> Supabase Auth/Data -> Commerce Dashboard",
+    screenshots: [
+      "/assets/projects/tapas-grocery.png",
+      "/assets/projects/tapas-grocery.png",
+      "/assets/projects/tapas-grocery.png",
+    ],
+    metrics: ["Secure Supabase auth", "Local delivery workflow", "Admin analytics ready"],
+  },
+  {
     key: "voting",
     category: "web",
     title: "Online Voting System",
@@ -178,6 +228,83 @@ export const PROJECTS: Project[] = [
     tech: ["API", "JavaScript", "HTML"],
     liveUrl: "https://janmej0y.github.io/Weather-App/",
     githubUrl: "https://github.com/janmej0y/Weather-App",
+  },
+  {
+    key: "authsphere",
+    category: "web",
+    title: "AuthSphere",
+    image: "/assets/projects/authsphere.png",
+    shortDescription: "Production-ready MERN authentication and task management system.",
+    longDescription:
+      "A MERN stack authentication and task management system with JWT access and refresh tokens, role-based access control, task CRUD, admin analytics, audit logs, Swagger/Postman docs, Docker support, and backend tests.",
+    resultLine: "Secure auth, admin controls, and task workflows in one MERN dashboard.",
+    tech: ["React", "Vite", "Node.js", "Express", "MongoDB", "JWT"],
+    liveUrl: "https://auth-sphere-alpha.vercel.app/",
+    githubUrl: "https://github.com/janmej0y/AuthSphere",
+    highlights: [
+      "JWT access token and refresh token authentication with bcrypt password hashing.",
+      "Role-based access control for user and admin workflows.",
+      "Task CRUD with search, filters, sorting, pagination, ownership rules, and detail pages.",
+      "Admin analytics, user management, audit logs, Swagger/Postman docs, Docker, and CI support.",
+    ],
+    architecture: "React/Vite Dashboard -> Express API -> Auth Middleware -> MongoDB",
+    screenshots: [
+      "/assets/projects/authsphere.png",
+      "/assets/projects/authsphere.png",
+      "/assets/projects/authsphere.png",
+    ],
+    metrics: ["Role-based access control", "Tested REST API", "Docker + CI ready"],
+  },
+  {
+    key: "datavault",
+    category: "web",
+    title: "DataVault",
+    image: "/assets/projects/datavault.png",
+    shortDescription: "Laravel admin app for business-data imports, duplicate cleanup, and reporting.",
+    longDescription:
+      "A Laravel 10 admin application for bulk business-data import, duplicate detection, merge workflows, incomplete-data review, import history, CSV exports, and Chart.js reporting with MongoDB-backed storage.",
+    resultLine: "Bulk data cleanup workflows with merge review and reporting dashboards.",
+    tech: ["Laravel", "PHP", "MongoDB", "Tailwind CSS", "Alpine.js", "Chart.js"],
+    githubUrl: "https://github.com/janmej0y/DataVault",
+    highlights: [
+      "Bulk import from CSV, XLS, XLSX, and public Google Drive file URLs.",
+      "Automatic duplicate detection using normalized business name, area, city, and address.",
+      "Merge workflows for mobile numbers, categories, sub-categories, and soft-deleted redundant records.",
+      "Dashboard cards, city/category reports, import history logs, CSV export, and protected admin access.",
+    ],
+    architecture: "Laravel Breeze Admin -> Services/Repositories -> MongoDB -> Chart.js Reports",
+    screenshots: [
+      "/assets/projects/datavault.png",
+      "/assets/projects/datavault.png",
+      "/assets/projects/datavault.png",
+    ],
+    metrics: ["Duplicate merge workflow", "MongoDB-backed imports", "Admin-only access"],
+  },
+  {
+    key: "comodex",
+    category: "web",
+    title: "Comodex",
+    image: "/assets/projects/comodex.png",
+    shortDescription: "Executive commodities and inventory management platform.",
+    longDescription:
+      "A full-stack commodities and inventory management system built with Next.js, NestJS, GraphQL, Prisma, and PostgreSQL for secure role-based operations, warehouse visibility, procurement workflows, stock history, and manager analytics.",
+    resultLine: "Role-aware inventory operations with warehouse, procurement, and audit workflows.",
+    tech: ["Next.js", "NestJS", "GraphQL", "Prisma", "PostgreSQL", "TypeScript"],
+    liveUrl: "https://comodex.vercel.app/",
+    githubUrl: "https://github.com/janmej0y/Comodex",
+    highlights: [
+      "Manager and store keeper roles with frontend route gating and backend JWT role guards.",
+      "Product management, stock adjustments, multi-warehouse balances, and stock transfers.",
+      "Procurement workflows with purchase orders, goods receipt posting, and low-stock alerts.",
+      "Manager dashboard, audit trail, global search, responsive navigation, and Apollo mock mode.",
+    ],
+    architecture: "Next.js App Router -> Apollo GraphQL -> NestJS API -> Prisma -> PostgreSQL",
+    screenshots: [
+      "/assets/projects/comodex.png",
+      "/assets/projects/comodex.png",
+      "/assets/projects/comodex.png",
+    ],
+    metrics: ["Role-based inventory access", "GraphQL API layer", "Warehouse audit history"],
   },
 ];
 
@@ -315,14 +442,14 @@ export const CERTIFICATIONS: Certification[] = [
 
 export const EXPERIENCE_ITEMS: ExperienceItem[] = [
   {
-    role: "Frontend Developer Intern",
+    role: "Full Stack Developer Intern",
     company: "Springer Capital Investments LLC",
     employmentType: "Internship",
-    period: "Mar 2026 - Present · 1 mo",
+    period: "Mar 2026 - May 2026",
     location: "Remote",
     description:
-      "Working on real-world product interfaces using Next.js, React, and TypeScript to build responsive and user-friendly experiences.",
-    skills: ["Next.js", "TypeScript", "React"],
+      "Developed React/Next.js features, integrated REST APIs, connected backend workflows, and optimized UI performance. Shipped reusable components and collaborated in a remote agile team to deliver production-ready application updates.",
+    skills: ["React", "Next.js", "REST APIs", "Backend Workflows", "UI Performance"],
   },
 ];
 

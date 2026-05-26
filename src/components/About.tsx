@@ -138,7 +138,7 @@ export default function About() {
                     <p className="mt-1 text-sm text-white/52">{item.location}</p>
                   </div>
                   <div className="rounded-full border border-cyan-300/20 bg-cyan-400/[0.08] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
-                    Current Role
+                    Completed
                   </div>
                 </div>
                 <p className="mt-5 max-w-4xl text-base leading-8 text-[#9ca3af]">{item.description}</p>

@@ -12,6 +12,17 @@ type Command = {
   run: () => void;
 };
 
+type ThemePreset = "dark" | "bright" | "cyber";
+const THEME_CHANGE_EVENT = "portfolio-theme-change";
+
+function applyThemePreset(preset: ThemePreset) {
+  document.documentElement.classList.remove("theme-dark", "theme-bright", "theme-cyber", "bright-mode");
+  document.documentElement.classList.add(`theme-${preset}`);
+  localStorage.setItem("theme-preset", preset);
+  window.dispatchEvent(new CustomEvent("portfolio-theme-transition", { detail: { preset } }));
+  window.dispatchEvent(new CustomEvent(THEME_CHANGE_EVENT, { detail: { preset } }));
+}
+
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -71,31 +82,19 @@ export default function CommandPalette() {
         id: "theme-dark",
         label: "Switch Theme: Dark",
         hint: "Theme",
-        run: () => {
-          document.documentElement.classList.remove("theme-bright", "theme-cyber", "bright-mode");
-          document.documentElement.classList.add("theme-dark");
-          localStorage.setItem("theme-preset", "dark");
-        },
+        run: () => applyThemePreset("dark"),
       },
       {
         id: "theme-bright",
         label: "Switch Theme: Bright",
         hint: "Theme",
-        run: () => {
-          document.documentElement.classList.remove("theme-dark", "theme-cyber", "bright-mode");
-          document.documentElement.classList.add("theme-bright");
-          localStorage.setItem("theme-preset", "bright");
-        },
+        run: () => applyThemePreset("bright"),
       },
       {
         id: "theme-cyber",
         label: "Switch Theme: Cyber",
         hint: "Theme",
-        run: () => {
-          document.documentElement.classList.remove("theme-dark", "theme-bright", "bright-mode");
-          document.documentElement.classList.add("theme-cyber");
-          localStorage.setItem("theme-preset", "cyber");
-        },
+        run: () => applyThemePreset("cyber"),
       },
     ],
     [],

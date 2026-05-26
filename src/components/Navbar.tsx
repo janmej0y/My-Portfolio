@@ -4,15 +4,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import MagneticButton from "@/components/MagneticButton";
+import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { NAV_ITEMS } from "@/lib/data";
 import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
 
 type ThemePreset = "dark" | "bright" | "cyber";
+const THEME_CHANGE_EVENT = "portfolio-theme-change";
 
 export default function Navbar() {
   const [active, setActive] = useState("hero");
   const [themePreset, setThemePreset] = useState<ThemePreset>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { enabled: soundEnabled, play, toggleSound } = useSoundEffects();
   const sectionIds = useMemo(() => ["hero", ...NAV_ITEMS.map((item) => item.id)], []);
 
   const applyTheme = (preset: ThemePreset) => {
@@ -28,6 +31,16 @@ export default function Navbar() {
 
     setThemePreset(nextPreset);
     applyTheme(nextPreset);
+
+    const onThemeChange = (event: Event) => {
+      const preset = (event as CustomEvent<{ preset?: string }>).detail?.preset;
+      if (preset === "bright" || preset === "cyber" || preset === "dark") {
+        setThemePreset(preset);
+      }
+    };
+
+    window.addEventListener(THEME_CHANGE_EVENT, onThemeChange);
+    return () => window.removeEventListener(THEME_CHANGE_EVENT, onThemeChange);
   }, []);
 
   useEffect(() => {
@@ -61,9 +74,16 @@ export default function Navbar() {
   }, []);
 
   const changeTheme = (preset: ThemePreset) => {
+    play("switch");
     setThemePreset(preset);
     window.dispatchEvent(new CustomEvent("portfolio-theme-transition", { detail: { preset } }));
     applyTheme(preset);
+    window.dispatchEvent(new CustomEvent(THEME_CHANGE_EVENT, { detail: { preset } }));
+  };
+
+  const onToggleSound = () => {
+    toggleSound();
+    window.setTimeout(() => play("success"), 0);
   };
 
   return (
@@ -87,12 +107,13 @@ export default function Navbar() {
             <a
               key={item.id}
               href={`#${item.id}`}
+              onClick={() => play("tap")}
               className={`link-underline text-sm transition ${active === item.id ? "text-white" : "text-white/65 hover:text-white"}`}
             >
               {item.label}
             </a>
           ))}
-          <Link href="/games" className="link-underline text-sm text-cyan-100 transition hover:text-white">
+          <Link href="/games" onClick={() => play("open")} className="link-underline text-sm text-cyan-100 transition hover:text-white">
             Game Hub
           </Link>
         </nav>
@@ -115,6 +136,24 @@ export default function Navbar() {
               </button>
             ))}
           </div>
+          <button
+            type="button"
+            onClick={onToggleSound}
+            className={`hidden min-h-9 items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] transition md:inline-flex ${
+              soundEnabled
+                ? "border-cyan-300/45 bg-cyan-400/[0.12] text-cyan-100"
+                : "border-white/15 bg-black/30 text-white/60 hover:text-white"
+            }`}
+            aria-pressed={soundEnabled}
+            aria-label={soundEnabled ? "Turn sound off" : "Turn sound on"}
+          >
+            <span className="relative flex h-3 w-3 items-end gap-[2px]" aria-hidden="true">
+              <span className={`w-[3px] rounded-full ${soundEnabled ? "h-2 bg-cyan-200" : "h-1 bg-white/45"}`} />
+              <span className={`w-[3px] rounded-full ${soundEnabled ? "h-3 bg-cyan-100" : "h-2 bg-white/45"}`} />
+              <span className={`w-[3px] rounded-full ${soundEnabled ? "h-1.5 bg-cyan-300" : "h-1 bg-white/45"}`} />
+            </span>
+            Sound
+          </button>
           <MagneticButton
             href="#contact"
             className="hidden rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white hover:border-white/50 md:inline-flex"
@@ -123,7 +162,10 @@ export default function Navbar() {
           </MagneticButton>
           <button
             type="button"
-            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            onClick={() => {
+              play("tap");
+              setMobileMenuOpen((prev) => !prev);
+            }}
             className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-cyan-300/55 bg-[linear-gradient(135deg,rgba(8,20,32,0.96),rgba(2,10,18,0.82))] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-50 shadow-[0_14px_34px_rgba(2,6,23,0.34)] md:hidden"
             aria-label="Toggle mobile menu"
             aria-expanded={mobileMenuOpen}
@@ -151,7 +193,10 @@ export default function Navbar() {
             <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
               <Link
                 href="/games"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  play("open");
+                  setMobileMenuOpen(false);
+                }}
                 className="flex min-h-11 items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-cyan-100 transition hover:bg-white/10 hover:text-white"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.85)]" aria-hidden="true" />
@@ -161,7 +206,10 @@ export default function Navbar() {
                 <a
                   key={item.id}
                   href={`#${item.id}`}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    play("tap");
+                    setMobileMenuOpen(false);
+                  }}
                   className={`flex min-h-11 items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition ${
                     active === item.id ? "bg-white/10 text-white" : "text-white/75 hover:bg-white/10 hover:text-white"
                   }`}
@@ -189,9 +237,22 @@ export default function Navbar() {
                   </button>
                 ))}
               </div>
+              <button
+                type="button"
+                onClick={onToggleSound}
+                className={`min-h-11 rounded-lg border px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] ${
+                  soundEnabled ? "border-cyan-300/45 bg-cyan-400/[0.12] text-cyan-100" : "border-white/15 text-white/70"
+                }`}
+                aria-pressed={soundEnabled}
+              >
+                {soundEnabled ? "Sound On" : "Sound Off"}
+              </button>
               <a
                 href="#contact"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  play("tap");
+                  setMobileMenuOpen(false);
+                }}
                 className="mt-1 inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-3 py-2 text-center text-xs font-semibold uppercase tracking-[0.18em] text-white"
               >
                 Let&apos;s Talk

@@ -9,14 +9,15 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function BackgroundFX() {
   const shouldReduceMotion = useReducedMotion();
+  const [leanMode, setLeanMode] = useState(false);
   const { scrollYProgress } = useScroll();
-  const gridY = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? -24 : -120]);
-  const auroraY = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 18 : 80]);
-  const auroraY2 = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? -16 : -60]);
+  const gridY = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion || leanMode ? -18 : -80]);
+  const auroraY = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion || leanMode ? 0 : 52]);
+  const auroraY2 = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion || leanMode ? 0 : -44]);
   const pointerX = useMotionValue(50);
   const pointerY = useMotionValue(32);
   const smoothX = useSpring(pointerX, { stiffness: 120, damping: 18, mass: 0.2 });
@@ -25,7 +26,16 @@ export default function BackgroundFX() {
 
   useEffect(() => {
     const isCoarse = window.matchMedia("(pointer: coarse)").matches;
-    const isSmallViewport = window.innerWidth < 768;
+    const syncLeanMode = () => setLeanMode(isCoarse || window.innerWidth < 1024);
+    syncLeanMode();
+    window.addEventListener("resize", syncLeanMode);
+
+    return () => window.removeEventListener("resize", syncLeanMode);
+  }, []);
+
+  useEffect(() => {
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    const isSmallViewport = window.innerWidth < 1024;
     if (isCoarse || isSmallViewport || shouldReduceMotion) return;
 
     const onMove = (event: MouseEvent) => {
@@ -39,14 +49,20 @@ export default function BackgroundFX() {
 
   return (
     <div aria-hidden="true" className="bg-fx-wrap">
-      <motion.div style={{ y: auroraY }} className="aurora aurora-one" />
-      <motion.div style={{ y: auroraY2 }} className="aurora aurora-two" />
+      {!leanMode ? (
+        <>
+          <motion.div style={{ y: auroraY }} className="aurora aurora-one" />
+          <motion.div style={{ y: auroraY2 }} className="aurora aurora-two" />
+        </>
+      ) : null}
       <motion.div style={{ y: gridY }} className="bg-grid" />
-      <motion.div
-        className="bg-spotlight"
-        style={{ background: shouldReduceMotion ? undefined : spotlightBackground }}
-      />
-      <div className="bg-grain" />
+      {!leanMode ? (
+        <motion.div
+          className="bg-spotlight"
+          style={{ background: shouldReduceMotion ? undefined : spotlightBackground }}
+        />
+      ) : null}
+      {!leanMode ? <div className="bg-grain" /> : null}
     </div>
   );
 }

@@ -161,6 +161,7 @@ html.lenis body {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  contain: strict;
 }
 
 .aurora {
@@ -168,6 +169,7 @@ html.lenis body {
   filter: blur(70px);
   opacity: 0.35;
   animation: floatAura 18s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .aurora-one {
@@ -195,6 +197,7 @@ html.lenis body {
   background-size: 48px 48px;
   mask-image: radial-gradient(circle at 50% 38%, black 16%, transparent 78%);
   opacity: 0.14;
+  will-change: transform;
 }
 
 .bg-spotlight {
@@ -404,6 +407,116 @@ html.lenis body {
   color: #334155 !important;
 }
 
+.theme-bright .text-cyan-100,
+.bright-mode .text-cyan-100,
+.theme-bright .text-cyan-100\/95,
+.bright-mode .text-cyan-100\/95,
+.theme-bright .text-cyan-100\/88,
+.bright-mode .text-cyan-100\/88,
+.theme-bright .text-cyan-100\/82,
+.bright-mode .text-cyan-100\/82,
+.theme-bright .text-cyan-100\/80,
+.bright-mode .text-cyan-100\/80,
+.theme-bright .text-cyan-100\/78,
+.bright-mode .text-cyan-100\/78,
+.theme-bright .text-cyan-100\/70,
+.bright-mode .text-cyan-100\/70,
+.theme-bright .text-cyan-50\/88,
+.bright-mode .text-cyan-50\/88,
+.theme-bright .text-fuchsia-100,
+.bright-mode .text-fuchsia-100,
+.theme-bright .text-emerald-100,
+.bright-mode .text-emerald-100 {
+  color: #075985 !important;
+}
+
+.theme-bright .project-card,
+.bright-mode .project-card,
+.theme-bright .project-showcase-panel,
+.bright-mode .project-showcase-panel,
+.theme-bright .showcase-shell,
+.bright-mode .showcase-shell {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.9)) !important;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1) !important;
+}
+
+.theme-bright .project-card > .absolute,
+.bright-mode .project-card > .absolute {
+  opacity: 0.36;
+}
+
+.theme-bright .bg-black\/82,
+.bright-mode .bg-black\/82,
+.theme-bright .bg-black\/75,
+.bright-mode .bg-black\/75,
+.theme-bright .bg-black\/72,
+.bright-mode .bg-black\/72,
+.theme-bright .bg-black\/70,
+.bright-mode .bg-black\/70,
+.theme-bright .bg-black\/56,
+.bright-mode .bg-black\/56,
+.theme-bright .bg-black\/55,
+.bright-mode .bg-black\/55,
+.theme-bright .bg-black\/40,
+.bright-mode .bg-black\/40,
+.theme-bright .bg-black\/35,
+.bright-mode .bg-black\/35,
+.theme-bright .bg-black\/32,
+.bright-mode .bg-black\/32,
+.theme-bright .bg-black\/30,
+.bright-mode .bg-black\/30,
+.theme-bright .bg-black\/28,
+.bright-mode .bg-black\/28,
+.theme-bright .bg-black\/25,
+.bright-mode .bg-black\/25,
+.theme-bright .bg-black\/24,
+.bright-mode .bg-black\/24,
+.theme-bright .bg-black\/22,
+.bright-mode .bg-black\/22,
+.theme-bright .bg-black\/20,
+.bright-mode .bg-black\/20,
+.theme-bright .bg-black\/18,
+.bright-mode .bg-black\/18 {
+  background-color: rgba(255, 255, 255, 0.76) !important;
+}
+
+.theme-bright .bg-\[\#07111d\],
+.bright-mode .bg-\[\#07111d\],
+.theme-bright .bg-\[\#0f0f10\],
+.bright-mode .bg-\[\#0f0f10\] {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+}
+
+.theme-bright input,
+.bright-mode input,
+.theme-bright textarea,
+.bright-mode textarea,
+.theme-bright select,
+.bright-mode select {
+  color: #0f172a !important;
+}
+
+.theme-bright input::placeholder,
+.bright-mode input::placeholder,
+.theme-bright textarea::placeholder,
+.bright-mode textarea::placeholder {
+  color: #64748b !important;
+}
+
+.theme-bright .metric-card,
+.bright-mode .metric-card {
+  border-color: rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+}
+
+.theme-bright .status-toast,
+.bright-mode .status-toast {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(15, 23, 42, 0.16);
+}
+
 .theme-cyber body {
   background-image: radial-gradient(circle at 12% 10%, rgba(34, 211, 238, 0.24), transparent 36%),
     radial-gradient(circle at 84% 18%, rgba(56, 189, 248, 0.2), transparent 42%),
@@ -582,6 +695,8 @@ html.lenis body {
 .section-wrap {
   padding-top: var(--space-section);
   padding-bottom: var(--space-section);
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
 }
 
 .display-title {
