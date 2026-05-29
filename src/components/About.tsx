@@ -7,6 +7,36 @@ import { EDUCATION_ITEMS, EXPERIENCE_ITEMS } from "@/lib/data";
 import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
 import StaggerHeading from "@/components/StaggerHeading";
 
+const CAREER_TIMELINE = [
+  {
+    year: "2022",
+    title: "Started CSE",
+    description: "Built the foundation in computer science, programming, and web fundamentals.",
+  },
+  {
+    year: "2024",
+    title: "Security Projects",
+    description: "Moved deeper into authentication, voting workflows, and cybersecurity practice.",
+  },
+  {
+    year: "2025",
+    title: "Full-Stack Apps",
+    description: "Shipped practical products across Next.js, Supabase, MongoDB, APIs, and dashboards.",
+  },
+  {
+    year: "2026",
+    title: "Developer Internship",
+    description: "Delivered React/Next.js features, REST integrations, backend workflows, and UI polish.",
+  },
+];
+
+const HIRE_REASONS = [
+  "I ship fast without ignoring code quality.",
+  "I understand both frontend experience and backend reliability.",
+  "I bring security-first thinking into product decisions.",
+  "I communicate clearly and turn unclear requirements into working builds.",
+];
+
 export default function About() {
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
@@ -105,6 +135,70 @@ export default function About() {
             </div>
           </div>
         </motion.div>
+
+        <div className="mx-auto mt-8 grid max-w-6xl gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
+            className="surface rounded-[24px] p-5 md:p-6"
+          >
+            <p className="text-sm uppercase tracking-[0.26em] text-white/50">Why Hire Me</p>
+            <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white md:text-3xl">
+              Practical builder, security-aware teammate.
+            </h3>
+            <div className="mt-5 grid gap-3">
+              {HIRE_REASONS.map((reason, index) => (
+                <motion.div
+                  key={reason}
+                  initial={{ opacity: 0, x: -14 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.06, duration: DURATIONS.fast, ease: EASE_STANDARD }}
+                  className="rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3"
+                >
+                  <p className="text-sm leading-6 text-white/78">{reason}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
+            className="surface rounded-[24px] p-5 md:p-6"
+          >
+            <p className="text-sm uppercase tracking-[0.26em] text-white/50">Timeline</p>
+            <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white md:text-3xl">
+              From CS fundamentals to production-minded builds.
+            </h3>
+            <div className="mt-6 grid gap-4">
+              {CAREER_TIMELINE.map((item, index) => (
+                <motion.article
+                  key={`${item.year}-${item.title}`}
+                  initial={{ opacity: 0, x: 18 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.07, duration: DURATIONS.fast, ease: EASE_STANDARD }}
+                  className="relative rounded-2xl border border-white/10 bg-black/20 p-4"
+                >
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-4">
+                    <span className="w-fit rounded-full border border-cyan-300/25 bg-cyan-400/[0.08] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
+                      {item.year}
+                    </span>
+                    <div>
+                      <h4 className="text-base font-semibold text-white">{item.title}</h4>
+                      <p className="mt-1 text-sm leading-6 text-[#9ca3af]">{item.description}</p>
+                    </div>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       <section id="education" className="section-backplate b section-wrap px-5 sm:px-6 md:px-12">

@@ -109,8 +109,8 @@ export default function Hero() {
             </h1>
             <StaggerHeading
               as="h2"
-              text="Secure Builder of Digital Systems"
-              className="display-title mt-3 max-w-3xl text-xl font-semibold leading-tight text-white/84 sm:text-2xl lg:text-3xl"
+              text="Full-stack products with clean UX, secure APIs, and production-ready architecture."
+              className="mt-3 max-w-2xl text-base font-medium leading-7 text-white/76 sm:text-lg lg:text-xl"
             />
           </div>
 
@@ -156,7 +156,7 @@ export default function Hero() {
             transition={{ delay: 0.32, duration: DURATIONS.base, ease: EASE_STANDARD }}
             className="mt-6 max-w-2xl text-sm leading-7 text-[#9ca3af] sm:text-base"
           >
-            I design and build secure, performant digital products with a clean visual language and strong engineering fundamentals.
+            I build full-stack products with clean UX, secure APIs, and production-ready architecture.
           </motion.p>
 
           <motion.div

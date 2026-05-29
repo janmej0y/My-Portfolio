@@ -12,12 +12,12 @@ import type {
 } from "@/types/portfolio";
 
 export const NAV_ITEMS: NavItem[] = [
-  { id: "about", label: "Origin" },
-  { id: "education", label: "Launchpad" },
-  { id: "projects", label: "Build Vault" },
-  { id: "skills", label: "Arsenal" },
-  { id: "certifications", label: "Proof Stack" },
-  { id: "contact", label: "Signal" },
+  { id: "about", label: "About" },
+  { id: "education", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "skills", label: "Skills" },
+  { id: "certifications", label: "Certificates" },
+  { id: "contact", label: "Contact" },
 ];
 
 export const EDUCATION_ITEMS: EducationItem[] = [
