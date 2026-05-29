@@ -9,6 +9,7 @@ const BackgroundFX = dynamic(() => import("@/components/BackgroundFX"), { ssr: f
 const InteractionFX = dynamic(() => import("@/components/InteractionFX"), { ssr: false });
 const PageLoader = dynamic(() => import("@/components/PageLoader"), { ssr: false });
 const ScrollProgressBar = dynamic(() => import("@/components/ScrollProgressBar"), { ssr: false });
+const StaleServiceWorkerCleaner = dynamic(() => import("@/components/StaleServiceWorkerCleaner"), { ssr: false });
 const ThemeTransition = dynamic(() => import("@/components/ThemeTransition"), { ssr: false });
 
 const manrope = Manrope({
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           dangerouslySetInnerHTML={{ __html: JSON.stringify(workJsonLd) }}
         />
         <SmoothScrollProvider>
+          <StaleServiceWorkerCleaner />
           <PageLoader />
           <ThemeTransition />
           <BackgroundFX />
