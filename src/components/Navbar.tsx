@@ -2,7 +2,8 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 import MagneticButton from "@/components/MagneticButton";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { NAV_ITEMS } from "@/lib/data";
@@ -15,8 +16,13 @@ export default function Navbar() {
   const [active, setActive] = useState("hero");
   const [themePreset, setThemePreset] = useState<ThemePreset>("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navHidden, setNavHidden] = useState(false);
+  const lastScrollY = useRef(0);
+  const pathname = usePathname();
   const { enabled: soundEnabled, play, toggleSound } = useSoundEffects();
   const sectionIds = useMemo(() => ["hero", ...NAV_ITEMS.map((item) => item.id)], []);
+  const isHomePage = pathname === "/";
+  const sectionHref = (id: string) => (isHomePage ? `#${id}` : `/#${id}`);
 
   const applyTheme = (preset: ThemePreset) => {
     document.documentElement.classList.remove("theme-dark", "theme-bright", "theme-cyber", "bright-mode");
@@ -44,6 +50,11 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    if (!isHomePage) {
+      setActive("");
+      return;
+    }
+
     const sections = sectionIds
       .map((id) => document.getElementById(id))
       .filter((node): node is HTMLElement => Boolean(node));
@@ -60,7 +71,7 @@ export default function Navbar() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [sectionIds]);
+  }, [isHomePage, sectionIds]);
 
   useEffect(() => {
     const onResize = () => {
@@ -71,6 +82,28 @@ export default function Navbar() {
 
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    const onScrollDirection = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+
+      if (Math.abs(delta) < 8) return;
+
+      if (currentY < 24) {
+        setNavHidden(false);
+      } else {
+        setNavHidden(delta > 0);
+      }
+
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener("scroll", onScrollDirection, { passive: true });
+    return () => window.removeEventListener("scroll", onScrollDirection);
   }, []);
 
   const changeTheme = (preset: ThemePreset) => {
@@ -89,13 +122,14 @@ export default function Navbar() {
   return (
     <motion.header
       initial={{ y: -48, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      animate={{ y: navHidden && !mobileMenuOpen ? -112 : 0, opacity: navHidden && !mobileMenuOpen ? 0 : 1 }}
       transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
-      className="fixed inset-x-0 top-0 z-[170]"
+      className="fixed inset-x-0 top-0 z-[210]"
+      style={{ pointerEvents: navHidden && !mobileMenuOpen ? "none" : "auto" }}
     >
       <div className="mx-auto mt-3 flex w-[min(96%,1120px)] items-center justify-between gap-3 rounded-[28px] border border-white/10 bg-black/72 px-3 py-3 backdrop-blur-xl sm:px-4 md:mt-4 md:rounded-full md:px-6">
         <a
-          href="#hero"
+          href={sectionHref("hero")}
           className="inline-flex min-w-0 max-w-[calc(100%-5.75rem)] items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold tracking-[0.18em] text-white sm:max-w-none sm:text-sm sm:tracking-[0.22em] md:border-0 md:bg-transparent md:px-0 md:py-0"
         >
           <span className="truncate max-[380px]:hidden">JANMEJOY</span>
@@ -106,7 +140,7 @@ export default function Navbar() {
           {NAV_ITEMS.map((item) => (
             <a
               key={item.id}
-              href={`#${item.id}`}
+              href={sectionHref(item.id)}
               onClick={() => play("tap")}
               className={`link-underline text-sm transition ${active === item.id ? "text-white" : "text-white/65 hover:text-white"}`}
             >
@@ -155,21 +189,24 @@ export default function Navbar() {
             Sound
           </button>
           <MagneticButton
-            href="#contact"
+            href={sectionHref("contact")}
             className="hidden rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white hover:border-white/50 md:inline-flex"
           >
             Let&apos;s Talk
           </MagneticButton>
-          <button
+          <motion.button
             type="button"
             onClick={() => {
               play("tap");
               setMobileMenuOpen((prev) => !prev);
             }}
+            animate={{ y: navHidden && !mobileMenuOpen ? -18 : 0, opacity: navHidden && !mobileMenuOpen ? 0 : 1 }}
+            transition={{ duration: DURATIONS.fast, ease: EASE_STANDARD }}
             className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-cyan-300/55 bg-[linear-gradient(135deg,rgba(8,20,32,0.96),rgba(2,10,18,0.82))] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-50 shadow-[0_14px_34px_rgba(2,6,23,0.34)] md:hidden"
             aria-label="Toggle mobile menu"
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-nav-menu"
+            tabIndex={navHidden && !mobileMenuOpen ? -1 : 0}
           >
             <span className="flex flex-col gap-[3px]" aria-hidden="true">
               <span className={`h-[2px] w-4 rounded-full bg-current transition ${mobileMenuOpen ? "translate-y-[5px] rotate-45" : ""}`} />
@@ -177,7 +214,7 @@ export default function Navbar() {
               <span className={`h-[2px] w-4 rounded-full bg-current transition ${mobileMenuOpen ? "-translate-y-[5px] -rotate-45" : ""}`} />
             </span>
             {mobileMenuOpen ? "Close" : "Menu"}
-          </button>
+          </motion.button>
         </div>
       </div>
       <AnimatePresence>
@@ -205,7 +242,7 @@ export default function Navbar() {
               {NAV_ITEMS.map((item) => (
                 <a
                   key={item.id}
-                  href={`#${item.id}`}
+                  href={sectionHref(item.id)}
                   onClick={() => {
                     play("tap");
                     setMobileMenuOpen(false);
@@ -248,7 +285,7 @@ export default function Navbar() {
                 {soundEnabled ? "Sound On" : "Sound Off"}
               </button>
               <a
-                href="#contact"
+                href={sectionHref("contact")}
                 onClick={() => {
                   play("tap");
                   setMobileMenuOpen(false);

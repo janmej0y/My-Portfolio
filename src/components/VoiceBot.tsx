@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
 import { smoothScrollToTarget } from "@/lib/scroll";
@@ -43,6 +44,8 @@ function getSpeechRecognitionCtor(): SpeechRecognitionCtor | null {
 }
 
 export default function VoiceBot() {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
   const [isCompact, setIsCompact] = useState(false);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -286,8 +289,10 @@ export default function VoiceBot() {
     recognition.start();
   };
 
+  if (!isHomePage) return null;
+
   return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-[128] w-[min(calc(100vw-1rem),360px)] sm:bottom-5 sm:right-5 sm:w-[min(92vw,360px)]">
+    <div className="pointer-events-none fixed bottom-4 right-4 z-[160] w-[min(calc(100vw-1rem),360px)] sm:bottom-5 sm:right-5 sm:w-[min(92vw,360px)]">
       {open ? (
         <motion.div
           className={`pointer-events-auto overflow-hidden rounded-2xl border border-cyan-300/20 bg-black/18 shadow-[0_10px_24px_rgba(2,6,23,0.24)] backdrop-blur-sm transition-opacity ${

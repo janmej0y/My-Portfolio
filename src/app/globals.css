@@ -165,6 +165,31 @@ html.lenis body {
   contain: strict;
 }
 
+.portfolio-intro-active .bg-fx-wrap,
+.portfolio-intro-active .linux-watermark,
+.portfolio-intro-active .kali-3d-bg,
+.portfolio-intro-active .bg-grain {
+  display: none !important;
+}
+
+html.portfolio-intro-active,
+body.portfolio-intro-active {
+  overflow: hidden;
+}
+
+.portfolio-content-shell {
+  transform: scale(1);
+  opacity: 1;
+  transform-origin: center top;
+  transition: transform 1.35s cubic-bezier(0.76, 0, 0.24, 1), opacity 1.35s cubic-bezier(0.76, 0, 0.24, 1);
+  will-change: transform, opacity;
+}
+
+.portfolio-intro-active .portfolio-content-shell {
+  transform: scale(0.95);
+  opacity: 0.72;
+}
+
 .aurora {
   position: absolute;
   filter: blur(70px);
@@ -429,6 +454,24 @@ html.lenis body {
 .theme-bright .text-emerald-100,
 .bright-mode .text-emerald-100 {
   color: #075985 !important;
+}
+
+.theme-bright .portfolio-loader .text-white,
+.bright-mode .portfolio-loader .text-white,
+.theme-bright .portfolio-loader .text-white\/58,
+.bright-mode .portfolio-loader .text-white\/58,
+.theme-bright .portfolio-loader .text-white\/38,
+.bright-mode .portfolio-loader .text-white\/38 {
+  color: rgba(255, 255, 255, 0.94) !important;
+}
+
+.theme-bright .portfolio-loader .text-cyan-50\/72,
+.bright-mode .portfolio-loader .text-cyan-50\/72,
+.theme-bright .portfolio-loader .text-cyan-100\/72,
+.bright-mode .portfolio-loader .text-cyan-100\/72,
+.theme-bright .portfolio-loader .text-emerald-100\/70,
+.bright-mode .portfolio-loader .text-emerald-100\/70 {
+  color: rgba(207, 250, 254, 0.82) !important;
 }
 
 .theme-bright .project-card,

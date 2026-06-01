@@ -7,10 +7,12 @@ import { CASE_STUDIES, PROJECTS } from "@/lib/data";
 
 const BackgroundFX = dynamic(() => import("@/components/BackgroundFX"), { ssr: false });
 const InteractionFX = dynamic(() => import("@/components/InteractionFX"), { ssr: false });
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
 const PageLoader = dynamic(() => import("@/components/PageLoader"), { ssr: false });
 const ScrollProgressBar = dynamic(() => import("@/components/ScrollProgressBar"), { ssr: false });
 const StaleServiceWorkerCleaner = dynamic(() => import("@/components/StaleServiceWorkerCleaner"), { ssr: false });
 const ThemeTransition = dynamic(() => import("@/components/ThemeTransition"), { ssr: false });
+const VoiceBot = dynamic(() => import("@/components/VoiceBot"), { ssr: false });
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -93,13 +95,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SmoothScrollProvider>
           <StaleServiceWorkerCleaner />
           <PageLoader />
+          <Navbar />
           <ThemeTransition />
           <BackgroundFX />
           <ScrollProgressBar />
           <div aria-hidden="true" className="linux-watermark" />
           <div aria-hidden="true" className="kali-3d-bg" />
           <InteractionFX />
-          <div className="relative z-10">{children}</div>
+          <VoiceBot />
+          <div className="portfolio-content-shell relative z-10">{children}</div>
         </SmoothScrollProvider>
       </body>
     </html>
