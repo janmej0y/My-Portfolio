@@ -292,10 +292,10 @@ export default function VoiceBot() {
   if (!isHomePage) return null;
 
   return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-[160] w-[min(calc(100vw-1rem),360px)] sm:bottom-5 sm:right-5 sm:w-[min(92vw,360px)]">
+    <div className="janbot pointer-events-none fixed bottom-4 right-4 z-[160] w-[min(calc(100vw-1rem),360px)] sm:bottom-5 sm:right-5 sm:w-[min(92vw,360px)]">
       {open ? (
         <motion.div
-          className={`pointer-events-auto overflow-hidden rounded-2xl border border-cyan-300/20 bg-black/18 shadow-[0_10px_24px_rgba(2,6,23,0.24)] backdrop-blur-sm transition-opacity ${
+          className={`janbot-panel pointer-events-auto overflow-hidden rounded-2xl border border-cyan-300/20 bg-black/18 shadow-[0_10px_24px_rgba(2,6,23,0.24)] backdrop-blur-sm transition-opacity ${
             isScrolling ? "opacity-55" : "opacity-95"
           }`}
           initial={{ opacity: 0, y: 14, scale: 0.98 }}
@@ -423,7 +423,7 @@ export default function VoiceBot() {
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Open JanBot"
-          className={`pointer-events-auto ml-auto flex items-center gap-3 rounded-2xl border border-cyan-300/25 bg-black/30 px-3 py-2 shadow-[0_10px_24px_rgba(2,6,23,0.24)] backdrop-blur-sm transition-opacity ${
+          className={`janbot-launcher pointer-events-auto ml-auto flex items-center gap-3 rounded-2xl border border-cyan-300/25 bg-black/30 px-3 py-2 shadow-[0_10px_24px_rgba(2,6,23,0.24)] backdrop-blur-sm transition-opacity ${
             isScrolling ? "opacity-55" : "opacity-95"
           }`}
           initial={{ opacity: 0, y: 14, scale: 0.96 }}

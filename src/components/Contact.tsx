@@ -210,7 +210,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <form onSubmit={onSubmit} className="surface relative z-10 rounded-2xl p-5 sm:p-6">
+          <form onSubmit={onSubmit} className="contact-form surface relative z-10 rounded-2xl p-5 sm:p-6">
             <div className="grid gap-4">
               <label className="hidden" aria-hidden="true">
                 Company
@@ -229,7 +229,7 @@ export default function Contact() {
                   required
                   value={form.name}
                   onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
-                  className="mt-2 min-h-11 w-full rounded-md border border-white/15 bg-transparent px-3 py-2.5 text-white outline-none focus:border-white/35"
+                  className="contact-field mt-2 min-h-11 w-full rounded-md border border-white/15 bg-black/20 px-3 py-2.5 text-white outline-none transition focus:border-cyan-300/45 focus:bg-black/30"
                 />
               </label>
               <label className="text-sm text-white/75">
@@ -239,7 +239,7 @@ export default function Contact() {
                   type="email"
                   value={form.email}
                   onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-                  className="mt-2 min-h-11 w-full rounded-md border border-white/15 bg-transparent px-3 py-2.5 text-white outline-none focus:border-white/35"
+                  className="contact-field mt-2 min-h-11 w-full rounded-md border border-white/15 bg-black/20 px-3 py-2.5 text-white outline-none transition focus:border-cyan-300/45 focus:bg-black/30"
                 />
               </label>
               <label className="text-sm text-white/75">
@@ -249,7 +249,7 @@ export default function Contact() {
                   rows={5}
                   value={form.message}
                   onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
-                  className="mt-2 w-full rounded-md border border-white/15 bg-transparent px-3 py-2.5 text-white outline-none focus:border-white/35"
+                  className="contact-field mt-2 w-full rounded-md border border-white/15 bg-black/20 px-3 py-2.5 text-white outline-none transition focus:border-cyan-300/45 focus:bg-black/30"
                 />
               </label>
             </div>

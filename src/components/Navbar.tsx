@@ -124,10 +124,10 @@ export default function Navbar() {
       initial={{ y: -48, opacity: 0 }}
       animate={{ y: navHidden && !mobileMenuOpen ? -112 : 0, opacity: navHidden && !mobileMenuOpen ? 0 : 1 }}
       transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
-      className="fixed inset-x-0 top-0 z-[210]"
+      className="portfolio-navbar fixed inset-x-0 top-0 z-[210]"
       style={{ pointerEvents: navHidden && !mobileMenuOpen ? "none" : "auto" }}
     >
-      <div className="mx-auto mt-3 flex w-[min(96%,1120px)] items-center justify-between gap-3 rounded-[28px] border border-white/10 bg-black/72 px-3 py-3 backdrop-blur-xl sm:px-4 md:mt-4 md:rounded-full md:px-6">
+      <div className="portfolio-navbar-shell mx-auto mt-3 flex w-[min(96%,1120px)] items-center justify-between gap-3 rounded-[28px] border border-white/10 bg-black/72 px-3 py-3 backdrop-blur-xl sm:px-4 md:mt-4 md:rounded-full md:px-6">
         <a
           href={sectionHref("hero")}
           className="inline-flex min-w-0 max-w-[calc(100%-5.75rem)] items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold tracking-[0.18em] text-white sm:max-w-none sm:text-sm sm:tracking-[0.22em] md:border-0 md:bg-transparent md:px-0 md:py-0"
@@ -225,7 +225,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: DURATIONS.fast, ease: EASE_STANDARD }}
-            className="mx-auto mt-2 w-[min(96%,1120px)] rounded-2xl border border-cyan-300/20 bg-black/82 p-4 shadow-[0_16px_48px_rgba(2,6,23,0.42)] backdrop-blur-xl md:hidden"
+            className="portfolio-mobile-menu mx-auto mt-2 w-[min(96%,1120px)] rounded-2xl border border-cyan-300/20 bg-black/82 p-4 shadow-[0_16px_48px_rgba(2,6,23,0.42)] backdrop-blur-xl md:hidden"
           >
             <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
               <Link
