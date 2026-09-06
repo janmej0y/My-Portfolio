@@ -146,15 +146,15 @@ export default function Contact() {
             </>
           ) : null}
           <div>
-            <p className="text-sm uppercase tracking-[0.26em] text-white/50">Signal Line</p>
+            <p className="eyebrow-hand"><span className="eyebrow-hand-underline">Signal Line</span></p>
             <div className="mt-4">
               <StaggerHeading
-                text="Start the next build before someone else does."
+                text="Let's build something."
                 className="display-title text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl"
               />
             </div>
             <p className="mt-4 max-w-md text-sm leading-6 text-[#9ca3af] sm:text-base">
-              Open to software engineering roles, security-focused product work, and creative collaborations.
+              Open to engineering roles, security work, and collaborations.
             </p>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -309,7 +309,7 @@ export default function Contact() {
         >
           <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/80">Last Call</p>
           <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <p className="display-title text-2xl font-semibold leading-tight text-white sm:text-3xl">Let&apos;s launch something sharp and hard to ignore</p>
+            <p className="display-title text-2xl font-semibold leading-tight text-white sm:text-3xl">Ready when you are</p>
             <a
               href="#contact"
               className="interactive-lift inline-flex min-h-11 items-center justify-center rounded-full border border-white/25 bg-black/35 px-5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white"

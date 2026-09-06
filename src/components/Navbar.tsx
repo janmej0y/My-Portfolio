@@ -25,7 +25,7 @@ export default function Navbar() {
   const sectionHref = (id: string) => (isHomePage ? `#${id}` : `/#${id}`);
 
   const applyTheme = (preset: ThemePreset) => {
-    document.documentElement.classList.remove("theme-dark", "theme-bright", "theme-cyber", "bright-mode");
+    document.documentElement.classList.remove("theme-dark", "theme-bright", "theme-cyber");
     document.documentElement.classList.add(`theme-${preset}`);
     localStorage.setItem("theme-preset", preset);
   };

@@ -16,9 +16,9 @@ export default function CaseStudies() {
           className="mb-10"
         >
           <p className="text-sm uppercase tracking-[0.26em] text-white/50">Deep Dives</p>
-          <h2 className="display-title mt-3 text-4xl font-semibold tracking-tight md:text-5xl">Breakdowns behind the strongest builds</h2>
+          <h2 className="display-title mt-3 text-4xl font-semibold tracking-tight md:text-5xl">How they were built</h2>
           <p className="mt-4 max-w-3xl text-[#9ca3af]">
-            Selected projects with concrete problem context, engineering decisions, and measurable outcomes.
+            The problem, the decisions, and the outcome.
           </p>
         </motion.div>
 

@@ -308,36 +308,30 @@ body.portfolio-intro-active {
   opacity: 0.29;
 }
 
-.theme-bright .aurora,
-.bright-mode .aurora {
+.theme-bright .aurora {
   opacity: 0.62;
   filter: blur(54px) saturate(1.45);
 }
 
-.theme-bright .bg-grid,
-.bright-mode .bg-grid {
+.theme-bright .bg-grid {
   opacity: 0.3;
   background-size: 44px 44px;
 }
 
-.theme-bright .bg-spotlight,
-.bright-mode .bg-spotlight {
+.theme-bright .bg-spotlight {
   opacity: 0.92;
 }
 
-.theme-bright .bg-grain,
-.bright-mode .bg-grain {
+.theme-bright .bg-grain {
   opacity: 0.1;
 }
 
-.theme-bright .linux-watermark,
-.bright-mode .linux-watermark {
+.theme-bright .linux-watermark {
   opacity: 0.11;
   filter: grayscale(0.42) contrast(1.14) brightness(1.24);
 }
 
-.theme-bright body,
-.bright-mode body {
+.theme-bright body {
   color: #0f172a;
   background-image: radial-gradient(circle at 12% 10%, rgba(14, 165, 233, 0.18), transparent 34%),
     radial-gradient(circle at 86% 16%, rgba(6, 182, 212, 0.16), transparent 40%),
@@ -345,48 +339,41 @@ body.portfolio-intro-active {
     linear-gradient(170deg, #f8fafc 0%, #eef6ff 42%, #edf2ff 100%);
 }
 
-.theme-bright .surface,
-.bright-mode .surface {
+.theme-bright .surface {
   border-color: rgba(15, 23, 42, 0.14);
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.78));
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
 }
 
-.theme-bright .link-underline::after,
-.bright-mode .link-underline::after {
+.theme-bright .link-underline::after {
   background: linear-gradient(90deg, transparent, rgba(2, 6, 23, 0.65), transparent);
 }
 
-.theme-bright .surface::before,
-.bright-mode .surface::before {
+.theme-bright .surface::before {
   opacity: 1;
   background: radial-gradient(circle at 16% 10%, rgba(14, 165, 233, 0.1), transparent 44%);
 }
 
 @media (pointer: fine) {
-  .theme-bright .surface:hover,
-  .bright-mode .surface:hover {
+  .theme-bright .surface:hover {
     border-color: rgba(14, 116, 144, 0.35);
     box-shadow: 0 20px 44px rgba(15, 23, 42, 0.12), 0 1px 0 rgba(255, 255, 255, 0.9) inset;
     background: linear-gradient(160deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.84));
   }
 }
 
-.theme-bright .interactive-lift,
-.bright-mode .interactive-lift {
+.theme-bright .interactive-lift {
   border-color: rgba(15, 23, 42, 0.22);
 }
 
 @media (pointer: fine) {
-  .theme-bright .interactive-lift:hover,
-  .bright-mode .interactive-lift:hover {
+  .theme-bright .interactive-lift:hover {
     border-color: rgba(14, 116, 144, 0.45);
     box-shadow: 0 10px 22px rgba(14, 116, 144, 0.18);
   }
 }
 
-.theme-bright .impact-chip,
-.bright-mode .impact-chip {
+.theme-bright .impact-chip {
   border-color: rgba(6, 182, 212, 0.45);
   background: linear-gradient(160deg, rgba(14, 165, 233, 0.12), rgba(6, 182, 212, 0.04));
   color: rgba(8, 47, 73, 0.95);
@@ -394,295 +381,195 @@ body.portfolio-intro-active {
 
 /* Bright theme readability overrides for components that use white utility text classes */
 .theme-bright .text-white,
-.bright-mode .text-white,
 .theme-bright .text-white\/90,
-.bright-mode .text-white\/90,
 .theme-bright .text-white\/85,
-.bright-mode .text-white\/85,
 .theme-bright .text-white\/82,
-.bright-mode .text-white\/82,
-.theme-bright .text-white\/80,
-.bright-mode .text-white\/80 {
+.theme-bright .text-white\/80 {
   color: #0f172a !important;
 }
 
 .theme-bright .text-white\/78,
-.bright-mode .text-white\/78,
 .theme-bright .text-white\/75,
-.bright-mode .text-white\/75,
 .theme-bright .text-white\/70,
-.bright-mode .text-white\/70,
 .theme-bright .text-white\/60,
-.bright-mode .text-white\/60,
-.theme-bright .text-white\/55,
-.bright-mode .text-white\/55 {
+.theme-bright .text-white\/55 {
   color: #334155 !important;
 }
 
 .theme-bright .text-white\/50,
-.bright-mode .text-white\/50,
 .theme-bright .text-white\/45,
-.bright-mode .text-white\/45,
-.theme-bright .text-white\/40,
-.bright-mode .text-white\/40 {
+.theme-bright .text-white\/40 {
   color: #475569 !important;
 }
 
-.theme-bright .text-\[\#9ca3af\],
-.bright-mode .text-\[\#9ca3af\] {
+.theme-bright .text-\[\#9ca3af\] {
   color: #334155 !important;
 }
 
 .theme-bright .text-cyan-100,
-.bright-mode .text-cyan-100,
 .theme-bright .text-cyan-100\/95,
-.bright-mode .text-cyan-100\/95,
 .theme-bright .text-cyan-100\/88,
-.bright-mode .text-cyan-100\/88,
 .theme-bright .text-cyan-100\/82,
-.bright-mode .text-cyan-100\/82,
 .theme-bright .text-cyan-100\/80,
-.bright-mode .text-cyan-100\/80,
 .theme-bright .text-cyan-100\/78,
-.bright-mode .text-cyan-100\/78,
 .theme-bright .text-cyan-100\/70,
-.bright-mode .text-cyan-100\/70,
 .theme-bright .text-cyan-50\/88,
-.bright-mode .text-cyan-50\/88,
 .theme-bright .text-fuchsia-100,
-.bright-mode .text-fuchsia-100,
-.theme-bright .text-emerald-100,
-.bright-mode .text-emerald-100 {
+.theme-bright .text-emerald-100 {
   color: #075985 !important;
 }
 
 .theme-bright .portfolio-loader .text-white,
-.bright-mode .portfolio-loader .text-white,
 .theme-bright .portfolio-loader .text-white\/58,
-.bright-mode .portfolio-loader .text-white\/58,
-.theme-bright .portfolio-loader .text-white\/38,
-.bright-mode .portfolio-loader .text-white\/38 {
+.theme-bright .portfolio-loader .text-white\/38 {
   color: rgba(255, 255, 255, 0.94) !important;
 }
 
 .theme-bright .portfolio-loader .text-cyan-50\/72,
-.bright-mode .portfolio-loader .text-cyan-50\/72,
 .theme-bright .portfolio-loader .text-cyan-100\/72,
-.bright-mode .portfolio-loader .text-cyan-100\/72,
-.theme-bright .portfolio-loader .text-emerald-100\/70,
-.bright-mode .portfolio-loader .text-emerald-100\/70 {
+.theme-bright .portfolio-loader .text-emerald-100\/70 {
   color: rgba(207, 250, 254, 0.82) !important;
 }
 
 .theme-bright .project-card,
-.bright-mode .project-card,
 .theme-bright .project-showcase-panel,
-.bright-mode .project-showcase-panel,
-.theme-bright .showcase-shell,
-.bright-mode .showcase-shell {
+.theme-bright .showcase-shell {
   border-color: rgba(15, 23, 42, 0.14) !important;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.9)) !important;
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1) !important;
 }
 
-.theme-bright .project-card > .absolute,
-.bright-mode .project-card > .absolute {
+.theme-bright .project-card > .absolute {
   opacity: 0.36;
 }
 
 .theme-bright .bg-black\/82,
-.bright-mode .bg-black\/82,
 .theme-bright .bg-black\/75,
-.bright-mode .bg-black\/75,
 .theme-bright .bg-black\/72,
-.bright-mode .bg-black\/72,
 .theme-bright .bg-black\/70,
-.bright-mode .bg-black\/70,
 .theme-bright .bg-black\/56,
-.bright-mode .bg-black\/56,
 .theme-bright .bg-black\/55,
-.bright-mode .bg-black\/55,
 .theme-bright .bg-black\/40,
-.bright-mode .bg-black\/40,
 .theme-bright .bg-black\/35,
-.bright-mode .bg-black\/35,
 .theme-bright .bg-black\/32,
-.bright-mode .bg-black\/32,
 .theme-bright .bg-black\/30,
-.bright-mode .bg-black\/30,
 .theme-bright .bg-black\/28,
-.bright-mode .bg-black\/28,
 .theme-bright .bg-black\/25,
-.bright-mode .bg-black\/25,
 .theme-bright .bg-black\/24,
-.bright-mode .bg-black\/24,
 .theme-bright .bg-black\/22,
-.bright-mode .bg-black\/22,
 .theme-bright .bg-black\/20,
-.bright-mode .bg-black\/20,
-.theme-bright .bg-black\/18,
-.bright-mode .bg-black\/18 {
+.theme-bright .bg-black\/18 {
   background-color: rgba(255, 255, 255, 0.76) !important;
 }
 
 .theme-bright .bg-\[\#07111d\],
-.bright-mode .bg-\[\#07111d\],
-.theme-bright .bg-\[\#0f0f10\],
-.bright-mode .bg-\[\#0f0f10\] {
+.theme-bright .bg-\[\#0f0f10\] {
   background-color: rgba(255, 255, 255, 0.94) !important;
 }
 
 .theme-bright .portfolio-navbar,
-.bright-mode .portfolio-navbar,
-.theme-bright .janbot,
-.bright-mode .janbot {
+.theme-bright .janbot {
   color: rgba(248, 250, 252, 0.96);
 }
 
 .theme-bright .portfolio-navbar-shell,
-.bright-mode .portfolio-navbar-shell,
 .theme-bright .portfolio-mobile-menu,
-.bright-mode .portfolio-mobile-menu,
 .theme-bright .janbot-panel,
-.bright-mode .janbot-panel,
-.theme-bright .janbot-launcher,
-.bright-mode .janbot-launcher {
+.theme-bright .janbot-launcher {
   border-color: rgba(103, 232, 249, 0.28) !important;
   background-color: rgba(2, 6, 23, 0.9) !important;
   box-shadow: 0 18px 48px rgba(2, 6, 23, 0.28) !important;
 }
 
 .theme-bright .portfolio-navbar .bg-black\/82,
-.bright-mode .portfolio-navbar .bg-black\/82,
 .theme-bright .portfolio-navbar .bg-black\/72,
-.bright-mode .portfolio-navbar .bg-black\/72,
 .theme-bright .portfolio-navbar .bg-black\/35,
-.bright-mode .portfolio-navbar .bg-black\/35,
 .theme-bright .portfolio-navbar .bg-black\/30,
-.bright-mode .portfolio-navbar .bg-black\/30,
 .theme-bright .janbot .bg-black\/35,
-.bright-mode .janbot .bg-black\/35,
 .theme-bright .janbot .bg-black\/30,
-.bright-mode .janbot .bg-black\/30,
 .theme-bright .janbot .bg-black\/28,
-.bright-mode .janbot .bg-black\/28,
 .theme-bright .janbot .bg-black\/25,
-.bright-mode .janbot .bg-black\/25,
-.theme-bright .janbot .bg-black\/18,
-.bright-mode .janbot .bg-black\/18 {
+.theme-bright .janbot .bg-black\/18 {
   background-color: rgba(2, 6, 23, 0.72) !important;
 }
 
 .theme-bright .portfolio-navbar .text-white,
-.bright-mode .portfolio-navbar .text-white,
 .theme-bright .portfolio-navbar .text-white\/75,
-.bright-mode .portfolio-navbar .text-white\/75,
 .theme-bright .portfolio-navbar .text-white\/70,
-.bright-mode .portfolio-navbar .text-white\/70,
 .theme-bright .portfolio-navbar .text-white\/65,
-.bright-mode .portfolio-navbar .text-white\/65,
 .theme-bright .portfolio-navbar .text-white\/60,
-.bright-mode .portfolio-navbar .text-white\/60,
 .theme-bright .janbot .text-white,
-.bright-mode .janbot .text-white,
 .theme-bright .janbot .text-white\/90,
-.bright-mode .janbot .text-white\/90,
 .theme-bright .janbot .text-white\/75,
-.bright-mode .janbot .text-white\/75,
 .theme-bright .janbot .text-white\/70,
-.bright-mode .janbot .text-white\/70,
 .theme-bright .janbot .text-white\/65,
-.bright-mode .janbot .text-white\/65,
 .theme-bright .janbot .text-white\/60,
-.bright-mode .janbot .text-white\/60,
-.theme-bright .janbot .text-white\/45,
-.bright-mode .janbot .text-white\/45 {
+.theme-bright .janbot .text-white\/45 {
   color: rgba(248, 250, 252, 0.9) !important;
 }
 
 .theme-bright .portfolio-navbar .text-cyan-50,
-.bright-mode .portfolio-navbar .text-cyan-50,
 .theme-bright .portfolio-navbar .text-cyan-100,
-.bright-mode .portfolio-navbar .text-cyan-100,
 .theme-bright .janbot .text-cyan-50,
-.bright-mode .janbot .text-cyan-50,
 .theme-bright .janbot .text-cyan-100,
-.bright-mode .janbot .text-cyan-100,
 .theme-bright .janbot .text-cyan-200\/90,
-.bright-mode .janbot .text-cyan-200\/90,
 .theme-bright .janbot .text-emerald-100,
-.bright-mode .janbot .text-emerald-100,
 .theme-bright .janbot .text-fuchsia-100,
-.bright-mode .janbot .text-fuchsia-100,
-.theme-bright .janbot .text-red-100,
-.bright-mode .janbot .text-red-100 {
+.theme-bright .janbot .text-red-100 {
   color: rgba(207, 250, 254, 0.96) !important;
 }
 
-.theme-bright .janbot input,
-.bright-mode .janbot input {
+.theme-bright .janbot input {
   border-color: rgba(255, 255, 255, 0.2) !important;
   background-color: rgba(2, 6, 23, 0.76) !important;
   color: rgba(248, 250, 252, 0.96) !important;
 }
 
-.theme-bright .janbot input::placeholder,
-.bright-mode .janbot input::placeholder {
+.theme-bright .janbot input::placeholder {
   color: rgba(226, 232, 240, 0.58) !important;
 }
 
 .theme-bright input,
-.bright-mode input,
 .theme-bright textarea,
-.bright-mode textarea,
-.theme-bright select,
-.bright-mode select {
+.theme-bright select {
   color: #0f172a !important;
 }
 
 .theme-bright input::placeholder,
-.bright-mode input::placeholder,
-.theme-bright textarea::placeholder,
-.bright-mode textarea::placeholder {
+.theme-bright textarea::placeholder {
   color: #64748b !important;
 }
 
-.theme-bright .contact-form,
-.bright-mode .contact-form {
+.theme-bright .contact-form {
   border-color: rgba(15, 23, 42, 0.16) !important;
   background: rgba(255, 255, 255, 0.86) !important;
   box-shadow: 0 24px 58px rgba(15, 23, 42, 0.12) !important;
 }
 
-.theme-bright .contact-form label,
-.bright-mode .contact-form label {
+.theme-bright .contact-form label {
   color: #334155 !important;
 }
 
-.theme-bright .contact-field,
-.bright-mode .contact-field {
+.theme-bright .contact-field {
   border-color: rgba(15, 23, 42, 0.22) !important;
   background-color: rgba(255, 255, 255, 0.86) !important;
   color: #0f172a !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88), 0 8px 22px rgba(15, 23, 42, 0.06) !important;
 }
 
-.theme-bright .contact-field:focus,
-.bright-mode .contact-field:focus {
+.theme-bright .contact-field:focus {
   border-color: rgba(8, 145, 178, 0.55) !important;
   background-color: #ffffff !important;
   box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.16), 0 10px 26px rgba(15, 23, 42, 0.08) !important;
 }
 
-.theme-bright .metric-card,
-.bright-mode .metric-card {
+.theme-bright .metric-card {
   border-color: rgba(15, 23, 42, 0.12);
   background: rgba(255, 255, 255, 0.78);
   box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
 }
 
-.theme-bright .status-toast,
-.bright-mode .status-toast {
+.theme-bright .status-toast {
   background: rgba(255, 255, 255, 0.94);
   border-color: rgba(15, 23, 42, 0.16);
 }
@@ -987,4 +874,246 @@ body.portfolio-intro-active {
 
 .section-backplate.c::before {
   background: radial-gradient(circle at 50% 16%, rgba(45, 212, 191, 0.11), transparent 48%);
+}
+
+/* ---------- Arsenal (skills) section ---------- */
+
+.arsenal-tab {
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+
+.arsenal-tab-active {
+  border-color: rgba(var(--group-accent) / 0.55);
+  background: rgba(var(--group-accent) / 0.08);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.3), 0 0 0 1px rgba(var(--group-accent) / 0.14) inset;
+}
+
+@media (pointer: fine) {
+  .arsenal-tab:hover {
+    transform: translateX(2px);
+  }
+}
+
+.arsenal-tile {
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+
+@media (pointer: fine) {
+  .arsenal-tile:hover {
+    transform: translateY(-3px);
+    border-color: rgba(var(--group-accent) / 0.45);
+    background: rgba(var(--group-accent) / 0.06);
+  }
+}
+
+.arsenal-marquee {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.arsenal-marquee-track {
+  animation: arsenal-scroll 46s linear infinite;
+}
+
+@media (pointer: fine) {
+  .arsenal-marquee:hover .arsenal-marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes arsenal-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arsenal-marquee-track {
+    animation: none;
+  }
+}
+
+/* Bright theme: the tinted glass panels need light-mode equivalents. */
+.theme-bright .arsenal-tab {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.theme-bright .arsenal-tab-active {
+  border-color: rgba(var(--group-accent) / 0.6);
+  background: rgba(var(--group-accent) / 0.12);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.1);
+}
+
+.theme-bright .arsenal-tile {
+  border-color: rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.82) !important;
+}
+
+@media (pointer: fine) {
+  .theme-bright .arsenal-tile:hover {
+    border-color: rgba(var(--group-accent) / 0.5);
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+}
+
+.theme-bright .arsenal-tile .bg-white\/10 {
+  background-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+.theme-bright .arsenal-marquee {
+  border-color: rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
+.theme-bright .arsenal-marquee .bg-white\/5 {
+  background-color: rgba(15, 23, 42, 0.05) !important;
+}
+
+.theme-bright .arsenal-marquee .text-white\/72 {
+  color: #334155 !important;
+}
+
+/* Dark brand logos are inverted to stay visible on the dark theme; the bright
+   theme already has a light ground, so they must render at their true colors. */
+.theme-bright .invert-on-dark {
+  filter: none;
+}
+
+/* ---------- Hero ---------- */
+
+.hero-status {
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  background: linear-gradient(120deg, rgba(16, 185, 129, 0.14), rgba(16, 185, 129, 0.04));
+}
+
+/* Fades out to the right so it reads as a rule, not a hard divider. */
+.hero-rule {
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.85), rgba(var(--accent-rgb), 0.12) 55%, transparent);
+}
+
+.hero-stat {
+  background: rgba(9, 12, 20, 0.72);
+  transition: background 0.3s ease;
+}
+
+@media (pointer: fine) {
+  .hero-stat:hover {
+    background: rgba(var(--accent-rgb), 0.1);
+  }
+}
+
+.hero-cta {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+@media (pointer: fine) {
+  .hero-cta:hover {
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.28), 0 14px 34px rgba(2, 6, 23, 0.4);
+  }
+}
+
+.theme-bright .hero-status {
+  border-color: rgba(5, 150, 105, 0.4);
+  background: linear-gradient(120deg, rgba(16, 185, 129, 0.16), rgba(16, 185, 129, 0.06));
+}
+
+.theme-bright .hero-status span:last-child {
+  color: #065f46 !important;
+}
+
+.theme-bright .hero-stat {
+  background: rgba(255, 255, 255, 0.86);
+}
+
+@media (pointer: fine) {
+  .theme-bright .hero-stat:hover {
+    background: rgba(var(--accent-rgb), 0.12);
+  }
+}
+
+.theme-bright .hero-cta {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.gh-skeleton {
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.04) 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.04) 70%
+  );
+  background-size: 220% 100%;
+  animation: gh-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes gh-shimmer {
+  from {
+    background-position: 180% 0;
+  }
+  to {
+    background-position: -60% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gh-skeleton {
+    animation: none;
+  }
+}
+
+/* ---------- Handwritten accent ---------- */
+
+/* Caveat runs small on its metrics, so accents get a size bump to sit
+   optically level with the uppercase labels they replace. */
+.font-hand {
+  font-family: var(--font-hand), "Segoe Script", cursive;
+}
+
+/* Section eyebrows: handwritten, larger, no letter-spacing (tracking
+   destroys joined script). */
+.eyebrow-hand {
+  font-family: var(--font-hand), "Segoe Script", cursive;
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgba(var(--accent-rgb), 0.92);
+}
+
+@media (min-width: 640px) {
+  .eyebrow-hand {
+    font-size: 1.55rem;
+  }
+}
+
+/* Underline that mimics a marker stroke under a handwritten eyebrow. */
+.eyebrow-hand-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.eyebrow-hand-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.32em;
+  height: 6px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'><path d='M1 5.2C22 2.1 47 1.4 70 3.1c17 1.2 33 3 49 1.3' fill='none' stroke='rgba(34,211,238,0.55)' stroke-width='2' stroke-linecap='round'/></svg>")
+    no-repeat center / 100% 100%;
+  pointer-events: none;
+}
+
+.theme-bright .eyebrow-hand {
+  color: #0e7490;
+}
+
+.theme-bright .eyebrow-hand-underline::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'><path d='M1 5.2C22 2.1 47 1.4 70 3.1c17 1.2 33 3 49 1.3' fill='none' stroke='rgba(14,116,144,0.6)' stroke-width='2' stroke-linecap='round'/></svg>");
 }

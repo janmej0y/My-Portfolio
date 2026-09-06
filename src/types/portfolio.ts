@@ -43,10 +43,22 @@ export type Skill = {
   name: string;
   icon: string;
   invert?: boolean;
+  /** Self-rated working proficiency, 0-100. Drives the meter bars in the arsenal. */
+  level: number;
+  /** One-line note on how the tool is actually used. */
+  note: string;
 };
 
 export type SkillGroup = {
+  /** Stable id used for tab selection and deep links. */
+  id: string;
   title: string;
+  /** Short line describing what this domain covers. */
+  summary: string;
+  /** Two-word label shown on the rail, e.g. "Interface Layer". */
+  kicker: string;
+  /** Tailwind-ish accent token used for gradients and glows in this group. */
+  accent: string;
   items: Skill[];
 };
 

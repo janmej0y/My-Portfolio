@@ -2,18 +2,13 @@
 
 import { AnimatePresence, motion, useReducedMotion, useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import PointerTrailCanvas from "@/components/PointerTrailCanvas";
 
 type Ripple = {
   id: number;
   x: number;
   y: number;
   size: number;
-};
-
-type CursorTrail = {
-  id: number;
-  x: number;
-  y: number;
 };
 
 type ParticleBurst = {
@@ -28,13 +23,10 @@ export default function InteractionFX() {
   const [expanded, setExpanded] = useState(false);
   const [cursorLabel, setCursorLabel] = useState("");
   const [ripples, setRipples] = useState<Ripple[]>([]);
-  const [cursorTrail, setCursorTrail] = useState<CursorTrail[]>([]);
   const [particleBursts, setParticleBursts] = useState<ParticleBurst[]>([]);
 
   const rippleIdRef = useRef(0);
-  const cursorTrailIdRef = useRef(0);
   const burstIdRef = useRef(0);
-  const lastTrailRef = useRef(0);
   const stuckRectRef = useRef<DOMRect | null>(null);
 
   const dotX = useSpring(-100, { stiffness: 900, damping: 48 });
@@ -46,8 +38,8 @@ export default function InteractionFX() {
 
   useEffect(() => {
     const coarse = window.matchMedia("(pointer: coarse)").matches;
-    setEnabled(!coarse);
-    if (coarse) return;
+    const fine = !coarse;
+    setEnabled(fine);
 
     const interactiveSelector = "a, button, [role='button'], .magnetic, [data-magnetic='true'], input, textarea, select";
 
@@ -85,17 +77,6 @@ export default function InteractionFX() {
       ringY.set(y);
       glowX.set(event.clientX);
       glowY.set(event.clientY);
-
-      if (shouldReduceMotion || expanded) return;
-      const now = Date.now();
-      if (now - lastTrailRef.current < 36) return;
-      lastTrailRef.current = now;
-      cursorTrailIdRef.current += 1;
-      const nextTrail = { id: cursorTrailIdRef.current, x: event.clientX, y: event.clientY };
-      setCursorTrail((prev) => [...prev.slice(-5), nextTrail]);
-      window.setTimeout(() => {
-        setCursorTrail((prev) => prev.filter((item) => item.id !== nextTrail.id));
-      }, 260);
     };
 
     const onOver = (event: MouseEvent) => {
@@ -114,15 +95,23 @@ export default function InteractionFX() {
       setCursorLabel("");
     };
 
+    // Buttons, links and fields render their own press states, so the ambient
+    // ripple would only muddy them. Everything else gets the touch feedback.
+    const isInteractive = (target: EventTarget | null) =>
+      Boolean((target as HTMLElement | null)?.closest?.(interactiveSelector));
+
     const onPointerDown = (event: PointerEvent) => {
-      if (event.pointerType === "touch") return;
-      spawnRipple(event.clientX, event.clientY, 132);
+      if (isInteractive(event.target)) return;
+      const touch = event.pointerType === "touch";
+      spawnRipple(event.clientX, event.clientY, touch ? 108 : 132);
       spawnParticleBurst(event.clientX, event.clientY);
     };
 
-    window.addEventListener("mousemove", onMove, { passive: true });
-    document.addEventListener("mouseover", onOver, { passive: true });
-    document.addEventListener("mouseout", onOut, { passive: true });
+    if (fine) {
+      window.addEventListener("mousemove", onMove, { passive: true });
+      document.addEventListener("mouseover", onOver, { passive: true });
+      document.addEventListener("mouseout", onOut, { passive: true });
+    }
     window.addEventListener("pointerdown", onPointerDown, { passive: true });
 
     return () => {
@@ -131,31 +120,11 @@ export default function InteractionFX() {
       document.removeEventListener("mouseout", onOut);
       window.removeEventListener("pointerdown", onPointerDown);
     };
-  }, [dotX, dotY, ringX, ringY, glowX, glowY, expanded, shouldReduceMotion]);
+  }, [dotX, dotY, ringX, ringY, glowX, glowY, shouldReduceMotion]);
 
   return (
     <>
-      <AnimatePresence>
-        {cursorTrail.map((item) => (
-          <motion.div
-            key={item.id}
-            initial={{
-              opacity: enabled ? 0.18 : 0.22,
-              scaleX: enabled ? 0.55 : 0.45,
-              scaleY: enabled ? 0.55 : 0.95,
-            }}
-            animate={{ opacity: enabled ? 0.06 : 0.08, scaleX: 1, scaleY: enabled ? 1 : 1.35 }}
-            exit={{ opacity: 0, scaleX: 1.24, scaleY: enabled ? 1.2 : 1.65 }}
-            transition={{ duration: enabled ? 0.24 : 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className={`pointer-events-none fixed rounded-full ${
-              enabled
-                ? "z-[137] h-4 w-4 bg-cyan-200/22 blur-[3px]"
-                : "z-[134] h-4 w-10 bg-gradient-to-r from-cyan-300/0 via-cyan-300/24 to-cyan-200/0 blur-[6px]"
-            }`}
-            style={{ left: item.x, top: item.y, translateX: "-50%", translateY: "-50%" }}
-          />
-        ))}
-      </AnimatePresence>
+      <PointerTrailCanvas />
 
       {enabled ? (
         <>

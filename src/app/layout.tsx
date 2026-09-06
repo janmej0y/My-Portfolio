@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { Manrope, Sora } from "next/font/google";
+import { Caveat, Manrope, Sora } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import { CASE_STUDIES, PROJECTS } from "@/lib/data";
@@ -24,6 +24,14 @@ const sora = Sora({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-display",
+});
+
+// Accent face only - used for eyebrows and short asides, never for body copy.
+const caveat = Caveat({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["500", "600", "700"],
+  variable: "--font-hand",
 });
 
 export const metadata: Metadata = {
@@ -83,7 +91,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
   return (
     <html lang="en" className="theme-dark">
-      <body className={`${manrope.variable} ${sora.variable} font-body`}>
+      <body className={`${manrope.variable} ${sora.variable} ${caveat.variable} font-body`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}

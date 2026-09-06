@@ -16,7 +16,7 @@ type ThemePreset = "dark" | "bright" | "cyber";
 const THEME_CHANGE_EVENT = "portfolio-theme-change";
 
 function applyThemePreset(preset: ThemePreset) {
-  document.documentElement.classList.remove("theme-dark", "theme-bright", "theme-cyber", "bright-mode");
+  document.documentElement.classList.remove("theme-dark", "theme-bright", "theme-cyber");
   document.documentElement.classList.add(`theme-${preset}`);
   localStorage.setItem("theme-preset", preset);
   window.dispatchEvent(new CustomEvent("portfolio-theme-transition", { detail: { preset } }));

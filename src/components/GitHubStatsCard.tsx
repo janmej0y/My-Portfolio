@@ -18,6 +18,8 @@ export default function GitHubStatsCard() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  // Kept apart from `stats` so the fallback link still works when the fetch fails.
+  const [username, setUsername] = useState("janmej0y");
 
   useEffect(() => {
     let mounted = true;
@@ -26,6 +28,7 @@ export default function GitHubStatsCard() {
       .then((res) => res.json())
       .then((data) => {
         if (!mounted) return;
+        if (data?.username) setUsername(data.username);
         if (!data?.success) {
           setError(data?.message || "Unable to load GitHub stats.");
           return;
@@ -84,16 +87,41 @@ export default function GitHubStatsCard() {
         </a>
       ) : null}
 
-      {loading ? <p className="mt-3 text-sm text-white/60">Loading stats...</p> : null}
-      {error ? <p className="mt-3 text-sm text-red-300">{error}</p> : null}
+      {loading ? (
+        <div className="mt-4 grid grid-cols-2 gap-2" aria-hidden="true">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="gh-skeleton h-[46px] rounded-lg border border-white/10" />
+          ))}
+        </div>
+      ) : null}
+
+      {/* A missing token or rate limit should not surface as an error in the hero -
+          fall back to a plain link so the card still reads as intentional. */}
+      {!loading && error ? (
+        <a
+          href={`https://github.com/${username}`}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 inline-flex items-center gap-1.5 text-sm text-white/70 transition-colors hover:text-white"
+        >
+          View profile on GitHub
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      ) : null}
 
       {!loading && !error && stats ? (
         <div className="mt-4 grid grid-cols-2 gap-2">
-          {rows.map((row) => (
-            <div key={row.label} className="rounded-lg border border-white/10 bg-black/25 px-3 py-2">
+          {rows.map((row, index) => (
+            <motion.div
+              key={row.label}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05, duration: 0.35, ease: EASE_STANDARD }}
+              className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+            >
               <p className="text-[10px] uppercase tracking-[0.14em] text-white/45">{row.label}</p>
               <p className="mt-1 text-sm font-semibold text-white">{row.value.toLocaleString()}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       ) : null}

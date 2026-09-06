@@ -19,12 +19,13 @@ type GraphQLResponse = {
 };
 
 export async function GET() {
+  const username = process.env.GITHUB_USERNAME || "janmej0y";
+
   try {
-    const username = process.env.GITHUB_USERNAME || "janmej0y";
     const token = process.env.GITHUB_TOKEN;
 
     if (!token) {
-      return NextResponse.json({ success: false, message: "GitHub token not configured." }, { status: 500 });
+      return NextResponse.json({ success: false, username, message: "GitHub token not configured." }, { status: 500 });
     }
 
     const query = `
@@ -55,12 +56,12 @@ export async function GET() {
     });
 
     if (!response.ok) {
-      return NextResponse.json({ success: false, message: "Unable to fetch GitHub stats." }, { status: 502 });
+      return NextResponse.json({ success: false, username, message: "Unable to fetch GitHub stats." }, { status: 502 });
     }
 
     const json = (await response.json()) as GraphQLResponse;
     if (json.errors?.length) {
-      return NextResponse.json({ success: false, message: json.errors[0]?.message || "GitHub API error." }, { status: 502 });
+      return NextResponse.json({ success: false, username, message: json.errors[0]?.message || "GitHub API error." }, { status: 502 });
     }
 
     const user = json.data?.user;
@@ -77,6 +78,6 @@ export async function GET() {
       stars,
     });
   } catch {
-    return NextResponse.json({ success: false, message: "Unable to fetch GitHub stats." }, { status: 500 });
+    return NextResponse.json({ success: false, username, message: "Unable to fetch GitHub stats." }, { status: 500 });
   }
 }

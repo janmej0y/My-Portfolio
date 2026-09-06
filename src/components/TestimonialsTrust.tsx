@@ -19,11 +19,11 @@ export default function TestimonialsTrust() {
             <div className="max-w-2xl">
               <p className="text-xs uppercase tracking-[0.2em] text-white/45">Trust Signals</p>
               <h2 className="display-title mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                Proof, momentum, and a clearer reason to trust the work
+                Proof of the work
               </h2>
             </div>
             <p className="max-w-md text-sm leading-6 text-white/60">
-              A compact credibility layer with delivery volume, internship depth, and feedback from people who have seen the work up close.
+              Delivery volume, internships, and feedback from people who saw it up close.
             </p>
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

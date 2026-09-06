@@ -1,64 +1,173 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
+import { useMemo, useState } from "react";
 import { CERTIFICATIONS, SKILL_GROUPS } from "@/lib/data";
+import type { Skill, SkillGroup } from "@/types/portfolio";
 import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
 
 const DRIVE_LINK =
   "https://drive.google.com/drive/folders/173A6iPtgXG45KZc-uIHhHH7TXdQageUscgHL5Y2F8uKxgTbS4l8FsH8CAUsvCoI5Lpg4ooKH";
 
-function SkillGroupCard({
-  title,
-  items,
-  index,
+function levelLabel(level: number) {
+  if (level >= 88) return "Expert";
+  if (level >= 78) return "Advanced";
+  if (level >= 68) return "Proficient";
+  return "Working";
+}
+
+/** Domain button on the left rail. Accent comes from the group so each layer reads distinctly. */
+function DomainTab({
+  group,
+  active,
+  onSelect,
 }: {
-  title: string;
-  items: Array<{ name: string; icon: string; invert?: boolean }>;
-  index: number;
+  group: SkillGroup;
+  active: boolean;
+  onSelect: () => void;
 }) {
+  const top = Math.max(...group.items.map((item) => item.level));
+
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 22 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.22 }}
-      transition={{ delay: index * STAGGER.card, duration: DURATIONS.base, ease: EASE_STANDARD }}
-      whileHover={{ y: -4 }}
-      className="surface rounded-[28px] p-5"
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={active}
+      style={{ "--group-accent": group.accent } as React.CSSProperties}
+      className={`arsenal-tab group/tab relative w-full overflow-hidden rounded-2xl border px-4 py-3.5 text-left transition ${
+        active ? "arsenal-tab-active" : "border-white/10 bg-black/20 hover:border-white/20"
+      }`}
     >
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-[10px] uppercase tracking-[0.22em] text-white/40">Symbol Stack</p>
-          <h3 className="mt-2 text-xl font-semibold text-white">{title}</h3>
-        </div>
-        <div className="accent-pill px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em]">
-          {items.length} Tools
+      {active ? (
+        <motion.span
+          layoutId="arsenal-tab-glow"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(120deg, rgba(var(--group-accent) / 0.20), rgba(var(--group-accent) / 0.04) 62%)",
+          }}
+          transition={{ duration: 0.36, ease: EASE_STANDARD }}
+        />
+      ) : null}
+
+      <span className="relative flex items-center gap-3">
+        <span
+          aria-hidden
+          className="h-9 w-1 shrink-0 rounded-full transition-all"
+          style={{
+            background: active
+              ? "rgb(var(--group-accent))"
+              : "rgba(var(--group-accent) / 0.34)",
+            boxShadow: active ? "0 0 14px rgba(var(--group-accent) / 0.65)" : "none",
+          }}
+        />
+        <span className="min-w-0 flex-1">
+          <span className="block text-[9px] uppercase tracking-[0.2em] text-white/45">{group.kicker}</span>
+          <span className="mt-1 block truncate text-sm font-semibold text-white">{group.title}</span>
+        </span>
+        <span className="flex shrink-0 flex-col items-end">
+          <span className="text-sm font-semibold tabular-nums text-white">{group.items.length}</span>
+          <span className="text-[9px] uppercase tracking-[0.14em] text-white/40">peak {top}</span>
+        </span>
+      </span>
+    </button>
+  );
+}
+
+/** One tool: symbol, how it is used, and an animated proficiency meter. */
+function SkillTile({ skill, accent, index }: { skill: Skill; accent: string; index: number }) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.li
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.035, duration: 0.36, ease: EASE_STANDARD }}
+      style={{ "--group-accent": accent } as React.CSSProperties}
+      className="arsenal-tile group/tile relative overflow-hidden rounded-2xl border border-white/10 bg-black/22 p-4"
+    >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-16 h-24 opacity-0 blur-2xl transition-opacity duration-300 group-hover/tile:opacity-100"
+        style={{ background: "radial-gradient(circle, rgba(var(--group-accent) / 0.5), transparent 70%)" }}
+      />
+
+      <div className="relative flex items-start gap-3">
+        <span
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/10 transition-transform duration-300 group-hover/tile:scale-105"
+          style={{ boxShadow: "inset 0 0 18px rgba(var(--group-accent) / 0.18)" }}
+        >
+          <Image
+            src={skill.icon}
+            alt=""
+            width={22}
+            height={22}
+            className={`h-[22px] w-[22px] object-contain ${skill.invert ? "invert invert-on-dark" : ""}`}
+          />
+        </span>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-baseline justify-between gap-2">
+            <p className="truncate text-sm font-semibold text-white">{skill.name}</p>
+            <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/50">
+              {levelLabel(skill.level)}
+            </span>
+          </div>
+          <p className="mt-1 line-clamp-2 text-[11px] leading-5 text-white/58">{skill.note}</p>
         </div>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        {items.map((skill) => (
-          <div key={skill.name} className="rounded-[20px] border border-white/10 bg-black/18 px-4 py-3">
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white/8">
-                <Image src={skill.icon} alt={skill.name} width={22} height={22} className={skill.invert ? "invert" : ""} />
-              </span>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-white">{skill.name}</p>
-                <p className="text-[10px] uppercase tracking-[0.16em] text-white/42">Tool Symbol</p>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="relative mt-3.5 flex items-center gap-3">
+        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+          <motion.div
+            initial={{ width: reduceMotion ? `${skill.level}%` : 0 }}
+            animate={{ width: `${skill.level}%` }}
+            transition={{ delay: 0.12 + index * 0.035, duration: 0.7, ease: EASE_STANDARD }}
+            className="h-full rounded-full"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(var(--group-accent) / 0.45), rgb(var(--group-accent)))",
+              boxShadow: "0 0 12px rgba(var(--group-accent) / 0.5)",
+            }}
+          />
+        </div>
+        <span className="w-8 shrink-0 text-right text-[11px] font-semibold tabular-nums text-white/70">
+          {skill.level}
+        </span>
       </div>
-    </motion.article>
+    </motion.li>
   );
 }
 
 export default function Skills() {
-  const totalTools = SKILL_GROUPS.reduce((sum, group) => sum + group.items.length, 0);
-  const featuredGroup = SKILL_GROUPS[0];
-  const remainingGroups = SKILL_GROUPS.slice(1);
+  const [activeId, setActiveId] = useState(SKILL_GROUPS[0]?.id ?? "");
+
+  const activeGroup = useMemo(
+    () => SKILL_GROUPS.find((group) => group.id === activeId) ?? SKILL_GROUPS[0],
+    [activeId],
+  );
+
+  const totalTools = useMemo(
+    () => SKILL_GROUPS.reduce((sum, group) => sum + group.items.length, 0),
+    [],
+  );
+
+  const expertCount = useMemo(
+    () => SKILL_GROUPS.reduce((sum, group) => sum + group.items.filter((i) => i.level >= 85).length, 0),
+    [],
+  );
+
+  const dbCount = useMemo(
+    () => SKILL_GROUPS.find((group) => group.id === "database")?.items.length ?? 0,
+    [],
+  );
+
+  // Marquee needs the list twice so the -50% translation loops seamlessly.
+  const marqueeItems = useMemo(() => {
+    const all = SKILL_GROUPS.flatMap((group) => group.items.map((item) => ({ ...item, accent: group.accent })));
+    return [...all, ...all];
+  }, []);
 
   return (
     <>
@@ -69,87 +178,125 @@ export default function Skills() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
-            className="relative"
+            className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
           >
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <p className="text-sm uppercase tracking-[0.28em] text-white/46">Arsenal</p>
-                <h2 className="display-title mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl">
-                  Clean capability stack with recognisable symbols
-                </h2>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <div className="accent-pill px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em]">
-                  Frontend to security
-                </div>
-                <div className="rounded-full border border-white/10 bg-black/24 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/78">
-                  {SKILL_GROUPS.length} Domains
-                </div>
-                <div className="rounded-full border border-white/10 bg-black/24 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/78">
-                  {totalTools} Tools
-                </div>
-              </div>
+            <div className="max-w-2xl">
+              <p className="eyebrow-hand"><span className="eyebrow-hand-underline">Arsenal</span></p>
+              <h2 className="display-title mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl">
+                Pixels to packets
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-white/70">
+                Pick a layer to see what I use and how deep it runs.
+              </p>
             </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              <div className="metric-card px-4 py-4">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-white/42">Design Value</p>
-                <p className="mt-2 text-sm leading-6 text-white/82">Symbol-led cards that stay easy to scan for recruiters and collaborators.</p>
-              </div>
-              <div className="metric-card px-4 py-4">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-white/42">Engineering Value</p>
-                <p className="mt-2 text-sm leading-6 text-white/82">A balanced stack covering interfaces, APIs, databases, and delivery tools.</p>
-              </div>
-              <div className="metric-card px-4 py-4">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-white/42">Security Value</p>
-                <p className="mt-2 text-sm leading-6 text-white/82">Security-first thinking carried into implementation choices and system design.</p>
-              </div>
-            </div>
+            <dl className="grid w-full max-w-md grid-cols-3 gap-3 lg:w-auto">
+              {[
+                { label: "Tools", value: totalTools },
+                { label: "Databases", value: dbCount },
+                { label: "Core Strength", value: expertCount },
+              ].map((stat) => (
+                <div key={stat.label} className="metric-card px-3 py-3 text-center">
+                  <dd className="display-title text-2xl font-semibold tabular-nums text-white">{stat.value}</dd>
+                  <dt className="mt-1 text-[9px] uppercase tracking-[0.16em] text-white/45">{stat.label}</dt>
+                </div>
+              ))}
+            </dl>
           </motion.div>
 
-          <div className="mt-8 grid gap-5 xl:grid-cols-[1.02fr_1.18fr]">
-            {featuredGroup ? (
-              <motion.article
-                initial={{ opacity: 0, x: -18 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
-                className="surface rounded-[30px] p-6"
-              >
-                <p className="text-[10px] uppercase tracking-[0.24em] text-cyan-100/68">Primary Stack</p>
-                <h3 className="display-title mt-3 text-3xl font-semibold text-white">{featuredGroup.title}</h3>
-                <p className="mt-4 max-w-xl text-sm leading-7 text-white/72">
-                  The strongest working layer for polished interfaces, modern app structure, and dependable delivery.
-                </p>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {featuredGroup.items.map((skill, index) => (
-                    <motion.div
-                      key={skill.name}
-                      initial={{ opacity: 0, y: 12 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.05, duration: 0.3 }}
-                      className="rounded-[22px] border border-white/10 bg-black/20 px-4 py-4"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white/8">
-                          <Image src={skill.icon} alt={skill.name} width={24} height={24} className={skill.invert ? "invert" : ""} />
-                        </span>
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-white">{skill.name}</p>
-                          <p className="text-[10px] uppercase tracking-[0.16em] text-white/42">Core Symbol</p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
+          <motion.div
+            initial={{ opacity: 0, y: 26 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
+            className="mt-9 grid gap-4 lg:grid-cols-[minmax(240px,300px)_1fr]"
+          >
+            {/* Domain rail: horizontal scroll strip on mobile, vertical list on desktop. */}
+            <div
+              role="tablist"
+              aria-label="Skill domains"
+              className="flex gap-3 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0"
+            >
+              {SKILL_GROUPS.map((group) => (
+                <div key={group.id} className="min-w-[210px] lg:min-w-0">
+                  <DomainTab
+                    group={group}
+                    active={group.id === activeGroup?.id}
+                    onSelect={() => setActiveId(group.id)}
+                  />
                 </div>
-              </motion.article>
-            ) : null}
+              ))}
+            </div>
 
-            <div className="grid gap-5 md:grid-cols-2">
-              {remainingGroups.map((group, index) => (
-                <SkillGroupCard key={group.title} title={group.title} items={group.items} index={index} />
+            {/* Detail panel for the selected domain. */}
+            {activeGroup ? (
+              <div
+                style={{ "--group-accent": activeGroup.accent } as React.CSSProperties}
+                className="surface relative overflow-hidden rounded-[28px] p-5 sm:p-6"
+              >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full opacity-60 blur-3xl"
+                  style={{ background: "radial-gradient(circle, rgba(var(--group-accent) / 0.28), transparent 70%)" }}
+                />
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeGroup.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3, ease: EASE_STANDARD }}
+                    className="relative"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p
+                          className="text-[10px] font-semibold uppercase tracking-[0.24em]"
+                          style={{ color: "rgb(var(--group-accent))" }}
+                        >
+                          {activeGroup.kicker}
+                        </p>
+                        <h3 className="display-title mt-2 text-2xl font-semibold text-white sm:text-3xl">
+                          {activeGroup.title}
+                        </h3>
+                      </div>
+                      <span className="accent-pill px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em]">
+                        {activeGroup.items.length} Tools
+                      </span>
+                    </div>
+
+                    <p className="mt-3 max-w-2xl text-sm leading-6 text-white/70">{activeGroup.summary}</p>
+
+                    <ul className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                      {activeGroup.items.map((skill, index) => (
+                        <SkillTile key={skill.name} skill={skill} accent={activeGroup.accent} index={index} />
+                      ))}
+                    </ul>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            ) : null}
+          </motion.div>
+
+          {/* Full-stack ticker: every symbol in one continuous pass. */}
+          <div className="arsenal-marquee mt-6 overflow-hidden rounded-2xl border border-white/10 bg-black/20 py-3">
+            <div className="arsenal-marquee-track flex w-max items-center gap-3">
+              {marqueeItems.map((item, index) => (
+                <span
+                  key={`${item.name}-${index}`}
+                  style={{ "--group-accent": item.accent } as React.CSSProperties}
+                  className="flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5"
+                >
+                  <Image
+                    src={item.icon}
+                    alt=""
+                    width={14}
+                    height={14}
+                    className={`h-3.5 w-3.5 object-contain ${item.invert ? "invert invert-on-dark" : ""}`}
+                  />
+                  <span className="text-[11px] font-medium whitespace-nowrap text-white/72">{item.name}</span>
+                </span>
               ))}
             </div>
           </div>
@@ -166,8 +313,8 @@ export default function Skills() {
             className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
           >
             <div>
-              <p className="text-sm uppercase tracking-[0.26em] text-white/50">Proof Stack</p>
-              <h2 className="display-title mt-3 text-4xl font-semibold tracking-tight">Certificates and verification trail</h2>
+              <p className="eyebrow-hand"><span className="eyebrow-hand-underline">Proof Stack</span></p>
+              <h2 className="display-title mt-3 text-4xl font-semibold tracking-tight">Certificates</h2>
             </div>
             <a
               href={DRIVE_LINK}
