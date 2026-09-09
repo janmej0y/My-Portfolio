@@ -390,15 +390,19 @@ body.portfolio-intro-active {
 
 .theme-bright .text-white\/78,
 .theme-bright .text-white\/75,
+.theme-bright .text-white\/72,
 .theme-bright .text-white\/70,
 .theme-bright .text-white\/60,
+.theme-bright .text-white\/58,
 .theme-bright .text-white\/55 {
   color: #334155 !important;
 }
 
 .theme-bright .text-white\/50,
 .theme-bright .text-white\/45,
-.theme-bright .text-white\/40 {
+.theme-bright .text-white\/42,
+.theme-bright .text-white\/40,
+.theme-bright .text-white\/38 {
   color: #475569 !important;
 }
 
@@ -676,13 +680,15 @@ body.portfolio-intro-active {
 @media (max-width: 768px) {
   html,
   body {
-    overscroll-behavior-y: auto;
+    /* Contain stops the browser chrome bouncing mid-flick, which was the
+       jolt that made the smooth glide feel broken at the ends of the page. */
+    overscroll-behavior-y: contain;
   }
 
   body,
   main,
   section {
-    touch-action: auto;
+    touch-action: pan-y;
   }
 
   .surface {
@@ -995,15 +1001,22 @@ body.portfolio-intro-active {
   background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.85), rgba(var(--accent-rgb), 0.12) 55%, transparent);
 }
 
+/* Stats sit on a shared baseline rule, each with its own accent tick. */
 .hero-stat {
-  background: rgba(9, 12, 20, 0.72);
-  transition: background 0.3s ease;
+  position: relative;
+  padding-left: 0.85rem;
 }
 
-@media (pointer: fine) {
-  .hero-stat:hover {
-    background: rgba(var(--accent-rgb), 0.1);
-  }
+.hero-stat::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  width: 2px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.9), rgba(var(--accent-rgb), 0.1));
+  transition: background 0.3s ease;
 }
 
 .hero-cta {
@@ -1025,14 +1038,8 @@ body.portfolio-intro-active {
   color: #065f46 !important;
 }
 
-.theme-bright .hero-stat {
-  background: rgba(255, 255, 255, 0.86);
-}
-
-@media (pointer: fine) {
-  .theme-bright .hero-stat:hover {
-    background: rgba(var(--accent-rgb), 0.12);
-  }
+.theme-bright .hero-stat::before {
+  background: linear-gradient(180deg, rgba(14, 116, 144, 0.85), rgba(14, 116, 144, 0.1));
 }
 
 .theme-bright .hero-cta {
@@ -1116,4 +1123,636 @@ body.portfolio-intro-active {
 
 .theme-bright .eyebrow-hand-underline::after {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'><path d='M1 5.2C22 2.1 47 1.4 70 3.1c17 1.2 33 3 49 1.3' fill='none' stroke='rgba(14,116,144,0.6)' stroke-width='2' stroke-linecap='round'/></svg>");
+}
+
+/* ---------- Learning Runway ---------- */
+
+/* Unlit track. Fades at both ends so it reads as a path, not a hard bar. */
+.runway-spine {
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(255, 255, 255, 0.16) 12%,
+    rgba(255, 255, 255, 0.16) 88%,
+    transparent
+  );
+}
+
+/* Scroll-driven overlay; scaleY is animated from the component. Wider and
+   brighter than the track so the drawn portion is unmistakable. */
+.runway-spine-lit {
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(34, 211, 238, 0.95),
+    rgba(167, 139, 250, 0.9) 55%,
+    rgba(45, 212, 191, 0.85)
+  );
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.55), 0 0 22px rgba(167, 139, 250, 0.35);
+}
+
+/* Comet head riding the end of the lit portion - the moving highlight is
+   what actually pulls the eye down the section. */
+.runway-spark {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 0 10px 2px rgba(34, 211, 238, 0.9), 0 0 26px 6px rgba(167, 139, 250, 0.5);
+}
+
+.runway-node {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: rgba(9, 12, 20, 0.95);
+  border: 1px solid rgba(var(--accent-rgb), 0.55);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.runway-node-core {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: rgb(var(--accent-rgb));
+  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.85);
+  transition: transform 0.3s ease;
+}
+
+/* The node the reader has just reached gets a halo, so the runway always has
+   exactly one focal point as it scrolls. */
+.runway-node-active {
+  border-color: rgba(var(--accent-rgb), 0.95);
+  box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.16), 0 0 20px rgba(var(--accent-rgb), 0.55);
+}
+
+.runway-node-active .runway-node-core {
+  transform: scale(1.18);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .runway-node-active::after {
+    content: "";
+    position: absolute;
+    inset: -0.35rem;
+    border-radius: 999px;
+    border: 1px solid rgba(var(--accent-rgb), 0.5);
+    animation: runway-pulse 2.4s ease-out infinite;
+  }
+}
+
+@keyframes runway-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.85);
+  }
+  70% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
+/* Card picks up its milestone's accent on the border and a matching aurora
+   wash, so colour runs down the page rather than sitting flat. */
+.runway-card {
+  border-color: rgba(var(--accent-rgb), 0.18);
+}
+
+.runway-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 88% 10%, rgba(var(--accent-alt-rgb), 0.16), transparent 55%),
+    radial-gradient(circle at 4% 96%, rgba(var(--accent-rgb), 0.12), transparent 52%);
+  transition: opacity 0.4s ease;
+}
+
+/* Visible once the card is in view, so the accent reads while scrolling on
+   touch as well - not only on hover. */
+.runway-card-active::after {
+  opacity: 1;
+}
+
+@media (pointer: fine) {
+  .group:hover > .runway-node {
+    transform: scale(1.16);
+  }
+
+  .group:hover > .runway-node .runway-node-core {
+    transform: scale(1.2);
+  }
+
+  .runway-card {
+    transition: transform 0.34s ease, border-color 0.34s ease, box-shadow 0.34s ease;
+  }
+
+  .group:hover > .runway-card {
+    transform: translateX(5px);
+    border-color: rgba(var(--accent-rgb), 0.42);
+    box-shadow: 0 18px 44px rgba(2, 6, 23, 0.38), 0 0 0 1px rgba(var(--accent-rgb), 0.12);
+  }
+}
+
+.theme-bright .runway-spine {
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(15, 23, 42, 0.16) 12%,
+    rgba(15, 23, 42, 0.16) 88%,
+    transparent
+  );
+}
+
+.theme-bright .runway-node {
+  background: #ffffff;
+}
+
+.theme-bright .runway-card {
+  border-color: rgba(var(--accent-rgb), 0.3);
+}
+
+/* Ghost year behind each card, bottom-right and clear of the period/status
+   stack in the top corner. Sits fully inside the card - hanging it past the
+   edge left the digits sliced in half by the card's overflow. */
+.runway-year {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.5rem;
+  z-index: 0;
+  font-family: var(--font-display), "Trebuchet MS", sans-serif;
+  font-size: 3.25rem;
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(var(--accent-rgb), 0.07);
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+  .runway-year {
+    font-size: 4.25rem;
+  }
+}
+
+/* Narrow cards have no spare width beside the text, so drop the numeral. */
+@media (max-width: 639px) {
+  .runway-year {
+    display: none;
+  }
+}
+
+.runway-kicker {
+  color: rgba(var(--accent-rgb), 0.9);
+}
+
+.runway-status {
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  background: rgba(var(--accent-rgb), 0.1);
+  color: rgba(var(--accent-rgb), 0.95);
+}
+
+/* Score meter - track plus a scaleX-animated fill. */
+.runway-meter {
+  position: relative;
+  height: 3px;
+  width: 100%;
+  max-width: 13rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.runway-meter-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(var(--accent-rgb)), rgb(var(--accent-alt-rgb)));
+  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.45);
+}
+
+/* The card's own accent border, tinted by the per-item palette. */
+.runway-card {
+  border-color: rgba(var(--accent-rgb), 0.16);
+}
+
+@media (pointer: fine) {
+  .group:hover > .runway-card {
+    border-color: rgba(var(--accent-rgb), 0.34);
+    box-shadow: 0 18px 44px rgba(2, 6, 23, 0.34);
+  }
+}
+
+.theme-bright .runway-year {
+  color: rgba(var(--accent-rgb), 0.12);
+}
+
+.theme-bright .runway-meter {
+  background: rgba(15, 23, 42, 0.12);
+}
+
+/* Header stat pills - small, factual, and the first colour the eye meets
+   before it starts down the spine. */
+.runway-stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.runway-stat strong {
+  font-family: var(--font-display), "Trebuchet MS", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: rgb(34, 211, 238);
+}
+
+.theme-bright .runway-stat {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(15, 23, 42, 0.04);
+  color: #475569;
+}
+
+.theme-bright .runway-stat strong {
+  color: #0e7490;
+}
+
+/* Touch: no hover to lean on, so the in-view card carries the emphasis. */
+@media (pointer: coarse) {
+  .runway-card-active {
+    border-color: rgba(var(--accent-rgb), 0.38);
+    box-shadow: 0 16px 38px rgba(2, 6, 23, 0.34);
+  }
+}
+
+@media (max-width: 639px) {
+  /* Tighter gutter so cards keep their width on small screens. */
+  .runway-meter {
+    max-width: 9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .runway-spark {
+    display: none;
+  }
+
+  .runway-card::after {
+    transition: none;
+  }
+}
+
+/* ---------- Project showcase ---------- */
+
+.project-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.18);
+  padding: 0.5rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.68);
+  transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+.project-filter-count {
+  font-family: var(--font-display), "Trebuchet MS", sans-serif;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+@media (pointer: fine) {
+  .project-filter:hover {
+    border-color: rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+}
+
+.project-filter-active {
+  border-color: rgba(var(--accent-rgb), 0.5);
+  background: rgba(var(--accent-rgb), 0.12);
+  color: rgba(207, 250, 254, 0.95);
+}
+
+.project-filter-active .project-filter-count {
+  color: rgba(var(--accent-rgb), 0.9);
+}
+
+/* Flagship marker on the spotlight card. */
+.project-spotlight-tag {
+  border-radius: 999px;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  background: rgba(var(--accent-rgb), 0.14);
+  padding: 0.25rem 0.7rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(207, 250, 254, 0.95);
+  backdrop-filter: blur(6px);
+}
+
+/* The spotlight is already the largest element on screen, so it lifts less
+   than the smaller cards - a big translate reads as jitter at that size. */
+@media (pointer: fine) {
+  .project-spotlight {
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .project-spotlight:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 36px 84px rgba(2, 6, 23, 0.48);
+  }
+}
+
+.theme-bright .project-filter {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(15, 23, 42, 0.03);
+  color: #475569;
+}
+
+.theme-bright .project-filter-count {
+  color: rgba(15, 23, 42, 0.4);
+}
+
+.theme-bright .project-filter-active {
+  border-color: rgba(14, 116, 144, 0.4);
+  background: rgba(14, 116, 144, 0.1);
+  color: #0e7490;
+}
+
+.theme-bright .project-filter-active .project-filter-count {
+  color: #0e7490;
+}
+
+.theme-bright .project-spotlight-tag {
+  color: #0e7490;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-spotlight,
+  .project-filter {
+    transition: none;
+  }
+}
+
+/* ---------- Proof stack / certificates ---------- */
+
+/* Each card carries its field's accent via --accent-rgb, set inline. */
+.cert-card {
+  border-color: rgba(var(--accent-rgb), 0.2);
+  transition: transform 0.34s ease, border-color 0.34s ease, box-shadow 0.34s ease;
+}
+
+/* Corner wash tinted by the field, so the grid reads as grouped by subject. */
+.cert-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(circle at 92% 4%, rgba(var(--accent-alt-rgb), 0.18), transparent 58%),
+    radial-gradient(circle at 0% 100%, rgba(var(--accent-rgb), 0.12), transparent 55%);
+  opacity: 0.75;
+  transition: opacity 0.4s ease;
+}
+
+/* Top hairline picks up the accent - reads at a glance in a dense grid. */
+.cert-card::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 1;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.85), rgba(var(--accent-alt-rgb), 0.5), transparent);
+  opacity: 0.6;
+  transition: opacity 0.4s ease;
+}
+
+.cert-pill {
+  position: relative;
+  z-index: 1;
+  border-color: rgba(var(--accent-rgb), 0.28);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.cert-icon {
+  background: rgba(var(--accent-rgb), 0.14);
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.22);
+}
+
+.cert-field {
+  color: rgba(var(--accent-rgb), 0.95);
+}
+
+/* Accent rule under the copy, grown on scroll-in from the component. */
+.cert-rule {
+  position: absolute;
+  left: 1.5rem;
+  right: 1.5rem;
+  bottom: 1.35rem;
+  height: 2px;
+  transform-origin: left center;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(var(--accent-rgb)), rgba(var(--accent-alt-rgb), 0.15));
+}
+
+.cert-legend-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: rgb(var(--accent-rgb));
+  box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.7);
+}
+
+/* Diagonal sheen, parked off-card until hover sweeps it across. */
+.cert-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.09) 48%,
+    rgba(255, 255, 255, 0.16) 52%,
+    transparent 62%
+  );
+  transform: translateX(-130%);
+  opacity: 0;
+}
+
+@media (pointer: fine) {
+  .cert-card:hover {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    box-shadow: 0 22px 52px rgba(2, 6, 23, 0.4), 0 0 0 1px rgba(var(--accent-rgb), 0.14);
+  }
+
+  .cert-card:hover::after,
+  .cert-card:hover::before {
+    opacity: 1;
+  }
+
+  .cert-card:hover .cert-sheen {
+    opacity: 1;
+    transform: translateX(130%);
+    transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+  }
+
+  .cert-card:hover .cert-icon {
+    box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.45), 0 0 16px rgba(var(--accent-rgb), 0.3);
+  }
+}
+
+/* Touch has no hover, so the accent sits a little stronger by default. */
+@media (pointer: coarse) {
+  .cert-card::before {
+    opacity: 0.85;
+  }
+}
+
+.theme-bright .cert-card {
+  border-color: rgba(var(--accent-rgb), 0.35);
+}
+
+.theme-bright .cert-card::after {
+  opacity: 0.45;
+}
+
+.theme-bright .cert-icon {
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+.theme-bright .cert-sheen {
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(15, 23, 42, 0.05) 48%,
+    rgba(15, 23, 42, 0.08) 52%,
+    transparent 62%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cert-card,
+  .cert-sheen {
+    transition: none;
+  }
+
+  .cert-sheen {
+    display: none;
+  }
+}
+
+/* ---------- Hero ---------- */
+
+/* Ruled floor behind the composition. Masked so it fades before the edges
+   rather than stopping on a hard line. */
+.hero-grid {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 76px 76px;
+  mask-image: radial-gradient(ellipse 78% 62% at 32% 44%, #000 12%, transparent 76%);
+  -webkit-mask-image: radial-gradient(ellipse 78% 62% at 32% 44%, #000 12%, transparent 76%);
+}
+
+/* Each letter is its own clipping window, so the glyph slides up from behind
+   the baseline instead of fading in place. */
+.hero-letter {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* Descenders would otherwise be shaved by the overflow. */
+  padding-bottom: 0.06em;
+}
+
+.hero-name {
+  /* Optical trim so the oversized glyphs sit flush with the rule below. */
+  margin-left: -0.055em;
+}
+
+.hero-locale {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.hero-locale::before {
+  content: "";
+  display: inline-block;
+  width: 1.4rem;
+  height: 1px;
+  margin-right: 0.6rem;
+  vertical-align: middle;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Ghost CTA: bordered rather than filled, so the primary button stays dominant. */
+.hero-cta-ghost {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+
+@media (pointer: fine) {
+  .hero-cta-ghost:hover {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    background: rgba(var(--accent-rgb), 0.08);
+  }
+}
+
+.theme-bright .hero-grid {
+  background-image: linear-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+}
+
+.theme-bright .hero-locale {
+  color: #64748b;
+}
+
+.theme-bright .hero-locale::before {
+  background: rgba(15, 23, 42, 0.2);
+}
+
+.theme-bright .hero-cta-ghost {
+  border-color: rgba(15, 23, 42, 0.16);
+  background: rgba(15, 23, 42, 0.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-letter {
+    overflow: visible;
+  }
 }

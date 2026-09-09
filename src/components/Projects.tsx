@@ -43,10 +43,16 @@ function getStats(project: Project) {
 }
 
 /**
- * Projects that lead the showcase, in display order. Edit this list to change
- * what gets a hero slot; anything not named here falls into the compact grid.
+ * The single project that leads the showcase - it gets a full-width spotlight
+ * row with the image beside the detail, rather than stacked above it.
  */
-const FEATURED_KEYS = ["vampforge", "tapas-grocery"];
+const SPOTLIGHT_KEY = "vampforge";
+
+/**
+ * Projects that follow the spotlight in a two-up row. Anything not named
+ * here or above drops into the compact grid.
+ */
+const FEATURED_KEYS = ["tapas-grocery", "comodex"];
 
 function CategoryBadge({ project, className = "" }: { project: Project; className?: string }) {
   const style = styles[project.category];
@@ -100,6 +106,98 @@ function QuickLinks({ project, onActivate }: { project: Project; onActivate: () 
         Code
       </a>
     </div>
+  );
+}
+
+/**
+ * Lead card: image and detail sit side by side so the strongest project reads
+ * as an editorial feature rather than one more tile in the grid.
+ */
+function SpotlightProjectCard({
+  project,
+  onOpen,
+  onActivate,
+}: {
+  project: Project;
+  onOpen: () => void;
+  onActivate: () => void;
+}) {
+  const style = styles[project.category];
+  const resultLine = project.resultLine ?? "Shipped with a cleaner product experience.";
+
+  return (
+    <motion.article
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
+      onClick={onOpen}
+      role="button"
+      tabIndex={0}
+      data-cursor="Open"
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen();
+        }
+      }}
+      aria-label={`View details for ${project.title}`}
+      className={`project-card project-spotlight group relative grid cursor-pointer overflow-hidden rounded-[32px] border ${style.ring} bg-[linear-gradient(180deg,rgba(7,12,24,0.96),rgba(3,8,18,0.92))] shadow-[0_30px_70px_rgba(2,6,23,0.4)] outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 lg:grid-cols-[1.15fr_1fr]`}
+    >
+      <div className={`absolute inset-0 bg-gradient-to-br ${style.glow}`} />
+
+      <div className="relative min-h-[230px] overflow-hidden lg:min-h-[380px]">
+        <Image
+          src={project.image}
+          alt={project.title}
+          fill
+          className="object-cover transition duration-700 group-hover:scale-[1.04]"
+          sizes="(max-width: 1024px) 100vw, 55vw"
+          priority
+        />
+        {/* Fade runs downward on mobile and rightward once side by side, so the
+            join between image and panel never shows a hard edge. */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,8,18,0.08),rgba(3,8,18,0.55)_70%,rgba(3,8,18,0.95))] lg:bg-[linear-gradient(90deg,rgba(3,8,18,0.15),rgba(3,8,18,0.35)_60%,rgba(3,8,18,0.95))]" />
+        <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
+          <CategoryBadge project={project} />
+          <span className="project-spotlight-tag">Flagship</span>
+        </div>
+      </div>
+
+      <div className="relative z-10 flex flex-col justify-center gap-4 p-6 md:p-8">
+        <div>
+          <h3 className="display-title text-2xl font-semibold tracking-tight text-white md:text-4xl">
+            {project.title}
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-cyan-100/85 md:text-base">{resultLine}</p>
+        </div>
+
+        <p className="text-sm leading-7 text-white/68">{project.shortDescription}</p>
+
+        {project.highlights?.length ? (
+          <ul className="grid gap-2">
+            {project.highlights.slice(0, 3).map((item) => (
+              <li key={item} className="flex gap-2.5 text-sm leading-6 text-white/72">
+                <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${style.dot}`} />
+                {item}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        <div className="flex flex-wrap gap-2">
+          {project.tech.slice(0, 5).map((tech) => (
+            <span key={`${project.key}-${tech}`} className="impact-chip">
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-1 border-t border-white/10 pt-4">
+          <QuickLinks project={project} onActivate={onActivate} />
+        </div>
+      </div>
+    </motion.article>
   );
 }
 
@@ -234,7 +332,7 @@ function CompactProjectCard({
           width={800}
           height={600}
           className="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,8,18,0.05),rgba(3,8,18,0.3)_58%,rgba(0,0,0,0.8))]" />
         <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3">
@@ -303,24 +401,37 @@ export default function Projects() {
 
   const allProjects = useMemo(() => mergeProjects(PROJECTS, synced), [synced]);
 
+  // Counts drive the filter pills, so an empty category never renders a
+  // button the user can click into a dead end.
+  const categoryCounts = useMemo(() => {
+    return allProjects.reduce<Record<string, number>>((acc, project) => {
+      acc[project.category] = (acc[project.category] ?? 0) + 1;
+      return acc;
+    }, {});
+  }, [allProjects]);
+
   const visible = useMemo(
     () => allProjects.filter((project) => activeFilter === "all" || project.category === activeFilter),
     [activeFilter, allProjects],
   );
 
-  // Hero slots only pay off when enough projects remain for a grid beneath
-  // them; under a narrow filter everything drops back to one uniform grid.
-  const { featured, rest } = useMemo(() => {
+  // Three tiers: one spotlight, a two-up feature row, then the grid. Tiers
+  // only pay off when enough projects remain beneath them, so under a narrow
+  // filter everything collapses back to one uniform grid.
+  const { spotlight, featured, rest } = useMemo(() => {
+    const flat = { spotlight: null as Project | null, featured: [] as Project[], rest: visible };
+    if (visible.length < 6) return flat;
+
+    const lead = visible.find((project) => project.key === SPOTLIGHT_KEY) ?? null;
+    if (!lead) return flat;
+
     const picks = FEATURED_KEYS.map((key) => visible.find((project) => project.key === key)).filter(
       (project): project is Project => Boolean(project),
     );
+    if (picks.length < FEATURED_KEYS.length) return flat;
 
-    if (picks.length < FEATURED_KEYS.length || visible.length <= picks.length + 1) {
-      return { featured: [] as Project[], rest: visible };
-    }
-
-    const featuredKeys = new Set(picks.map((project) => project.key));
-    return { featured: picks, rest: visible.filter((project) => !featuredKeys.has(project.key)) };
+    const used = new Set([lead.key, ...picks.map((project) => project.key)]);
+    return { spotlight: lead, featured: picks, rest: visible.filter((project) => !used.has(project.key)) };
   }, [visible]);
 
   const selectedProject = useMemo(
@@ -513,31 +624,45 @@ export default function Projects() {
           </div>
 
           <div className="flex flex-wrap gap-2 lg:justify-end">
-            {filters.map((filter) => (
-              <button
-                key={filter}
-                type="button"
-                onClick={() => {
-                  play("tap");
-                  setActiveFilter(filter);
-                }}
-                aria-pressed={activeFilter === filter}
-                className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
-                  activeFilter === filter
-                    ? "border-cyan-300/45 bg-cyan-400/[0.12] text-cyan-100"
-                    : "border-white/12 bg-black/18 text-white/68 hover:border-white/20 hover:text-white"
-                }`}
-              >
-                {filter}
-              </button>
-            ))}
+            {filters.map((filter) => {
+              const count = filter === "all" ? allProjects.length : categoryCounts[filter] ?? 0;
+              if (!count) return null;
+              const isActive = activeFilter === filter;
+
+              return (
+                <button
+                  key={filter}
+                  type="button"
+                  onClick={() => {
+                    play("tap");
+                    setActiveFilter(filter);
+                  }}
+                  aria-pressed={isActive}
+                  className={`project-filter ${isActive ? "project-filter-active" : ""}`}
+                >
+                  {filter}
+                  <span className="project-filter-count">{count}</span>
+                </button>
+              );
+            })}
           </div>
         </motion.div>
 
         {visible.length ? (
-          <>
+          <motion.div layout>
+            {spotlight ? (
+              <div className="mt-9">
+                <SpotlightProjectCard
+                  key={spotlight.key}
+                  project={spotlight}
+                  onOpen={() => openProject(spotlight.key)}
+                  onActivate={() => play("open")}
+                />
+              </div>
+            ) : null}
+
             {featured.length ? (
-              <div className="mt-9 grid gap-5 lg:grid-cols-2">
+              <div className="mt-5 grid gap-5 lg:grid-cols-2">
                 {featured.map((project) => (
                   <FeaturedProjectCard
                     key={project.key}
@@ -551,13 +676,22 @@ export default function Projects() {
 
             {rest.length ? (
               <>
-                {featured.length ? (
-                  <div className="mt-10 flex items-center gap-4">
-                    <p className="eyebrow-hand">More Work</p>
-                    <span className="h-px flex-1 bg-white/10" />
+                {spotlight || featured.length ? (
+                  <div className="mt-12 flex items-center gap-4">
+                    <p className="eyebrow-hand shrink-0">
+                      <span className="eyebrow-hand-underline">More Work</span>
+                    </p>
+                    <span className="h-px flex-1 bg-gradient-to-r from-white/18 to-transparent" />
+                    <span className="shrink-0 font-display text-xs tabular-nums text-white/40">
+                      {rest.length}
+                    </span>
                   </div>
                 ) : null}
-                <div className={`grid gap-4 sm:grid-cols-2 xl:grid-cols-4 ${featured.length ? "mt-5" : "mt-9"}`}>
+                <div
+                  className={`grid gap-4 sm:grid-cols-2 xl:grid-cols-3 ${
+                    spotlight || featured.length ? "mt-6" : "mt-9"
+                  }`}
+                >
                   {rest.map((project) => (
                     <CompactProjectCard
                       key={project.key}
@@ -569,7 +703,7 @@ export default function Projects() {
                 </div>
               </>
             ) : null}
-          </>
+          </motion.div>
         ) : (
           <p className="mt-10 text-center text-sm text-white/60">No projects in this category yet.</p>
         )}

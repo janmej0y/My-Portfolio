@@ -62,10 +62,16 @@ export type SkillGroup = {
   items: Skill[];
 };
 
+/** Subject area of a certificate. Drives its colour grade in the proof stack. */
+export type CertificationField = "security" | "automation" | "engineering" | "ai";
+
 export type Certification = {
   title: string;
   description: string;
   icon: string;
+  field: CertificationField;
+  /** Issuing body or programme, shown as the card's kicker. */
+  issuer: string;
 };
 
 export type ContactCard = {

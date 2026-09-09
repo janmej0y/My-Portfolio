@@ -1,10 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { CSSProperties, useMemo, useRef, useState } from "react";
 import { CERTIFICATIONS, SKILL_GROUPS } from "@/lib/data";
-import type { Skill, SkillGroup } from "@/types/portfolio";
+import type { Certification, CertificationField, Skill, SkillGroup } from "@/types/portfolio";
 import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
 
 const DRIVE_LINK =
@@ -15,6 +15,86 @@ function levelLabel(level: number) {
   if (level >= 78) return "Advanced";
   if (level >= 68) return "Proficient";
   return "Working";
+}
+
+/**
+ * Colour grade per subject area. Certificates group naturally by field, so the
+ * grade carries real meaning rather than decorating each card at random.
+ */
+const CERT_FIELDS: Record<CertificationField, { label: string; accent: string; accentAlt: string }> = {
+  security: { label: "Security", accent: "244 63 94", accentAlt: "251 146 60" }, // rose -> orange
+  automation: { label: "Automation", accent: "56 189 248", accentAlt: "34 211 238" }, // sky -> cyan
+  engineering: { label: "Engineering", accent: "45 212 191", accentAlt: "34 197 94" }, // teal -> green
+  ai: { label: "AI / ML", accent: "167 139 250", accentAlt: "217 70 239" }, // violet -> fuchsia
+};
+
+/** Fields actually present in the data, in card order, with their counts. */
+const certFieldLegend = (Object.keys(CERT_FIELDS) as CertificationField[])
+  .map((field) => ({
+    field,
+    label: CERT_FIELDS[field].label,
+    accent: CERT_FIELDS[field].accent,
+    count: CERTIFICATIONS.filter((cert) => cert.field === field).length,
+  }))
+  .filter((entry) => entry.count > 0);
+
+/**
+ * One certificate. Animates itself into view and keeps its own hover state so
+ * the sheen only runs on the card actually under the pointer.
+ */
+function CertificateCard({ cert, index }: { cert: Certification; index: number }) {
+  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLElement | null>(null);
+  const inView = useInView(ref, { once: true, amount: 0.3 });
+  const grade = CERT_FIELDS[cert.field];
+
+  return (
+    <motion.article
+      ref={ref}
+      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 28, scale: 0.97 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : undefined}
+      transition={{
+        delay: index * STAGGER.card,
+        duration: DURATIONS.base,
+        ease: EASE_STANDARD,
+      }}
+      whileHover={reduceMotion ? undefined : { y: -6 }}
+      style={
+        {
+          "--accent-rgb": grade.accent,
+          "--accent-alt-rgb": grade.accentAlt,
+        } as CSSProperties
+      }
+      className="cert-card surface group relative flex h-full flex-col overflow-hidden rounded-[20px] p-6 pb-9"
+    >
+      {/* Sheen sweeps across on hover; purely decorative. */}
+      <span aria-hidden="true" className="cert-sheen" />
+
+      <div className="relative flex items-start justify-between gap-3">
+        <span className="icon-pill cert-pill w-fit">
+          <span className="cert-icon grid h-9 w-9 place-items-center rounded-full">
+            <Image src={cert.icon} alt="" width={24} height={24} className="h-6 w-6 object-contain" />
+          </span>
+          <span className="cert-field text-[10px] font-semibold uppercase tracking-[0.14em]">{grade.label}</span>
+        </span>
+      </div>
+
+      <h3 className="relative mt-4 text-lg font-medium leading-snug">{cert.title}</h3>
+      <p className="relative mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-white/40">
+        {cert.issuer}
+      </p>
+      <p className="relative mt-3 flex-1 text-sm leading-6 text-[#9ca3af]">{cert.description}</p>
+
+      {/* Underline grows from the left as the card settles in. */}
+      <motion.span
+        aria-hidden="true"
+        className="cert-rule"
+        initial={{ scaleX: 0 }}
+        animate={inView ? { scaleX: 1 } : undefined}
+        transition={{ delay: index * STAGGER.card + 0.2, duration: DURATIONS.slow, ease: EASE_STANDARD }}
+      />
+    </motion.article>
+  );
 }
 
 /** Domain button on the left rail. Accent comes from the group so each layer reads distinctly. */
@@ -315,6 +395,20 @@ export default function Skills() {
             <div>
               <p className="eyebrow-hand"><span className="eyebrow-hand-underline">Proof Stack</span></p>
               <h2 className="display-title mt-3 text-4xl font-semibold tracking-tight">Certificates</h2>
+              {/* Legend makes the colour grade readable instead of decorative. */}
+              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+                {certFieldLegend.map((entry) => (
+                  <span
+                    key={entry.field}
+                    style={{ "--accent-rgb": entry.accent } as CSSProperties}
+                    className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/45"
+                  >
+                    <span className="cert-legend-dot" />
+                    {entry.label}
+                    <span className="text-white/28">{entry.count}</span>
+                  </span>
+                ))}
+              </div>
             </div>
             <a
               href={DRIVE_LINK}
@@ -328,24 +422,7 @@ export default function Skills() {
 
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {CERTIFICATIONS.map((cert, index) => (
-              <motion.article
-                key={cert.title}
-                initial={{ opacity: 0, y: 26 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ delay: index * STAGGER.card, duration: DURATIONS.base, ease: EASE_STANDARD }}
-                whileHover={{ y: -4 }}
-                className="surface rounded-xl p-6"
-              >
-                <span className="icon-pill w-fit">
-                  <span className="grid h-9 w-9 place-items-center rounded-full bg-white/10">
-                    <Image src={cert.icon} alt={cert.title} width={24} height={24} className="h-6 w-6 object-contain" />
-                  </span>
-                  <span className="text-xs uppercase tracking-[0.12em] text-white/70">Certificate</span>
-                </span>
-                <h3 className="mt-4 text-lg font-medium">{cert.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#9ca3af]">{cert.description}</p>
-              </motion.article>
+              <CertificateCard key={cert.title} cert={cert} index={index} />
             ))}
           </div>
         </div>

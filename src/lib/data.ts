@@ -25,7 +25,7 @@ export const EDUCATION_ITEMS: EducationItem[] = [
     degree: "B. Tech in Computer Science & Engineering",
     institute: "Greater Kolkata College of Engineering & Management",
     year: "2022 - 2026",
-    score: "CGPA: 7.20/10",
+    score: "CGPA: 7.37/10",
   },
   {
     degree: "Higher Secondary - WBCHSE",
@@ -460,26 +460,36 @@ export const CERTIFICATIONS: Certification[] = [
     title: "Palo Alto Cybersecurity Internship",
     description: "Hands-on training in firewalls, network security, and threat analysis.",
     icon: "https://cdn-icons-png.flaticon.com/512/565/565547.png",
+    field: "security",
+    issuer: "Palo Alto Networks",
   },
   {
     title: "Blue Prism Automation Internship",
     description: "Automation processes and workflow building using RPA tools.",
     icon: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Blue_Prism_logo.svg",
+    field: "automation",
+    issuer: "Blue Prism",
   },
   {
     title: "Full Stack BCT Training",
     description: "Complete training on frontend, backend, and APIs.",
     icon: "https://cdn-icons-png.flaticon.com/512/906/906324.png",
+    field: "engineering",
+    issuer: "BCT",
   },
   {
     title: "Ethical Hacking Internship",
     description: "Cybersecurity, penetration testing, and vulnerability assessment.",
     icon: "https://cdn-icons-png.flaticon.com/512/2989/2989988.png",
+    field: "security",
+    issuer: "Internship Programme",
   },
   {
     title: "AI-ML Virtual Internship",
     description: "Machine learning models and real-world AI development.",
     icon: "https://cdn-icons-png.flaticon.com/512/4712/4712100.png",
+    field: "ai",
+    issuer: "Virtual Internship",
   },
 ];
 

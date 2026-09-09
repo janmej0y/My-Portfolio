@@ -1,11 +1,168 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useInView, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
-import { MouseEvent } from "react";
+import { CSSProperties, MouseEvent, useMemo, useRef } from "react";
 import { EDUCATION_ITEMS, EXPERIENCE_ITEMS } from "@/lib/data";
 import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
 import StaggerHeading from "@/components/StaggerHeading";
+
+/** A milestone on the runway - work and study share one shape so they can interleave. */
+type RunwayItem = {
+  id: string;
+  kind: "work" | "study";
+  kicker: string;
+  title: string;
+  subtitle: string;
+  meta?: string;
+  period: string;
+  status: string;
+  description?: string;
+  tags: string[];
+  /** Big ghost numeral printed behind the card. */
+  yearLabel: string;
+  /** Percentage 0-100 when the milestone has a score worth charting. */
+  score?: number;
+  /** "r g b" triple driving every accent on the card. */
+  accent: string;
+  /** Second stop for the card's gradient border and aurora. */
+  accentAlt: string;
+  /** Start year, used only for ordering. */
+  sortYear: number;
+};
+
+/** Each milestone gets its own palette so the runway reads as a colour journey. */
+const RUNWAY_PALETTES = [
+  { accent: "34 211 238", accentAlt: "56 189 248" }, // cyan  -> sky
+  { accent: "167 139 250", accentAlt: "217 70 239" }, // violet -> fuchsia
+  { accent: "45 212 191", accentAlt: "34 197 94" }, // teal   -> green
+  { accent: "251 146 60", accentAlt: "244 63 94" }, // orange -> rose
+  { accent: "129 140 248", accentAlt: "56 189 248" }, // indigo -> sky
+];
+
+/** Leading 4-digit year from strings like "2022 - 2026" or "Mar 2026 - May 2026". */
+function startYear(period: string): number {
+  const match = period.match(/(\d{4})/);
+  return match ? Number(match[1]) : 0;
+}
+
+/** Pulls a chartable number out of "CGPA: 7.37/10" or "Percentage: 85.60%". */
+function scoreFromLabel(label: string): number | undefined {
+  const outOf = label.match(/([\d.]+)\s*\/\s*([\d.]+)/);
+  if (outOf) {
+    const value = (Number(outOf[1]) / Number(outOf[2])) * 100;
+    return Number.isFinite(value) ? value : undefined;
+  }
+  const percent = label.match(/([\d.]+)\s*%/);
+  if (percent) {
+    const value = Number(percent[1]);
+    return Number.isFinite(value) ? value : undefined;
+  }
+  return undefined;
+}
+
+/** One milestone row. Tracks its own in-view state so the node halo and card
+    wash fire on scroll - hover alone would leave touch users with nothing. */
+function RunwayMilestone({ item, index }: { item: RunwayItem; index: number }) {
+  const ref = useRef<HTMLLIElement | null>(null);
+  const active = useInView(ref, { amount: 0.55, margin: "-12% 0px -28% 0px" });
+
+  return (
+    <motion.li
+      ref={ref}
+      initial={{ opacity: 0, x: -18 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ delay: index * STAGGER.block, duration: DURATIONS.base, ease: EASE_STANDARD }}
+      className="group relative"
+      // Each milestone overrides the accent locally, so the node, border,
+      // chips and score meter below all shift together.
+      style={
+        {
+          "--accent-rgb": item.accent,
+          "--accent-alt-rgb": item.accentAlt,
+        } as CSSProperties
+      }
+    >
+      <span
+        aria-hidden="true"
+        className={`runway-node absolute -left-[1.85rem] top-6 sm:-left-[2.35rem] ${
+          active ? "runway-node-active" : ""
+        }`}
+      >
+        <span className="runway-node-core" />
+      </span>
+
+      <article
+        className={`runway-card surface relative overflow-hidden rounded-[22px] p-5 md:p-6 ${
+          active ? "runway-card-active" : ""
+        }`}
+      >
+        {/* Ghost year, printed behind the content as a depth cue. */}
+        <span aria-hidden="true" className="runway-year">
+          {item.yearLabel}
+        </span>
+
+        <div className="relative flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="runway-kicker text-[10px] font-semibold uppercase tracking-[0.2em]">{item.kicker}</p>
+            <h3 className="display-title mt-2 text-xl font-semibold tracking-tight text-white md:text-2xl">
+              {item.title}
+            </h3>
+            <p className="mt-1.5 text-sm text-white/72">
+              {item.subtitle}
+              {item.meta ? <span className="text-white/45"> - {item.meta}</span> : null}
+            </p>
+          </div>
+
+          <div className="flex shrink-0 flex-col items-end gap-2">
+            <span className="font-display text-xs tabular-nums text-white/50">{item.period}</span>
+            <span className="runway-status rounded-full px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.14em]">
+              {item.status}
+            </span>
+          </div>
+        </div>
+
+        {item.description ? (
+          <p className="relative mt-4 text-sm leading-7 text-white/58">{item.description}</p>
+        ) : null}
+
+        {/* Charts the score parsed out of the raw label. Grows on scroll-in
+            so it lands with the card rather than before it. */}
+        {typeof item.score === "number" ? (
+          <div className="relative mt-4 flex items-center gap-3">
+            <div className="runway-meter">
+              <motion.span
+                className="runway-meter-fill"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: item.score / 100 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{
+                  delay: index * STAGGER.block + 0.15,
+                  duration: DURATIONS.slow,
+                  ease: EASE_STANDARD,
+                }}
+              />
+            </div>
+            <span className="font-display text-[11px] tabular-nums text-white/45">
+              {item.score.toFixed(1)}%
+            </span>
+          </div>
+        ) : null}
+
+        {item.tags.length ? (
+          <div className="relative mt-4 flex flex-wrap gap-2">
+            {item.tags.map((tag) => (
+              <span key={tag} className="impact-chip">
+                {tag}
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </article>
+    </motion.li>
+  );
+}
 
 export default function About() {
   const rotateX = useMotionValue(0);
@@ -27,6 +184,61 @@ export default function About() {
     rotateX.set(0);
     rotateY.set(0);
   };
+
+  const runwayRef = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: runwayRef,
+    offset: ["start 0.85", "end 0.6"],
+  });
+  // Spring keeps the spine from snapping on fast scrolls.
+  const spineScale = useSpring(scrollYProgress, { stiffness: 90, damping: 26, restDelta: 0.001 });
+  // Comet rides the same spring, expressed as a percentage down the track.
+  const sparkTop = useTransform(spineScale, (value) => `calc(${Math.min(Math.max(value, 0), 1) * 100}% - 0.25rem)`);
+
+  // Span of the whole journey, earliest milestone to latest.
+  const RUNWAY_SPAN = useMemo(() => {
+    const years = [...EXPERIENCE_ITEMS.map((i) => startYear(i.period)), ...EDUCATION_ITEMS.map((i) => startYear(i.year))]
+      .filter(Boolean);
+    return years.length ? Math.max(...years) - Math.min(...years) + 1 : 0;
+  }, []);
+
+  // Work and study become one chronological list, newest first, so the runway
+  // reads as a single journey rather than two disconnected blocks.
+  const RUNWAY_ITEMS = useMemo<RunwayItem[]>(() => {
+    const work = EXPERIENCE_ITEMS.map((item) => ({
+      id: `work-${item.company}-${item.role}`,
+      kind: "work" as const,
+      kicker: item.employmentType,
+      title: item.role,
+      subtitle: item.company,
+      meta: item.location,
+      period: item.period,
+      status: "Completed",
+      description: item.description,
+      tags: item.skills,
+      yearLabel: String(startYear(item.period)),
+      sortYear: startYear(item.period),
+    }));
+
+    const study = EDUCATION_ITEMS.map((item) => ({
+      id: `study-${item.degree}`,
+      kind: "study" as const,
+      kicker: "Education",
+      title: item.degree,
+      subtitle: item.institute,
+      period: item.year,
+      status: item.score,
+      tags: [],
+      yearLabel: String(startYear(item.year)),
+      score: scoreFromLabel(item.score),
+      sortYear: startYear(item.year),
+    }));
+
+    // Palette is assigned after sorting so colours run in visual order down the page.
+    return [...work, ...study]
+      .sort((a, b) => b.sortYear - a.sortYear)
+      .map((item, index) => ({ ...item, ...RUNWAY_PALETTES[index % RUNWAY_PALETTES.length] }));
+  }, []);
 
   return (
     <>
@@ -108,65 +320,58 @@ export default function About() {
 
       <section id="education" className="section-backplate b section-wrap px-5 sm:px-6 md:px-12">
         <div className="mx-auto max-w-6xl">
-          <motion.h2
+          <motion.div
             initial={{ opacity: 0, y: 22 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
+            className="max-w-2xl"
           >
-            Learning Runway
-          </motion.h2>
-          <div className="mt-6 grid gap-4">
-            {EXPERIENCE_ITEMS.map((item, index) => (
-              <motion.article
-                key={`${item.company}-${item.role}`}
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ delay: index * STAGGER.block, duration: DURATIONS.base, ease: EASE_STANDARD }}
-                className="surface rounded-[24px] p-5 md:p-6"
-              >
-                <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-                  <div className="min-w-0">
-                    <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/80">Experience</p>
-                    <h3 className="mt-2 text-2xl font-semibold tracking-tight text-white md:text-[2rem]">{item.role}</h3>
-                    <p className="mt-2 text-base text-white/78">
-                      {item.company} <span className="text-white/45">- {item.employmentType}</span>
-                    </p>
-                    <p className="mt-1 text-sm text-white/52">{item.period}</p>
-                    <p className="mt-1 text-sm text-white/52">{item.location}</p>
-                  </div>
-                  <div className="rounded-full border border-cyan-300/20 bg-cyan-400/[0.08] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">
-                    Completed
-                  </div>
-                </div>
-                <p className="mt-5 max-w-4xl text-base leading-8 text-[#9ca3af]">{item.description}</p>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {item.skills.map((skill) => (
-                    <span key={skill} className="impact-chip">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </motion.article>
-            ))}
-          </div>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {EDUCATION_ITEMS.map((item, index) => (
-              <motion.article
-                key={item.degree}
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ delay: index * STAGGER.block, duration: DURATIONS.base, ease: EASE_STANDARD }}
-                className="surface rounded-xl p-5"
-              >
-                <p className="text-sm text-white/55">{item.year}</p>
-                <h3 className="mt-2 text-lg font-medium">{item.degree}</h3>
-                <p className="mt-2 text-sm text-[#9ca3af]">{item.institute}</p>
-                <p className="mt-3 text-sm text-white/80">{item.score}</p>
-              </motion.article>
-            ))}
+            <p className="eyebrow-hand">
+              <span className="eyebrow-hand-underline">Learning Runway</span>
+            </p>
+            <h2 className="display-title mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl">
+              The path so far
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-white/60">
+              Where studying stopped being theory and turned into shipped work.
+            </p>
+
+            {/* Counts come straight from the runway data, so they cannot drift. */}
+            <div className="mt-6 flex flex-wrap items-center gap-2.5">
+              <span className="runway-stat">
+                <strong>{EXPERIENCE_ITEMS.length}</strong> role{EXPERIENCE_ITEMS.length === 1 ? "" : "s"}
+              </span>
+              <span className="runway-stat">
+                <strong>{EDUCATION_ITEMS.length}</strong> qualifications
+              </span>
+              <span className="runway-stat">
+                <strong>{RUNWAY_SPAN}</strong> years
+              </span>
+            </div>
+          </motion.div>
+
+          {/* One spine, one node per milestone. The lit portion tracks scroll,
+              so the runway draws itself as the reader moves down it. */}
+          <div ref={runwayRef} className="relative mt-10 pl-10 sm:pl-14">
+            <div aria-hidden="true" className="runway-spine absolute bottom-2 left-[1.306rem] top-2 w-[3px] sm:left-[1.806rem]" />
+            <motion.div
+              aria-hidden="true"
+              style={{ scaleY: spineScale }}
+              className="runway-spine-lit absolute bottom-2 left-[1.306rem] top-2 w-[3px] origin-top sm:left-[1.806rem]"
+            />
+            {/* Comet head pinned to the end of the drawn line. */}
+            <motion.span
+              aria-hidden="true"
+              style={{ top: sparkTop }}
+              className="runway-spark absolute left-[1.15rem] z-10 sm:left-[1.65rem]"
+            />
+
+            <ol className="space-y-4">
+              {RUNWAY_ITEMS.map((item, index) => (
+                <RunwayMilestone key={item.id} item={item} index={index} />
+              ))}
+            </ol>
           </div>
         </div>
       </section>
