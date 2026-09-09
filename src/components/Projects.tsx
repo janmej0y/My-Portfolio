@@ -2,10 +2,11 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import StaggerHeading from "@/components/StaggerHeading";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
+import { useSpotlight } from "@/hooks/useSpotlight";
 import { PROJECTS } from "@/lib/data";
 import { mergeProjects, type SyncedProject } from "@/lib/github-projects";
 import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
@@ -13,24 +14,34 @@ import type { Project, ProjectCategory } from "@/types/portfolio";
 
 const filters: ProjectCategory[] = ["all", "web", "app", "tools"];
 
-const styles: Record<Exclude<ProjectCategory, "all">, { ring: string; badge: string; glow: string; dot: string }> = {
+const styles: Record<
+  Exclude<ProjectCategory, "all">,
+  { ring: string; badge: string; glow: string; dot: string; accent: string; accentAlt: string }
+> = {
   web: {
     ring: "border-cyan-300/35",
     badge: "text-cyan-100",
     glow: "from-cyan-400/22 via-sky-300/10 to-transparent",
     dot: "bg-cyan-300",
+    // Drives the duotone tint, cursor spotlight and conic border on the card.
+    accent: "34 211 238",
+    accentAlt: "56 189 248",
   },
   app: {
     ring: "border-fuchsia-300/35",
     badge: "text-fuchsia-100",
     glow: "from-fuchsia-400/22 via-pink-300/10 to-transparent",
     dot: "bg-fuchsia-300",
+    accent: "217 70 239",
+    accentAlt: "244 114 182",
   },
   tools: {
     ring: "border-emerald-300/35",
     badge: "text-emerald-100",
     glow: "from-emerald-400/22 via-teal-300/10 to-transparent",
     dot: "bg-emerald-300",
+    accent: "45 212 191",
+    accentAlt: "34 197 94",
   },
 };
 
@@ -124,10 +135,13 @@ function SpotlightProjectCard({
 }) {
   const style = styles[project.category];
   const resultLine = project.resultLine ?? "Shipped with a cleaner product experience.";
+  const spotlight = useSpotlight<HTMLElement>();
 
   return (
     <motion.article
       layout
+      {...spotlight}
+      style={{ "--accent-rgb": style.accent, "--accent-alt-rgb": style.accentAlt } as CSSProperties}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
@@ -142,16 +156,16 @@ function SpotlightProjectCard({
         }
       }}
       aria-label={`View details for ${project.title}`}
-      className={`project-card project-spotlight group relative grid cursor-pointer overflow-hidden rounded-[32px] border ${style.ring} bg-[linear-gradient(180deg,rgba(7,12,24,0.96),rgba(3,8,18,0.92))] shadow-[0_30px_70px_rgba(2,6,23,0.4)] outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 lg:grid-cols-[1.15fr_1fr]`}
+      className={`project-card project-spotlight conic-border conic-border-always grain-surface spotlight-card crt-surface group relative grid cursor-pointer overflow-hidden rounded-[32px] border ${style.ring} bg-[linear-gradient(180deg,rgba(7,12,24,0.96),rgba(3,8,18,0.92))] shadow-[0_30px_70px_rgba(2,6,23,0.4)] outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 lg:grid-cols-[1.15fr_1fr]`}
     >
       <div className={`absolute inset-0 bg-gradient-to-br ${style.glow}`} />
 
-      <div className="relative min-h-[230px] overflow-hidden lg:min-h-[380px]">
+      <div className="duotone-wrap relative min-h-[230px] overflow-hidden lg:min-h-[380px]">
         <Image
           src={project.image}
           alt={project.title}
           fill
-          className="object-cover transition duration-700 group-hover:scale-[1.04]"
+          className="duotone clip-reveal-angled object-cover transition duration-700 group-hover:scale-[1.04]"
           sizes="(max-width: 1024px) 100vw, 55vw"
           priority
         />
@@ -216,10 +230,13 @@ function FeaturedProjectCard({
 }) {
   const style = styles[project.category];
   const resultLine = project.resultLine ?? "Shipped with a cleaner product experience.";
+  const spotlight = useSpotlight<HTMLElement>();
 
   return (
     <motion.article
       layout
+      {...spotlight}
+      style={{ "--accent-rgb": style.accent, "--accent-alt-rgb": style.accentAlt } as CSSProperties}
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
@@ -235,17 +252,17 @@ function FeaturedProjectCard({
         }
       }}
       aria-label={`View details for ${project.title}`}
-      className={`project-card group relative flex cursor-pointer flex-col overflow-hidden rounded-[30px] border ${style.ring} bg-[linear-gradient(180deg,rgba(7,12,24,0.96),rgba(3,8,18,0.92))] shadow-[0_24px_60px_rgba(2,6,23,0.34)] outline-none transition focus-visible:ring-2 focus-visible:ring-cyan-300/60`}
+      className={`project-card conic-border grain-surface spotlight-card group relative flex cursor-pointer flex-col overflow-hidden rounded-[30px] border ${style.ring} bg-[linear-gradient(180deg,rgba(7,12,24,0.96),rgba(3,8,18,0.92))] shadow-[0_24px_60px_rgba(2,6,23,0.34)] outline-none transition focus-visible:ring-2 focus-visible:ring-cyan-300/60`}
     >
       <div className={`absolute inset-0 bg-gradient-to-br ${style.glow}`} />
 
-      <div className="relative">
+      <div className="duotone-wrap relative">
         <Image
           src={project.image}
           alt={project.title}
           width={1200}
           height={900}
-          className="aspect-[16/9] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+          className="duotone clip-reveal aspect-[16/9] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
           sizes="(max-width: 768px) 100vw, 50vw"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,8,18,0.05),rgba(3,8,18,0.35)_52%,rgba(0,0,0,0.88))]" />
@@ -304,10 +321,13 @@ function CompactProjectCard({
 }) {
   const style = styles[project.category];
   const resultLine = project.resultLine ?? "Shipped with a cleaner product experience.";
+  const spotlight = useSpotlight<HTMLElement>();
 
   return (
     <motion.article
       layout
+      {...spotlight}
+      style={{ "--accent-rgb": style.accent, "--accent-alt-rgb": style.accentAlt } as CSSProperties}
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: DURATIONS.base, ease: EASE_STANDARD }}
@@ -323,15 +343,15 @@ function CompactProjectCard({
         }
       }}
       aria-label={`View details for ${project.title}`}
-      className="project-card group relative flex cursor-pointer flex-col overflow-hidden rounded-[24px] border border-white/12 bg-[linear-gradient(180deg,rgba(7,12,24,0.94),rgba(3,8,18,0.9))] shadow-[0_18px_44px_rgba(2,6,23,0.28)] outline-none transition hover:border-white/25 focus-visible:ring-2 focus-visible:ring-cyan-300/60"
+      className="project-card spotlight-card grain-surface group relative flex cursor-pointer flex-col overflow-hidden rounded-[24px] border border-white/12 bg-[linear-gradient(180deg,rgba(7,12,24,0.94),rgba(3,8,18,0.9))] shadow-[0_18px_44px_rgba(2,6,23,0.28)] outline-none transition hover:border-white/25 focus-visible:ring-2 focus-visible:ring-cyan-300/60"
     >
-      <div className="relative">
+      <div className="duotone-wrap relative">
         <Image
           src={project.image}
           alt={project.title}
           width={800}
           height={600}
-          className="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+          className="duotone clip-reveal aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-[1.04]"
           sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,8,18,0.05),rgba(3,8,18,0.3)_58%,rgba(0,0,0,0.8))]" />
@@ -603,7 +623,8 @@ export default function Projects() {
       : null;
 
   return (
-    <section id="projects" className="section-backplate b section-wrap px-5 sm:px-6 md:px-12">
+    <section id="projects" className="section-backplate b mesh-ground mesh-c section-wrap px-5 sm:px-6 md:px-12">
+        <span aria-hidden="true" className="section-rail">Work</span>
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -613,17 +634,17 @@ export default function Projects() {
           className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
         >
           <div className="max-w-3xl">
-            <p className="eyebrow-hand"><span className="eyebrow-hand-underline">Project Showcase</span></p>
+            <p className="eyebrow-hand"><span className="section-number mr-2 align-middle" aria-hidden="true" /><span className="eyebrow-hand-underline">Project Showcase</span></p>
             <StaggerHeading
               text="Selected work"
-              className="display-title mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl"
+              className="display-title text-gradient text-gradient-shimmer mt-3 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl"
             />
             <p className="mt-4 max-w-xl text-sm leading-7 text-white/60">
               {allProjects.length} projects, {liveCount} live. Open any card for the full breakdown.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2 lg:justify-end">
+          <div className="project-filter-row flex flex-wrap gap-2 lg:justify-end">
             {filters.map((filter) => {
               const count = filter === "all" ? allProjects.length : categoryCounts[filter] ?? 0;
               if (!count) return null;

@@ -233,13 +233,16 @@ body.portfolio-intro-active {
   opacity: 0.6;
 }
 
+/* inset:-200% made this 25x the viewport area, repainting fullscreen eight
+   times a second. A small tile translated a few pixels reads identically. */
 .bg-grain {
   position: absolute;
-  inset: -200%;
+  inset: -12%;
   background-image: radial-gradient(rgba(255, 255, 255, 0.08) 0.6px, transparent 0.6px);
   background-size: 3px 3px;
   opacity: 0.09;
   animation: grainShift 9s steps(8) infinite;
+  will-change: transform;
 }
 
 .linux-watermark {
@@ -326,17 +329,17 @@ body.portfolio-intro-active {
   opacity: 0.1;
 }
 
-.theme-bright .linux-watermark {
-  opacity: 0.11;
-  filter: grayscale(0.42) contrast(1.14) brightness(1.24);
-}
-
 .theme-bright body {
   color: #0f172a;
   background-image: radial-gradient(circle at 12% 10%, rgba(14, 165, 233, 0.18), transparent 34%),
     radial-gradient(circle at 86% 16%, rgba(6, 182, 212, 0.16), transparent 40%),
     radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.08), transparent 48%),
     linear-gradient(170deg, #f8fafc 0%, #eef6ff 42%, #edf2ff 100%);
+}
+
+.theme-bright .linux-watermark {
+  opacity: 0.11;
+  filter: grayscale(0.42) contrast(1.14) brightness(1.24);
 }
 
 .theme-bright .surface {
@@ -659,12 +662,14 @@ body.portfolio-intro-active {
   }
 }
 
+/* Travel must stay inside the element's overhang or the edges show through.
+   The tile is 3px, so a few pixels is all the shimmer needs. */
 @keyframes grainShift {
   0% {
     transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translate3d(10%, -8%, 0);
+    transform: translate3d(6px, -6px, 0);
   }
 }
 
@@ -1001,24 +1006,6 @@ body.portfolio-intro-active {
   background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.85), rgba(var(--accent-rgb), 0.12) 55%, transparent);
 }
 
-/* Stats sit on a shared baseline rule, each with its own accent tick. */
-.hero-stat {
-  position: relative;
-  padding-left: 0.85rem;
-}
-
-.hero-stat::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.35rem;
-  bottom: 0.35rem;
-  width: 2px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.9), rgba(var(--accent-rgb), 0.1));
-  transition: background 0.3s ease;
-}
-
 .hero-cta {
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
@@ -1036,10 +1023,6 @@ body.portfolio-intro-active {
 
 .theme-bright .hero-status span:last-child {
   color: #065f46 !important;
-}
-
-.theme-bright .hero-stat::before {
-  background: linear-gradient(180deg, rgba(14, 116, 144, 0.85), rgba(14, 116, 144, 0.1));
 }
 
 .theme-bright .hero-cta {
@@ -1325,27 +1308,6 @@ body.portfolio-intro-active {
   color: rgba(var(--accent-rgb), 0.95);
 }
 
-/* Score meter - track plus a scaleX-animated fill. */
-.runway-meter {
-  position: relative;
-  height: 3px;
-  width: 100%;
-  max-width: 13rem;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.runway-meter-fill {
-  display: block;
-  height: 100%;
-  width: 100%;
-  transform-origin: left center;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgb(var(--accent-rgb)), rgb(var(--accent-alt-rgb)));
-  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.45);
-}
-
 /* The card's own accent border, tinted by the per-item palette. */
 .runway-card {
   border-color: rgba(var(--accent-rgb), 0.16);
@@ -1360,10 +1322,6 @@ body.portfolio-intro-active {
 
 .theme-bright .runway-year {
   color: rgba(var(--accent-rgb), 0.12);
-}
-
-.theme-bright .runway-meter {
-  background: rgba(15, 23, 42, 0.12);
 }
 
 /* Header stat pills - small, factual, and the first colour the eye meets
@@ -1405,13 +1363,6 @@ body.portfolio-intro-active {
   .runway-card-active {
     border-color: rgba(var(--accent-rgb), 0.38);
     box-shadow: 0 16px 38px rgba(2, 6, 23, 0.34);
-  }
-}
-
-@media (max-width: 639px) {
-  /* Tighter gutter so cards keep their width on small screens. */
-  .runway-meter {
-    max-width: 9rem;
   }
 }
 
@@ -1700,9 +1651,41 @@ body.portfolio-intro-active {
   padding-bottom: 0.06em;
 }
 
+/* Each letter clips its own slide-up, so the gradient has to be painted on the
+   inner glyph. `background-attachment: fixed` makes every letter sample one
+   shared viewport-sized gradient instead of restarting per box - without it the
+   sweep resets on every character. */
+.hero-name.text-gradient {
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  color: #ffffff;
+}
+
+.hero-name.text-gradient .hero-letter > span {
+  background-image: linear-gradient(115deg, #ffffff 12%, rgb(var(--accent-rgb)) 42%, #a78bfa 62%, #ffffff 88%);
+  background-size: 100vw 100%;
+  background-attachment: fixed;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.theme-bright .hero-name.text-gradient {
+  color: #0f172a;
+}
+
+.theme-bright .hero-name.text-gradient .hero-letter > span {
+  background-image: linear-gradient(115deg, #0f172a 12%, #0e7490 45%, #6d28d9 68%, #0f172a 92%);
+}
+
 .hero-name {
   /* Optical trim so the oversized glyphs sit flush with the rule below. */
   margin-left: -0.055em;
+  /* Fluid rather than stepped: at 320px the fixed 3.4rem size left only ~10px
+     of slack, so the name could wrap mid-word on small phones. clamp scales it
+     against viewport width and never overflows. */
+  font-size: clamp(2.35rem, 11.2vw, 7.5rem);
 }
 
 .hero-locale {
@@ -1755,4 +1738,1084 @@ body.portfolio-intro-active {
   .hero-letter {
     overflow: visible;
   }
+}
+
+/* ==========================================================================
+   Decorative layer: gradient text, conic borders, mesh grounds, grain
+   ========================================================================== */
+
+/* ---------- 1. Gradient text ---------- */
+
+/* Clipped to the glyphs. The oversized background is what lets the shimmer
+   travel without the colours banding at the edges. */
+.text-gradient {
+  background-image: linear-gradient(
+    115deg,
+    #ffffff 12%,
+    rgb(var(--accent-rgb)) 42%,
+    #a78bfa 62%,
+    #ffffff 88%
+  );
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .text-gradient-shimmer {
+    animation: gradient-drift 9s ease-in-out infinite;
+  }
+}
+
+@keyframes gradient-drift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* A gradient-clipped heading loses its text shadow, so depth comes from a
+   blurred duplicate painted behind it instead. */
+.text-gradient-glow {
+  position: relative;
+}
+
+.text-gradient-glow::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: rgb(var(--accent-rgb));
+  opacity: 0.16;
+  filter: blur(26px);
+  pointer-events: none;
+}
+
+.theme-bright .text-gradient {
+  background-image: linear-gradient(115deg, #0f172a 12%, #0e7490 45%, #6d28d9 68%, #0f172a 92%);
+}
+
+.theme-bright .text-gradient-glow::after {
+  opacity: 0.1;
+}
+
+
+/* StaggerHeading splits text into per-letter inline-blocks, so a gradient on
+   the heading itself would restart inside every glyph box. Painting the inner
+   spans against a shared viewport-sized background keeps the sweep continuous. */
+.text-gradient span span {
+  background-image: inherit;
+  background-size: 100vw 100%;
+  background-attachment: fixed;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---------- 2. Rotating conic borders ---------- */
+
+/* The element paints a spinning conic gradient, then masks out everything but
+   a 1px ring - so the border animates without a wrapper element. */
+.conic-border {
+  position: relative;
+  isolation: isolate;
+}
+
+.conic-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--conic-angle, 0deg),
+    transparent 0deg,
+    rgb(var(--accent-rgb)) 70deg,
+    rgba(var(--accent-alt-rgb, var(--accent-rgb)), 0.9) 140deg,
+    transparent 220deg,
+    transparent 360deg
+  );
+  /* Mask keeps only the ring: fill minus content box. */
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.conic-border-always::before,
+.conic-border:hover::before {
+  opacity: 1;
+}
+
+@property --conic-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Spinning a conic gradient repaints the whole card, so it runs only while
+   the pointer is actually on one. Previously every card on the page span
+   continuously - roughly eighteen full-size repaints per frame. */
+@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
+  .conic-border:hover::before,
+  .conic-border-always:hover::before {
+    animation: conic-spin 6s linear infinite;
+  }
+}
+
+/* Touch devices get the ring without the animation. */
+@media (pointer: coarse) {
+  .conic-border::before {
+    animation: none;
+  }
+}
+
+@keyframes conic-spin {
+  to {
+    --conic-angle: 360deg;
+  }
+}
+
+/* Radial progress ring, for scores that deserve more than a flat bar. */
+.conic-meter {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 999px;
+  background: conic-gradient(
+    rgb(var(--accent-rgb)) calc(var(--value, 0) * 1%),
+    rgba(255, 255, 255, 0.09) 0
+  );
+  transition: background 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.conic-meter::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 999px;
+  background: rgba(9, 12, 20, 0.96);
+}
+
+.conic-meter > * {
+  position: relative;
+  z-index: 1;
+}
+
+.theme-bright .conic-meter::before {
+  background: #ffffff;
+}
+
+.theme-bright .conic-meter {
+  background: conic-gradient(
+    rgb(var(--accent-rgb)) calc(var(--value, 0) * 1%),
+    rgba(15, 23, 42, 0.12) 0
+  );
+}
+
+/* ---------- 3. Mesh gradient grounds ---------- */
+
+/* Several soft colour points blended in one layer. Each section gets its own
+   mix so the page moves through a palette instead of one flat wash. */
+.mesh-ground::before {
+  background-image:
+    radial-gradient(at 18% 22%, rgba(var(--mesh-1, 56 189 248), 0.16) 0px, transparent 52%),
+    radial-gradient(at 82% 14%, rgba(var(--mesh-2, 167 139 250), 0.14) 0px, transparent 50%),
+    radial-gradient(at 62% 78%, rgba(var(--mesh-3, 45 212 191), 0.12) 0px, transparent 48%),
+    radial-gradient(at 8% 84%, rgba(var(--mesh-4, 244 114 182), 0.1) 0px, transparent 46%) !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mesh-ground::before {
+    animation: mesh-drift 24s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes mesh-drift {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.08) translate3d(0, -1.5%, 0);
+  }
+}
+
+.theme-bright .mesh-ground::before {
+  opacity: 0.75;
+}
+
+
+/* Per-section mesh palettes, applied alongside .mesh-ground. */
+.mesh-a { --mesh-1: 56 189 248; --mesh-2: 167 139 250; --mesh-3: 45 212 191; --mesh-4: 244 114 182; }
+.mesh-b { --mesh-1: 167 139 250; --mesh-2: 217 70 239; --mesh-3: 56 189 248; --mesh-4: 251 146 60; }
+.mesh-c { --mesh-1: 45 212 191; --mesh-2: 34 197 94; --mesh-3: 56 189 248; --mesh-4: 167 139 250; }
+.mesh-d { --mesh-1: 251 146 60; --mesh-2: 244 63 94; --mesh-3: 167 139 250; --mesh-4: 56 189 248; }
+
+/* ---------- 5. Grain on gradient surfaces ---------- */
+
+/* Tiny inline SVG turbulence, tiled. Keeps card surfaces from reading as flat
+   digital gradients without costing a network request. */
+.grain-surface {
+  position: relative;
+}
+
+.grain-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
+  background-size: 140px 140px;
+}
+
+.theme-bright .grain-surface::after {
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+}
+
+/* ---------- 4. Bento grid ---------- */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+@media (min-width: 768px) {
+  .bento-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* Asymmetric spans are what separate a bento from a plain grid. */
+  .bento-wide {
+    grid-column: span 2;
+  }
+
+  .bento-tall {
+    grid-row: span 2;
+  }
+
+  .bento-hero {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
+
+.bento-cell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(var(--accent-rgb), 0.18);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02));
+  transition: border-color 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+@media (pointer: fine) {
+  .bento-cell:hover {
+    transform: translateY(-4px);
+    border-color: rgba(var(--accent-rgb), 0.42);
+    box-shadow: 0 20px 46px rgba(2, 6, 23, 0.38);
+  }
+}
+
+.theme-bright .bento-cell {
+  border-color: rgba(var(--accent-rgb), 0.3);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.88));
+}
+
+/* ---------- 6. Scramble ---------- */
+
+/* Characters still resolving are dimmed and tinted, so the decode reads as
+   deliberate rather than as a font-loading glitch. */
+.scramble-char-pending {
+  color: rgb(var(--accent-rgb));
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-gradient-shimmer,
+  .mesh-ground::before,
+  .conic-border::before {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Tier 1: cursor spotlight, clip-path reveals, duotone, heading glow
+   ========================================================================== */
+
+/* ---------- Cursor spotlight on cards ---------- */
+
+/* --spot-x / --spot-y are written by a pointer handler; both default to the
+   card centre so a card that never sees the cursor still looks correct. */
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  background: radial-gradient(
+    circle 260px at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(var(--accent-rgb), 0.16),
+    transparent 70%
+  );
+}
+
+@media (pointer: fine) {
+  .spotlight-card:hover::before {
+    opacity: 1;
+  }
+}
+
+/* ---------- Clip-path reveals ---------- */
+
+/* Wipes the image in from the bottom instead of fading it. */
+.clip-reveal {
+  animation: clip-wipe 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes clip-wipe {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Angled variant for hero-scale imagery. */
+.clip-reveal-angled {
+  animation: clip-wipe-angled 1.05s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes clip-wipe-angled {
+  from {
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+  }
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+/* ---------- Duotone project imagery ---------- */
+
+/* Screenshots arrive in mixed palettes and formats. Desaturating them and
+   washing the card's accent over the top makes the grid read as one set;
+   hover restores the real colours. */
+.duotone {
+  position: relative;
+  filter: grayscale(1) contrast(1.06) brightness(0.92);
+  transition: filter 0.55s ease;
+}
+
+.duotone-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: color;
+  opacity: 0.62;
+  transition: opacity 0.55s ease;
+  background: linear-gradient(
+    145deg,
+    rgb(var(--accent-rgb)),
+    rgb(var(--accent-alt-rgb, var(--accent-rgb)))
+  );
+}
+
+@media (pointer: fine) {
+  .group:hover .duotone {
+    filter: grayscale(0) contrast(1) brightness(1);
+  }
+
+  .group:hover .duotone-wrap::after {
+    opacity: 0;
+  }
+}
+
+/* Touch has no hover, so the tint sits lighter and the image stays readable. */
+@media (pointer: coarse) {
+  .duotone {
+    filter: grayscale(0.35) contrast(1.02);
+  }
+
+  .duotone-wrap::after {
+    opacity: 0.3;
+  }
+}
+
+/* ---------- Heading glow ---------- */
+
+/* Gradient-clipped text cannot take a text-shadow, so headings that use the
+   gradient get their depth from .text-gradient-glow instead. This is for the
+   plain-coloured headings. */
+.heading-glow {
+  text-shadow: 0 0 28px rgba(var(--accent-rgb), 0.28), 0 2px 12px rgba(2, 6, 23, 0.5);
+}
+
+.theme-bright .heading-glow {
+  text-shadow: 0 0 22px rgba(var(--accent-rgb), 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clip-reveal,
+  .clip-reveal-angled {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Tier 2: modern CSS - balance, scroll-driven animation, colour functions
+   ========================================================================== */
+
+/* ---------- text-wrap ---------- */
+
+/* Balance evens out short headings; pretty only fixes the last line, which is
+   what long body copy actually needs. */
+h1,
+h2,
+h3,
+.display-title {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+/* ---------- Native scroll-driven animation ---------- */
+
+/* Progressive enhancement: only browsers that support scroll timelines run
+   these, and everything already renders correctly without them. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Cards rise as they enter, driven by the scroller rather than JS. */
+    .sda-rise {
+      animation: sda-rise-frames linear both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 32%;
+    }
+
+    /* Section grounds drift for the whole time they are on screen. */
+    .sda-drift {
+      animation: sda-drift-frames linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+
+    /* A reading-progress bar with no scroll listener at all. */
+    .sda-progress {
+      transform-origin: left center;
+      animation: sda-scale-x linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+}
+
+@keyframes sda-rise-frames {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sda-drift-frames {
+  from {
+    transform: translateY(-1.5%);
+  }
+  to {
+    transform: translateY(1.5%);
+  }
+}
+
+@keyframes sda-scale-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ---------- color-mix derived states ---------- */
+
+/* States derived from one accent rather than hand-picked per component, so a
+   palette change propagates instead of needing four edits. */
+@supports (color: color-mix(in oklab, red, blue)) {
+  .accent-tint-soft {
+    background: color-mix(in oklab, rgb(var(--accent-rgb)) 10%, transparent);
+    border-color: color-mix(in oklab, rgb(var(--accent-rgb)) 32%, transparent);
+  }
+
+  .accent-tint-strong {
+    background: color-mix(in oklab, rgb(var(--accent-rgb)) 22%, transparent);
+    border-color: color-mix(in oklab, rgb(var(--accent-rgb)) 55%, transparent);
+  }
+
+  /* Mixing toward the page ground keeps text legible on tinted surfaces
+     without picking a second colour by hand. */
+  .accent-text-quiet {
+    color: color-mix(in oklab, rgb(var(--accent-rgb)) 72%, #ffffff);
+  }
+
+  .theme-bright .accent-text-quiet {
+    color: color-mix(in oklab, rgb(var(--accent-rgb)) 78%, #0f172a);
+  }
+}
+
+/* ---------- :has() ---------- */
+
+/* Cards carrying a live link get a marker without threading a prop through
+   the component for it. */
+.project-card:has(a[data-cursor="Live"]) .project-live-dot {
+  opacity: 1;
+}
+
+/* A filter row with nothing active dims its own count badges. */
+.project-filter-row:not(:has(.project-filter-active)) .project-filter-count {
+  opacity: 0.4;
+}
+
+/* ---------- Focus visibility ---------- */
+
+/* Keyboard focus only - clicking a card should not draw a ring. */
+:where(a, button, [role="button"], [tabindex]):focus-visible {
+  outline: 2px solid rgb(var(--accent-rgb));
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ==========================================================================
+   Tier 3: editorial numbering, vertical labels, stroke draw, CRT
+   ========================================================================== */
+
+/* ---------- Section numbering ---------- */
+
+/* Counter lives on the page shell so numbers follow document order and stay
+   correct if sections are reordered. */
+.section-counter {
+  counter-reset: section-index;
+}
+
+/* Increment on the numbered eyebrow itself, not on every backplate - only
+   four sections display a number, so counting all eight would print a
+   non-sequential 01, 02, 04, 06. */
+.section-counter .section-number {
+  counter-increment: section-index;
+}
+
+.section-number::before {
+  content: "0" counter(section-index);
+  font-family: var(--font-display), "Trebuchet MS", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  color: rgba(var(--accent-rgb), 0.75);
+}
+
+/* ---------- Vertical edge labels ---------- */
+
+/* Rotated rail label pinned to the section edge. Hidden below xl - there is no
+   gutter to hold it once the layout narrows. */
+.section-rail {
+  position: absolute;
+  left: 0.75rem;
+  top: 6rem;
+  display: none;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.24);
+  pointer-events: none;
+  user-select: none;
+}
+
+.section-rail::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 3.5rem;
+  margin: 0.85rem auto 0;
+  background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.55), transparent);
+}
+
+@media (min-width: 1280px) {
+  .section-rail {
+    display: block;
+  }
+}
+
+.theme-bright .section-rail {
+  color: rgba(15, 23, 42, 0.3);
+}
+
+/* ---------- SVG stroke draw ---------- */
+
+.stroke-draw path,
+.stroke-draw line {
+  stroke-dasharray: var(--dash, 240);
+  stroke-dashoffset: var(--dash, 240);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .stroke-draw path,
+    .stroke-draw line {
+      animation: stroke-draw-frames linear both;
+      animation-timeline: view();
+      animation-range: entry 15% cover 45%;
+    }
+  }
+}
+
+/* Without scroll timelines the line still draws, just on a plain delay. */
+@supports not (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .stroke-draw path,
+    .stroke-draw line {
+      animation: stroke-draw-frames 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+  }
+}
+
+@keyframes stroke-draw-frames {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stroke-draw path,
+  .stroke-draw line {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- Cyber theme: CRT treatment ---------- */
+
+/* The cyber theme was only a recolour; scanlines and a phosphor flicker give
+   it an identity of its own. */
+.theme-cyber .crt-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.4;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.16) 3px,
+    rgba(0, 0, 0, 0.16) 4px
+  );
+}
+
+.theme-cyber .crt-text {
+  text-shadow: 0 0 6px rgba(var(--accent-rgb), 0.65), 0 0 18px rgba(var(--accent-rgb), 0.3);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .theme-cyber .crt-flicker {
+    animation: crt-flicker-frames 4.5s steps(24) infinite;
+  }
+}
+
+@keyframes crt-flicker-frames {
+  0%,
+  96%,
+  100% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0.86;
+  }
+  98% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0.92;
+  }
+}
+
+/* ==========================================================================
+   Performance: mobile and low-power budgets
+   ========================================================================== */
+
+/* Touch devices are usually the weakest hardware and never see hover effects.
+   Backdrop-filter is the single most expensive property here - it re-rasterises
+   everything behind the element on every frame - so it comes off first. */
+@media (pointer: coarse), (max-width: 900px) {
+  .surface,
+  .cert-card,
+  .project-card,
+  .bento-cell {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  /* Mesh grounds are large blurred paint areas; the drift keeps them dirty. */
+  .mesh-ground::before {
+    animation: none;
+  }
+
+  /* Grain is a full-viewport overlay for a texture nobody sees on a phone. */
+  .bg-grain {
+    display: none;
+  }
+
+  /* Per-card grain: keep the texture, drop nothing - it is a static paint. */
+
+  /* Sheen and spotlight are hover-only anyway; make sure they never composite. */
+  .cert-sheen,
+  .spotlight-card::before {
+    display: none;
+  }
+
+  /* The heading glow duplicate is a second blurred text render. */
+  .text-gradient-glow::after {
+    display: none;
+  }
+}
+
+/* Small screens: shrink the biggest blur radii. Blur cost scales with radius
+   and area, and these are the largest elements on the page. */
+@media (max-width: 900px) {
+  .aurora {
+    filter: blur(42px);
+  }
+
+  .aurora-one,
+  .aurora-two {
+    width: 62vw;
+    height: 62vw;
+  }
+}
+
+/* Anything offscreen should not be painting at all. */
+@media (prefers-reduced-motion: no-preference) {
+  .runway-node-active::after,
+  .conic-border::before,
+  .cert-sheen {
+    /* Hint the compositor these are transient layers, not permanent ones. */
+    will-change: auto;
+  }
+}
+
+/* Save-Data / low-end: strip every ambient animation. */
+@media (prefers-reduced-data: reduce) {
+  .aurora,
+  .bg-grain,
+  .mesh-ground::before,
+  .text-gradient-shimmer,
+  .arsenal-marquee-track {
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   Responsive safety net
+   ========================================================================== */
+
+/* Nothing may push the page wider than the viewport. Horizontal overflow is
+   what makes a mobile page feel broken even when everything else is right. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* Media defaults to shrinking rather than forcing its intrinsic width. */
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Long unbroken strings - URLs, repo names from the GitHub sync - are a common
+   overflow source in cards with narrow columns. */
+p,
+li,
+h1,
+h2,
+h3,
+dd,
+dt {
+  overflow-wrap: break-word;
+}
+
+/* Tap targets: anything interactive needs to clear roughly 44px. */
+@media (pointer: coarse) {
+  a,
+  button,
+  [role="button"] {
+    min-height: 40px;
+  }
+
+  /* Filter pills and chips are the smallest hit areas on the page. */
+  .project-filter {
+    min-height: 42px;
+    padding-inline: 1rem;
+  }
+}
+
+/* Fold the runway's left gutter on the narrowest screens - 2.5rem of padding
+   plus the spine leaves too little room for card text at 320px. */
+@media (max-width: 380px) {
+  .runway-year {
+    display: none;
+  }
+
+  .conic-meter {
+    width: 3.6rem;
+    height: 3.6rem;
+  }
+}
+
+/* ==========================================================================
+   Scroll smoothness
+   ========================================================================== */
+
+/* content-visibility skips offscreen work, but a single fixed intrinsic size
+   for every section makes the scrollbar jump as real heights resolve. Sections
+   differ enough in length to be worth separate estimates. */
+#about {
+  contain-intrinsic-size: auto 620px;
+}
+
+#education,
+#projects {
+  contain-intrinsic-size: auto 1400px;
+}
+
+#skills,
+#certifications {
+  contain-intrinsic-size: auto 900px;
+}
+
+#contact {
+  contain-intrinsic-size: auto 700px;
+}
+
+/* Promote only what actually animates, and only while it animates. Permanent
+   will-change on many elements costs more memory than it saves in paint. */
+.aurora,
+.bg-grid {
+  will-change: transform;
+  contain: paint;
+}
+
+/* Cards are self-contained: their paint and layout cannot affect siblings, so
+   the browser can skip re-checking them when something elsewhere changes. */
+.project-card,
+.cert-card,
+.runway-card,
+.bento-cell {
+  contain: layout paint style;
+}
+
+/* Ambient hero loops. These previously ran as Framer rAF loops on the main
+   thread; as CSS keyframes on transform/opacity they run on the compositor. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-caret {
+    animation: hero-caret-blink 0.9s linear infinite;
+  }
+
+  .hero-scroll-dot {
+    animation: hero-scroll-travel 1.9s ease-in-out infinite;
+  }
+
+  .hero-float {
+    animation: hero-float-frames 4.6s ease-in-out infinite;
+  }
+}
+
+@keyframes hero-caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-scroll-travel {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(300%);
+  }
+}
+
+@keyframes hero-float-frames {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* ==========================================================================
+   Entrance loader
+   ========================================================================== */
+
+/* The loader is always dark, whatever theme the site is in - it sits over the
+   page before the theme is visible, so it defines its own colours outright. */
+.portfolio-loader {
+  color-scheme: dark;
+}
+
+.loader-wordmark {
+  margin: 0;
+  font-size: clamp(0.95rem, 3.4vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em; /* balances the trailing letterspace */
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.loader-subtitle {
+  margin: 0;
+  font-size: clamp(0.6rem, 2.2vw, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.loader-track {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.loader-track-fill {
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(34, 211, 238), rgb(167, 139, 250));
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.7);
+}
+
+.loader-count {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Shown only when WebGL is unavailable. */
+.loader-fallback-mark {
+  font-size: clamp(7rem, 34vw, 18rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  background-image: linear-gradient(150deg, #22d3ee, #a78bfa 55%, #d946ef);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* The loader owns its own palette, so the bright theme must not repaint it. */
+.theme-bright .portfolio-loader .loader-wordmark {
+  color: #ffffff !important;
+}
+
+.theme-bright .portfolio-loader .loader-subtitle,
+.theme-bright .portfolio-loader .loader-count {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Hero stat row: always one line, all four tiles identical.
+   1fr columns plus minmax(0,...) lets them shrink evenly instead of the widest
+   number forcing its tile larger and pushing the last one to a new row. */
+.hero-stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+@media (min-width: 640px) {
+  .hero-stat-row {
+    gap: 0.75rem;
+  }
+}
+
+/* Equal height regardless of label length. */
+.hero-stat-row > .bento-cell {
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 4.6rem;
+  padding: 0.6rem 0.55rem;
+}
+
+@media (min-width: 640px) {
+  .hero-stat-row > .bento-cell {
+    min-height: 5.25rem;
+    padding: 0.8rem 0.75rem;
+  }
+}
+
+/* "Internships" is long enough to wrap at four-up on a phone; shrink the label
+   rather than letting the tile grow taller than its neighbours. */
+.hero-stat-row dt {
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 480px) {
+  .hero-stat-row dt {
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+  }
+}
+
+.hero-stat-row dd {
+  font-size: clamp(1.2rem, 4.4vw, 1.75rem);
+  line-height: 1.05;
 }

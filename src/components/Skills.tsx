@@ -3,6 +3,8 @@
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { CSSProperties, useMemo, useRef, useState } from "react";
+import ScrambleText from "@/components/ScrambleText";
+import { useSpotlight } from "@/hooks/useSpotlight";
 import { CERTIFICATIONS, SKILL_GROUPS } from "@/lib/data";
 import type { Certification, CertificationField, Skill, SkillGroup } from "@/types/portfolio";
 import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
@@ -47,10 +49,12 @@ function CertificateCard({ cert, index }: { cert: Certification; index: number }
   const ref = useRef<HTMLElement | null>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
   const grade = CERT_FIELDS[cert.field];
+  const spotlight = useSpotlight<HTMLElement>();
 
   return (
     <motion.article
       ref={ref}
+      {...spotlight}
       initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 28, scale: 0.97 }}
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : undefined}
       transition={{
@@ -65,7 +69,7 @@ function CertificateCard({ cert, index }: { cert: Certification; index: number }
           "--accent-alt-rgb": grade.accentAlt,
         } as CSSProperties
       }
-      className="cert-card surface group relative flex h-full flex-col overflow-hidden rounded-[20px] p-6 pb-9"
+      className="cert-card surface conic-border grain-surface spotlight-card group relative flex h-full flex-col overflow-hidden rounded-[20px] p-6 pb-9"
     >
       {/* Sheen sweeps across on hover; purely decorative. */}
       <span aria-hidden="true" className="cert-sheen" />
@@ -383,7 +387,8 @@ export default function Skills() {
         </div>
       </section>
 
-      <section id="certifications" className="section-backplate a section-wrap px-5 pt-0 sm:px-6 md:px-12">
+      <section id="certifications" className="section-backplate a mesh-ground mesh-d section-wrap px-5 pt-0 sm:px-6 md:px-12">
+        <span aria-hidden="true" className="section-rail">Proof</span>
         <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -393,8 +398,12 @@ export default function Skills() {
             className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
           >
             <div>
-              <p className="eyebrow-hand"><span className="eyebrow-hand-underline">Proof Stack</span></p>
-              <h2 className="display-title mt-3 text-4xl font-semibold tracking-tight">Certificates</h2>
+              <p className="eyebrow-hand"><span className="section-number mr-2 align-middle" aria-hidden="true" /><span className="eyebrow-hand-underline">Proof Stack</span></p>
+              <ScrambleText
+                as="h2"
+                text="Certificates"
+                className="display-title text-gradient text-gradient-shimmer mt-3 block text-4xl font-semibold tracking-tight"
+              />
               {/* Legend makes the colour grade readable instead of decorative. */}
               <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
                 {certFieldLegend.map((entry) => (

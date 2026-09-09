@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { MouseEvent, useMemo, useRef } from "react";
+import { CSSProperties, MouseEvent, useMemo, useRef } from "react";
 import { TypeAnimation } from "react-type-animation";
 import GitHubStatsCard from "@/components/GitHubStatsCard";
 import MagneticButton from "@/components/MagneticButton";
@@ -10,6 +10,9 @@ import { DURATIONS, EASE_STANDARD } from "@/lib/motion";
 
 /** Rendered per letter so the name can rise into place on load. */
 const NAME = "JANMEJOY";
+
+/** One accent per stat tile, so the bento row carries colour of its own. */
+const HERO_STAT_ACCENTS = ["34 211 238", "45 212 191", "167 139 250", "251 146 60"];
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -68,7 +71,7 @@ export default function Hero() {
       id="hero"
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      className="hero-shell relative flex min-h-[94svh] items-center overflow-hidden px-5 pb-20 pt-24 sm:min-h-screen sm:px-6 md:px-12 md:pb-16 md:pt-28"
+      className="hero-shell relative flex min-h-[94svh] items-center overflow-hidden px-5 pb-16 pt-24 sm:min-h-screen sm:px-6 md:px-12 md:pb-14 md:pt-28"
     >
       {/* Single warm glow anchored behind the name, plus a cool counterweight.
           The old build had three orbs pulling attention in three directions. */}
@@ -130,7 +133,10 @@ export default function Hero() {
 
           {/* The name is the anchor: oversized, tight, and clipped per letter so
               the reveal reads as one motion rather than eight separate fades. */}
-          <h1 className="hero-name display-title mt-2 flex flex-wrap text-[3.4rem] font-semibold leading-[0.9] tracking-[-0.045em] text-white sm:text-[5.4rem] lg:text-[7.5rem]">
+          <h1
+            data-text={NAME}
+            className="hero-name text-gradient text-gradient-glow display-title mt-2 flex flex-nowrap font-semibold leading-[0.9] tracking-[-0.045em]"
+          >
             <span className="sr-only">{NAME}</span>
             {Array.from(NAME).map((char, index) => (
               <span key={`${char}-${index}`} aria-hidden="true" className="hero-letter">
@@ -168,11 +174,11 @@ export default function Hero() {
               cursor={false}
               className="inline-block"
             />
-            <motion.span
+            {/* CSS keyframes rather than a Framer loop: these run forever, and
+                on the compositor they cost nothing on the main thread. */}
+            <span
               aria-hidden="true"
-              className="ml-1.5 inline-block h-[0.95em] w-[3px] rounded-full bg-cyan-300 align-middle"
-              animate={shouldReduceMotion ? undefined : { opacity: [1, 0, 1] }}
-              transition={shouldReduceMotion ? undefined : { duration: 0.9, repeat: Infinity, ease: "linear" }}
+              className="hero-caret ml-1.5 inline-block h-[0.95em] w-[3px] rounded-full bg-cyan-300 align-middle"
             />
           </motion.h2>
 
@@ -209,23 +215,47 @@ export default function Hero() {
             </MagneticButton>
           </motion.div>
 
-          {/* Stats sit on a bare baseline rule now - the boxed strip was reading
-              as a fifth competing panel next to the card. */}
+          {/* Stats and the scroll cue share one row, so the cue trails the cards
+              instead of floating over them. */}
+          <div className="mt-11 flex flex-wrap items-center gap-x-5 gap-y-4">
           <motion.dl
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.94, duration: DURATIONS.base, ease: EASE_STANDARD }}
-            className="mt-11 grid max-w-xl grid-cols-2 gap-x-6 gap-y-6 border-t border-white/10 pt-6 sm:grid-cols-4"
+            className="hero-stat-row max-w-xl flex-1"
           >
-            {heroStats.map((stat) => (
-              <div key={stat.label} className="hero-stat">
-                <dd className="display-title text-3xl font-semibold tabular-nums text-white sm:text-[2.1rem]">
+            {heroStats.map((stat, index) => (
+              <div
+                key={stat.label}
+                className="bento-cell grain-surface"
+                style={{ "--accent-rgb": HERO_STAT_ACCENTS[index % HERO_STAT_ACCENTS.length] } as CSSProperties}
+              >
+                <dd className="display-title relative font-semibold tabular-nums text-white">
                   {stat.value}
                 </dd>
-                <dt className="mt-1 text-[10px] uppercase tracking-[0.16em] text-white/42">{stat.label}</dt>
+                <dt className="relative mt-1 font-semibold uppercase text-white/42">{stat.label}</dt>
               </div>
             ))}
           </motion.dl>
+
+          {/* Trails the cards on the same row, with the rail running downward to
+              point at the content below. */}
+          <motion.a
+            href="#about"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.1, duration: DURATIONS.base, ease: EASE_STANDARD }}
+            className="group inline-flex shrink-0 flex-col items-center gap-2"
+            aria-label="Scroll to explore"
+          >
+            <span className="whitespace-nowrap text-[10px] uppercase tracking-[0.22em] text-white/38 transition-colors group-hover:text-white/70">
+              Scroll to explore
+            </span>
+            <span aria-hidden="true" className="relative h-9 w-px overflow-hidden bg-white/15">
+              <span className="hero-scroll-dot absolute inset-x-0 top-0 h-3 bg-gradient-to-b from-transparent to-cyan-300" />
+            </span>
+          </motion.a>
+          </div>
         </div>
 
         <motion.div
@@ -235,35 +265,11 @@ export default function Hero() {
           transition={{ delay: 0.5, duration: DURATIONS.base, ease: EASE_STANDARD }}
           className="relative mx-auto w-full max-w-[300px] lg:mx-0"
         >
-          <motion.div
-            animate={shouldReduceMotion ? undefined : { y: [0, -8, 0] }}
-            transition={shouldReduceMotion ? undefined : { duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
-          >
+          <div className="hero-float">
             <GitHubStatsCard />
-          </motion.div>
+          </div>
         </motion.div>
       </motion.div>
-
-      {/* Scroll cue: a dot travels down the rail instead of a static caption. */}
-      <motion.a
-        href="#about"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.1, duration: DURATIONS.base, ease: EASE_STANDARD }}
-        className="group absolute bottom-5 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
-        aria-label="Scroll to explore"
-      >
-        <span className="text-[10px] uppercase tracking-[0.22em] text-white/38 transition-colors group-hover:text-white/70">
-          Scroll to explore
-        </span>
-        <span aria-hidden="true" className="relative h-9 w-px overflow-hidden bg-white/15">
-          <motion.span
-            className="absolute inset-x-0 top-0 h-3 bg-gradient-to-b from-transparent to-cyan-300"
-            animate={shouldReduceMotion ? undefined : { y: ["-100%", "300%"] }}
-            transition={shouldReduceMotion ? undefined : { duration: 1.9, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </span>
-      </motion.a>
     </section>
   );
 }

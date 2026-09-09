@@ -5,6 +5,7 @@ import Image from "next/image";
 import { CSSProperties, MouseEvent, useMemo, useRef } from "react";
 import { EDUCATION_ITEMS, EXPERIENCE_ITEMS } from "@/lib/data";
 import { DURATIONS, EASE_STANDARD, STAGGER } from "@/lib/motion";
+import ScrambleText from "@/components/ScrambleText";
 import StaggerHeading from "@/components/StaggerHeading";
 
 /** A milestone on the runway - work and study share one shape so they can interleave. */
@@ -94,7 +95,7 @@ function RunwayMilestone({ item, index }: { item: RunwayItem; index: number }) {
       </span>
 
       <article
-        className={`runway-card surface relative overflow-hidden rounded-[22px] p-5 md:p-6 ${
+        className={`runway-card surface grain-surface relative overflow-hidden rounded-[22px] p-5 md:p-6 ${
           active ? "runway-card-active" : ""
         }`}
       >
@@ -127,25 +128,22 @@ function RunwayMilestone({ item, index }: { item: RunwayItem; index: number }) {
           <p className="relative mt-4 text-sm leading-7 text-white/58">{item.description}</p>
         ) : null}
 
-        {/* Charts the score parsed out of the raw label. Grows on scroll-in
-            so it lands with the card rather than before it. */}
+        {/* Radial meter: the ring fills to the parsed score once in view. */}
         {typeof item.score === "number" ? (
-          <div className="relative mt-4 flex items-center gap-3">
-            <div className="runway-meter">
-              <motion.span
-                className="runway-meter-fill"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: item.score / 100 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{
-                  delay: index * STAGGER.block + 0.15,
-                  duration: DURATIONS.slow,
-                  ease: EASE_STANDARD,
-                }}
-              />
+          <div className="relative mt-4 flex items-center gap-3.5">
+            <div
+              className="conic-meter"
+              style={{ "--value": active ? item.score : 0 } as CSSProperties}
+              role="img"
+              aria-label={`Score ${item.score.toFixed(1)} percent`}
+            >
+              <span className="font-display text-[13px] font-semibold tabular-nums text-white">
+                {Math.round(item.score)}
+                <span className="text-[9px] text-white/50">%</span>
+              </span>
             </div>
-            <span className="font-display text-[11px] tabular-nums text-white/45">
-              {item.score.toFixed(1)}%
+            <span className="text-[11px] uppercase tracking-[0.14em] text-white/45">
+              {item.kind === "study" ? "Result" : "Score"}
             </span>
           </div>
         ) : null}
@@ -242,7 +240,8 @@ export default function About() {
 
   return (
     <>
-      <section id="about" className="section-backplate a section-wrap px-5 pb-6 pt-4 sm:px-6 md:px-12">
+      <section id="about" className="section-backplate a mesh-ground mesh-a section-wrap px-5 pb-6 pt-4 sm:px-6 md:px-12">
+        <span aria-hidden="true" className="section-rail">About</span>
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -277,7 +276,7 @@ export default function About() {
           </div>
 
           <div className="surface rounded-2xl p-7 md:p-9">
-            <p className="eyebrow-hand"><span className="eyebrow-hand-underline">Origin Story</span></p>
+            <p className="eyebrow-hand"><span className="section-number mr-2 align-middle" aria-hidden="true" /><span className="eyebrow-hand-underline">Origin Story</span></p>
             <div className="mt-4">
               <StaggerHeading
                 as="h3"
@@ -318,7 +317,8 @@ export default function About() {
         </motion.div>
       </section>
 
-      <section id="education" className="section-backplate b section-wrap px-5 sm:px-6 md:px-12">
+      <section id="education" className="section-backplate b mesh-ground mesh-b section-wrap px-5 sm:px-6 md:px-12">
+        <span aria-hidden="true" className="section-rail">Experience</span>
         <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 22 }}
@@ -328,11 +328,13 @@ export default function About() {
             className="max-w-2xl"
           >
             <p className="eyebrow-hand">
-              <span className="eyebrow-hand-underline">Learning Runway</span>
+              <span className="section-number mr-2 align-middle" aria-hidden="true" /><span className="eyebrow-hand-underline">Learning Runway</span>
             </p>
-            <h2 className="display-title mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl">
-              The path so far
-            </h2>
+            <ScrambleText
+              as="h2"
+              text="The path so far"
+              className="display-title text-gradient text-gradient-shimmer mt-3 block text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl"
+            />
             <p className="mt-4 text-sm leading-7 text-white/60">
               Where studying stopped being theory and turned into shipped work.
             </p>

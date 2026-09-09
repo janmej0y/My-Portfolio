@@ -17,6 +17,8 @@ export default function HomePageClient() {
     <>
       <CommandPalette />
       <motion.main
+        // Counter root: section numbers increment in document order.
+        className="section-counter"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: DURATIONS.slow, ease: EASE_STANDARD }}

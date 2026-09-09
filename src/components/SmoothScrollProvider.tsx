@@ -13,6 +13,15 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
 
     const touchDevice = window.matchMedia("(pointer: coarse)").matches;
 
+    // syncTouch hijacks native touch scrolling. On weak hardware that costs
+    // more than it gives - the browser's own scrolling is compositor-driven
+    // and always smoother than JS can be once frames start dropping. Use core
+    // count and device memory as a rough capability signal.
+    const nav = navigator as Navigator & { deviceMemory?: number };
+    const lowPower =
+      (nav.hardwareConcurrency ?? 8) <= 4 || (nav.deviceMemory ?? 8) <= 4;
+    const useSyncTouch = touchDevice && !lowPower;
+
     const lenis = new Lenis({
       duration: 0.82,
       smoothWheel: true,
@@ -22,10 +31,12 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
       // Touch needs its own feel: syncTouch keeps the content glued to the
       // finger, and the higher lerp lets the glide settle quickly instead of
       // drifting past where the user let go.
-      syncTouch: touchDevice,
+      syncTouch: useSyncTouch,
       syncTouchLerp: 0.075,
       touchMultiplier: touchDevice ? 1.6 : 1,
-      touchInertiaExponent: 1.7,
+      // Higher exponent decays the glide faster - a long JS-driven coast is
+      // where dropped frames become visible on touch.
+      touchInertiaExponent: touchDevice ? 2.1 : 1.7,
     });
 
     document.documentElement.classList.add("lenis");
