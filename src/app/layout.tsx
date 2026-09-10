@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { Caveat, Manrope, Sora } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import DeferUntilIdle from "@/components/DeferUntilIdle";
 import { CASE_STUDIES, PROJECTS } from "@/lib/data";
 
 const BackgroundFX = dynamic(() => import("@/components/BackgroundFX"), { ssr: false });
@@ -14,24 +15,35 @@ const StaleServiceWorkerCleaner = dynamic(() => import("@/components/StaleServic
 const ThemeTransition = dynamic(() => import("@/components/ThemeTransition"), { ssr: false });
 const VoiceBot = dynamic(() => import("@/components/VoiceBot"), { ssr: false });
 
+// Weights are pinned to what the design actually uses. Without this the
+// variable fonts ship every weight, which put ~130KB of woff2 on the critical
+// path and stretched the request chain to ~870ms.
 const manrope = Manrope({
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700"],
   variable: "--font-body",
+  adjustFontFallback: true,
 });
 
 const sora = Sora({
   subsets: ["latin"],
   display: "swap",
+  weight: ["600", "700"],
   variable: "--font-display",
+  adjustFontFallback: true,
 });
 
-// Accent face only - used for eyebrows and short asides, never for body copy.
+// Accent face only - eyebrows and short asides, never body copy. preload:false
+// keeps it out of the critical path; it swaps in a moment later, which is fine
+// for a handful of small labels.
 const caveat = Caveat({
   subsets: ["latin"],
   display: "swap",
-  weight: ["500", "600", "700"],
+  weight: ["600"],
   variable: "--font-hand",
+  preload: false,
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -91,6 +103,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
   return (
     <html lang="en" className="theme-dark">
+      <head>
+        {/* The watermark is the LCP element but it is a CSS background, so the
+            preload scanner cannot find it in the initial HTML. Preloading makes
+            it discoverable immediately instead of waiting for the stylesheet. */}
+        <link
+          rel="preload"
+          as="image"
+          href="/assets/kali-dragon-red.webp"
+          type="image/webp"
+          fetchPriority="high"
+        />
+      </head>
       <body className={`${manrope.variable} ${sora.variable} ${caveat.variable} font-body`}>
         <script
           type="application/ld+json"
@@ -105,12 +129,17 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <PageLoader />
           <Navbar />
           <ThemeTransition />
-          <BackgroundFX />
           <ScrollProgressBar />
           <div aria-hidden="true" className="linux-watermark" />
           <div aria-hidden="true" className="kali-3d-bg" />
-          <InteractionFX />
-          <VoiceBot />
+          {/* Ambient chrome: not visible at first paint, so it mounts once the
+              browser is idle rather than competing with the initial render.
+              Nothing here changes visually - it simply arrives a beat later. */}
+          <DeferUntilIdle>
+            <BackgroundFX />
+            <InteractionFX />
+            <VoiceBot />
+          </DeferUntilIdle>
           <div className="portfolio-content-shell relative z-10">{children}</div>
         </SmoothScrollProvider>
       </body>

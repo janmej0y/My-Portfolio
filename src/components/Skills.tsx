@@ -84,7 +84,7 @@ function CertificateCard({ cert, index }: { cert: Certification; index: number }
       </div>
 
       <h3 className="relative mt-4 text-lg font-medium leading-snug">{cert.title}</h3>
-      <p className="relative mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-white/40">
+      <p className="relative mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-white/55">
         {cert.issuer}
       </p>
       <p className="relative mt-3 flex-1 text-sm leading-6 text-[#9ca3af]">{cert.description}</p>
@@ -152,7 +152,7 @@ function DomainTab({
         </span>
         <span className="flex shrink-0 flex-col items-end">
           <span className="text-sm font-semibold tabular-nums text-white">{group.items.length}</span>
-          <span className="text-[9px] uppercase tracking-[0.14em] text-white/40">peak {top}</span>
+          <span className="text-[9px] uppercase tracking-[0.14em] text-white/55">peak {top}</span>
         </span>
       </span>
     </button>
@@ -297,7 +297,11 @@ export default function Skills() {
           >
             {/* Domain rail: horizontal scroll strip on mobile, vertical list on desktop. */}
             <div
-              role="tablist"
+              // These are aria-pressed toggle buttons, not ARIA tabs (there are
+              // no tabpanels and no arrow-key roving focus), and role="tablist"
+              // additionally requires direct tab children - which the layout
+              // wrapper prevents. A labelled group is the accurate role.
+              role="group"
               aria-label="Skill domains"
               className="flex gap-3 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0"
             >

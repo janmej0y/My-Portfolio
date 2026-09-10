@@ -130,12 +130,12 @@ export default function InteractionFX() {
         <>
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none fixed z-[138] h-24 w-24 rounded-full bg-cyan-300/10 blur-3xl"
+            className="cursor-layer pointer-events-none fixed z-[234] h-24 w-24 rounded-full bg-cyan-300/10 blur-3xl"
             style={{ x: glowX, y: glowY, translateX: "-50%", translateY: "-50%" }}
           />
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none fixed z-[139] rounded-full border border-cyan-200/40 bg-white/[0.02] shadow-[0_0_24px_rgba(34,211,238,0.12)] backdrop-blur-[1px]"
+            className="cursor-layer pointer-events-none fixed z-[235] rounded-full border border-cyan-200/40 bg-white/[0.02] shadow-[0_0_24px_rgba(34,211,238,0.12)] backdrop-blur-[1px]"
             style={{
               x: ringX,
               y: ringY,
@@ -149,7 +149,7 @@ export default function InteractionFX() {
           />
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none fixed z-[140] h-2 w-2 rounded-full bg-white"
+            className="cursor-layer pointer-events-none fixed z-[236] h-2 w-2 rounded-full bg-white"
             style={{ x: dotX, y: dotY, translateX: "-50%", translateY: "-50%" }}
           />
 
@@ -159,7 +159,7 @@ export default function InteractionFX() {
                 initial={{ opacity: 0, scale: 0.7, y: 8 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.7, y: 8 }}
-                className="pointer-events-none fixed z-[141] rounded-full border border-cyan-200/30 bg-black/56 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-cyan-100 backdrop-blur"
+                className="cursor-layer pointer-events-none fixed z-[237] rounded-full border border-cyan-200/30 bg-black/56 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-cyan-100 backdrop-blur"
                 style={{ x: ringX, y: ringY, translateX: "14px", translateY: "-130%" }}
               >
                 {cursorLabel}
@@ -171,7 +171,7 @@ export default function InteractionFX() {
 
       <AnimatePresence>
         {ripples.map((ripple) => (
-          <div key={ripple.id} className="pointer-events-none fixed inset-0 z-[135]">
+          <div key={ripple.id} className="cursor-layer pointer-events-none fixed inset-0 z-[231]">
             <motion.span
               aria-hidden="true"
               initial={{ opacity: 0.84, scale: 0.16 }}
@@ -211,7 +211,7 @@ export default function InteractionFX() {
 
       <AnimatePresence>
         {particleBursts.map((burst) => (
-          <div key={burst.id} className="pointer-events-none fixed inset-0 z-[136]">
+          <div key={burst.id} className="cursor-layer pointer-events-none fixed inset-0 z-[232]">
             {Array.from({ length: 10 }).map((_, index) => {
               const angle = (Math.PI * 2 * index) / 10;
               const distance = 36 + (index % 3) * 18;

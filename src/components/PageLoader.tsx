@@ -67,6 +67,16 @@ export default function PageLoader() {
       };
     }
 
+    // On weak hardware the full sequence is the single biggest contributor to
+    // LCP - the page cannot paint until the curtain lifts. Run an abbreviated
+    // version there rather than making everyone wait for a phone's frame rate.
+    const nav = navigator as Navigator & { deviceMemory?: number };
+    const weak =
+      (nav.hardwareConcurrency ?? 8) <= 4 ||
+      (nav.deviceMemory ?? 8) <= 4 ||
+      window.matchMedia("(pointer: coarse)").matches;
+    const speed = weak ? 0.45 : 1;
+
     const start = performance.now();
 
     let lastPercent = -1;
@@ -75,22 +85,22 @@ export default function PageLoader() {
       const elapsed = now - start;
 
       // Converge 0 -> 1, then hold at 1. Ref only: no re-render.
-      const next = Math.min(1, elapsed / T.converge);
+      const next = Math.min(1, elapsed / (T.converge * speed));
       progressRef.current = next;
       if (next >= 0.999) setSettled(true);
 
       // Counter is text, so it does need state - but only when it changes.
-      const pct = Math.min(100, Math.round((elapsed / CONVERGE_END) * 100));
+      const pct = Math.min(100, Math.round((elapsed / (CONVERGE_END * speed)) * 100));
       if (pct !== lastPercent) {
         lastPercent = pct;
         setPercent(pct);
       }
 
-      if (elapsed >= BURST_START) {
-        burstRef.current = Math.min(1, (elapsed - BURST_START) / T.burst);
+      if (elapsed >= BURST_START * speed) {
+        burstRef.current = Math.min(1, (elapsed - BURST_START * speed) / (T.burst * speed));
       }
 
-      if (elapsed >= TOTAL) {
+      if (elapsed >= TOTAL * speed) {
         release();
         setMounted(false);
         return;

@@ -221,7 +221,17 @@ export default function ParticleMark({
 
       // Scale everything off the glyph size so density holds across viewports.
       const scale = Math.sqrt(clamp(fontSize / 144, 0.75, 2));
-      const step = Math.max(1, Math.round(1.4 * scale));
+      // Sampling step sets the particle count, and every particle is simulated
+      // on the CPU each frame. A ~1.4px grid gives ~28k particles, which a
+      // desktop absorbs but a phone cannot - it pushed LCP to 38s under
+      // Lighthouse's 4x CPU throttle. Coarser grid on weak hardware.
+      const nav = navigator as Navigator & { deviceMemory?: number };
+      const weak =
+        (nav.hardwareConcurrency ?? 8) <= 4 ||
+        (nav.deviceMemory ?? 8) <= 4 ||
+        window.matchMedia("(pointer: coarse)").matches;
+      const density = weak ? 3.2 : 1.4;
+      const step = Math.max(1, Math.round(density * scale));
       const minSize = 2 * scale;
       const maxSize = 3.2 * scale;
 

@@ -47,7 +47,7 @@ export default function TestimonialsTrust() {
               transition={{ delay: index * STAGGER.card, duration: DURATIONS.base, ease: EASE_STANDARD }}
               className="surface rounded-[24px] p-5"
             >
-              <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">Trusted Feedback</p>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/55">Trusted Feedback</p>
               <p className="mt-4 text-sm leading-7 text-white/85">"{item.quote}"</p>
               <p className="mt-4 text-sm font-semibold">{item.name}</p>
               <p className="text-xs uppercase tracking-[0.14em] text-white/55">{item.role}</p>

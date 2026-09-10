@@ -264,7 +264,7 @@ export default function About() {
                 <div className="relative overflow-hidden rounded-[24px] border border-white/10">
                   <div className="absolute inset-0 z-10 bg-[linear-gradient(135deg,rgba(255,255,255,0.22),transparent_30%,transparent_70%,rgba(34,211,238,0.2))]" />
                   <Image
-                    src="/assets/profile.jpg"
+                    src="/assets/profile.webp"
                     alt="Janmejoy Mahato portrait"
                     width={560}
                     height={760}

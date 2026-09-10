@@ -138,7 +138,7 @@ function SpotlightProjectCard({
   const spotlight = useSpotlight<HTMLElement>();
 
   return (
-    <motion.article
+    <motion.div
       layout
       {...spotlight}
       style={{ "--accent-rgb": style.accent, "--accent-alt-rgb": style.accentAlt } as CSSProperties}
@@ -211,7 +211,7 @@ function SpotlightProjectCard({
           <QuickLinks project={project} onActivate={onActivate} />
         </div>
       </div>
-    </motion.article>
+    </motion.div>
   );
 }
 
@@ -233,7 +233,7 @@ function FeaturedProjectCard({
   const spotlight = useSpotlight<HTMLElement>();
 
   return (
-    <motion.article
+    <motion.div
       layout
       {...spotlight}
       style={{ "--accent-rgb": style.accent, "--accent-alt-rgb": style.accentAlt } as CSSProperties}
@@ -305,7 +305,7 @@ function FeaturedProjectCard({
           <QuickLinks project={project} onActivate={onActivate} />
         </div>
       </div>
-    </motion.article>
+    </motion.div>
   );
 }
 
@@ -324,7 +324,7 @@ function CompactProjectCard({
   const spotlight = useSpotlight<HTMLElement>();
 
   return (
-    <motion.article
+    <motion.div
       layout
       {...spotlight}
       style={{ "--accent-rgb": style.accent, "--accent-alt-rgb": style.accentAlt } as CSSProperties}
@@ -385,7 +385,7 @@ function CompactProjectCard({
           <QuickLinks project={project} onActivate={onActivate} />
         </div>
       </div>
-    </motion.article>
+    </motion.div>
   );
 }
 
@@ -703,7 +703,7 @@ export default function Projects() {
                       <span className="eyebrow-hand-underline">More Work</span>
                     </p>
                     <span className="h-px flex-1 bg-gradient-to-r from-white/18 to-transparent" />
-                    <span className="shrink-0 font-display text-xs tabular-nums text-white/40">
+                    <span className="shrink-0 font-display text-xs tabular-nums text-white/55">
                       {rest.length}
                     </span>
                   </div>
